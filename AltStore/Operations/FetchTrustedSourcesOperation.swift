@@ -37,8 +37,8 @@ final class FetchTrustedSourcesOperation: ResultOperation<[FetchTrustedSourcesOp
     override func main()
     {
         super.main()
-        
-        let dataTask = URLSession.shared.dataTask(with: .trustedSources) { (data, response, error) in
+        let session: URLSession = AppServices.network.session
+        let dataTask = session.dataTask(with: .trustedSources) { (data, response, error) in
             do
             {
                 if let response = response as? HTTPURLResponse

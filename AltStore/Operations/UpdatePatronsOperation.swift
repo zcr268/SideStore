@@ -43,7 +43,7 @@ final class UpdatePatronsOperation: ResultOperation<Void>
     {
         super.main()
         
-        let dataTask = URLSession.shared.dataTask(with: .patreonInfo) { (data, response, error) in
+        let dataTask = AppServices.network.session.dataTask(with: .patreonInfo) { (data, response, error) in
             do
             {
                 if let response = response as? HTTPURLResponse
