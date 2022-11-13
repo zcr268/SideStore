@@ -28,6 +28,16 @@
 		B355DFC329209E2500E4C858 /* AppProxyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFC229209E2500E4C858 /* AppProxyProvider.swift */; };
 		B355DFC829209E2500E4C858 /* WireguardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B355DFBE29209E2400E4C858 /* WireguardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B355DFCF29209E4C00E4C858 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = B355DFCE29209E4C00E4C858 /* WireGuardKit */; };
+		B355DFEF2920A75E00E4C858 /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = B355DFE42920A75D00E4C858 /* ringlogger.c */; };
+		B355DFF02920A75E00E4C858 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFE52920A75D00E4C858 /* Logger.swift */; };
+		B355DFF12920A75E00E4C858 /* test_ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = B355DFE62920A75D00E4C858 /* test_ringlogger.c */; };
+		B355DFF22920A75E00E4C858 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFE82920A75D00E4C858 /* Keychain.swift */; };
+		B355DFF32920A75E00E4C858 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFE92920A75D00E4C858 /* FileManager+Extension.swift */; };
+		B355DFF42920A75E00E4C858 /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFEB2920A75D00E4C858 /* TunnelConfiguration+WgQuickConfig.swift */; };
+		B355DFF52920A75E00E4C858 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFEC2920A75D00E4C858 /* NETunnelProviderProtocol+Extension.swift */; };
+		B355DFF62920A75E00E4C858 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFED2920A75D00E4C858 /* String+ArrayConversion.swift */; };
+		B355DFF72920A75E00E4C858 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFEE2920A75E00E4C858 /* NotificationToken.swift */; };
+		B355DFF92920A79E00E4C858 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B355DFF82920A79E00E4C858 /* ErrorNotifier.swift */; };
 		B33FFBA8295F8E98002259E6 /* libfragmentzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B343F894295F7F9B002B1159 /* libfragmentzip.a */; };
 		B33FFBAA295F8F78002259E6 /* preboard.c in Sources */ = {isa = PBXBuildFile; fileRef = B33FFBA9295F8F78002259E6 /* preboard.c */; };
 		B33FFBAC295F8F98002259E6 /* companion_proxy.c in Sources */ = {isa = PBXBuildFile; fileRef = B33FFBAB295F8F98002259E6 /* companion_proxy.c */; };
@@ -544,6 +554,18 @@
 		B355DFC229209E2500E4C858 /* AppProxyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProxyProvider.swift; sourceTree = "<group>"; };
 		B355DFC429209E2500E4C858 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B355DFC529209E2500E4C858 /* WireguardNetworkExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireguardNetworkExtension.entitlements; sourceTree = "<group>"; };
+		B355DFE22920A6C200E4C858 /* WireguardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireguardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
+		B355DFE42920A75D00E4C858 /* ringlogger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ringlogger.c; sourceTree = "<group>"; };
+		B355DFE52920A75D00E4C858 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		B355DFE62920A75D00E4C858 /* test_ringlogger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_ringlogger.c; sourceTree = "<group>"; };
+		B355DFE72920A75D00E4C858 /* ringlogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ringlogger.h; sourceTree = "<group>"; };
+		B355DFE82920A75D00E4C858 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		B355DFE92920A75D00E4C858 /* FileManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
+		B355DFEB2920A75D00E4C858 /* TunnelConfiguration+WgQuickConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TunnelConfiguration+WgQuickConfig.swift"; sourceTree = "<group>"; };
+		B355DFEC2920A75D00E4C858 /* NETunnelProviderProtocol+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NETunnelProviderProtocol+Extension.swift"; sourceTree = "<group>"; };
+		B355DFED2920A75D00E4C858 /* String+ArrayConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+ArrayConversion.swift"; sourceTree = "<group>"; };
+		B355DFEE2920A75E00E4C858 /* NotificationToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationToken.swift; sourceTree = "<group>"; };
+		B355DFF82920A79E00E4C858 /* ErrorNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
 		B33FFBA9295F8F78002259E6 /* preboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = preboard.c; path = src/preboard.c; sourceTree = "<group>"; };
 		B33FFBAB295F8F98002259E6 /* companion_proxy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = companion_proxy.c; path = src/companion_proxy.c; sourceTree = "<group>"; };
 		B343F847295F6321002B1159 /* minimuxer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = minimuxer.xcodeproj; path = Dependencies/minimuxer.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -1024,11 +1046,39 @@
 		B355DFC129209E2500E4C858 /* WireguardNetworkExtension */ = {
 			isa = PBXGroup;
 			children = (
-				B355DFC229209E2500E4C858 /* AppProxyProvider.swift */,
-				B355DFC429209E2500E4C858 /* Info.plist */,
 				B355DFC529209E2500E4C858 /* WireguardNetworkExtension.entitlements */,
+				B355DFE22920A6C200E4C858 /* WireguardNetworkExtension-Bridging-Header.h */,
+				B355DFC429209E2500E4C858 /* Info.plist */,
+				B355DFC229209E2500E4C858 /* AppProxyProvider.swift */,
+				B355DFF82920A79E00E4C858 /* ErrorNotifier.swift */,
+				B355DFE92920A75D00E4C858 /* FileManager+Extension.swift */,
+				B355DFE82920A75D00E4C858 /* Keychain.swift */,
+				B355DFEE2920A75E00E4C858 /* NotificationToken.swift */,
+				B355DFE32920A75D00E4C858 /* Logging */,
+				B355DFEA2920A75D00E4C858 /* Model */,
 			);
 			path = WireguardNetworkExtension;
+			sourceTree = "<group>";
+		};
+		B355DFE32920A75D00E4C858 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				B355DFE42920A75D00E4C858 /* ringlogger.c */,
+				B355DFE52920A75D00E4C858 /* Logger.swift */,
+				B355DFE62920A75D00E4C858 /* test_ringlogger.c */,
+				B355DFE72920A75D00E4C858 /* ringlogger.h */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		B355DFEA2920A75D00E4C858 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B355DFEB2920A75D00E4C858 /* TunnelConfiguration+WgQuickConfig.swift */,
+				B355DFEC2920A75D00E4C858 /* NETunnelProviderProtocol+Extension.swift */,
+				B355DFED2920A75D00E4C858 /* String+ArrayConversion.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B33FFB8F295F8CF2002259E6 /* Recovered References */ = {
@@ -2376,6 +2426,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B355DFC329209E2500E4C858 /* AppProxyProvider.swift in Sources */,
+				B355DFF52920A75E00E4C858 /* NETunnelProviderProtocol+Extension.swift in Sources */,
+				B355DFF42920A75E00E4C858 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
+				B355DFF12920A75E00E4C858 /* test_ringlogger.c in Sources */,
+				B355DFF92920A79E00E4C858 /* ErrorNotifier.swift in Sources */,
+				B355DFF02920A75E00E4C858 /* Logger.swift in Sources */,
+				B355DFEF2920A75E00E4C858 /* ringlogger.c in Sources */,
+				B355DFF72920A75E00E4C858 /* NotificationToken.swift in Sources */,
+				B355DFF22920A75E00E4C858 /* Keychain.swift in Sources */,
+				B355DFF32920A75E00E4C858 /* FileManager+Extension.swift in Sources */,
+				B355DFF62920A75E00E4C858 /* String+ArrayConversion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
