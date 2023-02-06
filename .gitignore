@@ -41,3 +41,5 @@ Payload
 *.ipa.zip
 xcodebuild.log
 
+Dependencies/em_proxy.xcodeproj/project.pbxproj
+Dependencies/minimuxer.xcodeproj/project.pbxproj

@@ -14,4 +14,4 @@ ldid -SAltStore/Resources/tempEnt.plist archive.xcarchive/Products/Applications/
 mkdir Payload
 mkdir Payload/SideStore.app
 cp -R archive.xcarchive/Products/Applications/SideStore.app/ Payload/SideStore.app/
-zip -r SideStore_MDC_11.ipa Payload
+zip -r SideStore_MDC_12.ipa Payload
