@@ -34,3 +34,10 @@ xcuserdata
 
 ## AppCode specific
 .idea/
+
+Payload
+*.ipa
+*.zip.ipa
+*.ipa.zip
+xcodebuild.log
+
