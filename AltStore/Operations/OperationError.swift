@@ -6,11 +6,10 @@
 //  Copyright © 2019 Riley Testut. All rights reserved.
 //
 
-import Foundation
 import AltSign
+import Foundation
 
-enum OperationError: LocalizedError
-{
+enum OperationError: LocalizedError {
     static let domain = OperationError.unknown._domain
     
     case unknown
@@ -45,6 +44,8 @@ enum OperationError: LocalizedError
     case functionArguments
     case profileInstall
     case noConnection
+    case mdcNoFDA
+    case mdcFailedPatchd
     
     var failureReason: String? {
         switch self {
@@ -73,22 +74,21 @@ enum OperationError: LocalizedError
         case .functionArguments: return NSLocalizedString("A function was passed invalid arguments", comment: "")
         case .profileInstall: return NSLocalizedString("Unable to manage profiles on the device", comment: "")
         case .noConnection: return NSLocalizedString("Unable to connect to the device, make sure Wireguard is enabled and you're connected to WiFi", comment: "")
+        case .mdcNoFDA: return NSLocalizedString("Unable to get Full Disk Access using MDC.", comment: "")
+        case .mdcFailedPatchd: return NSLocalizedString("Unable to patch installd using MDC.", comment: "")
         }
     }
     
     var recoverySuggestion: String? {
-        switch self
-        {
+        switch self {
         case .maximumAppIDLimitReached(let application, let requiredAppIDs, let availableAppIDs, let date):
             let baseMessage = NSLocalizedString("Delete sideloaded apps to free up App ID slots.", comment: "")
             let message: String
             
-            if requiredAppIDs > 1
-            {
+            if requiredAppIDs > 1 {
                 let availableText: String
                 
-                switch availableAppIDs
-                {
+                switch availableAppIDs {
                 case 0: availableText = NSLocalizedString("none are available", comment: "")
                 case 1: availableText = NSLocalizedString("only 1 is available", comment: "")
                 default: availableText = String(format: NSLocalizedString("only %@ are available", comment: ""), NSNumber(value: availableAppIDs))
@@ -97,8 +97,7 @@ enum OperationError: LocalizedError
                 let prefixMessage = String(format: NSLocalizedString("%@ requires %@ App IDs, but %@.", comment: ""), application.name, NSNumber(value: requiredAppIDs), availableText)
                 message = prefixMessage + " " + baseMessage
             }
-            else
-            {
+            else {
                 let dateComponents = Calendar.current.dateComponents([.day, .hour, .minute], from: Date(), to: date)
                 
                 let dateComponentsFormatter = DateComponentsFormatter()

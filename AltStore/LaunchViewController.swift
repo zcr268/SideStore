@@ -46,38 +46,8 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         #if !targetEnvironment(simulator)
-        let dialogMessage = UIAlertController(title: "MDC Patch", message: "please confirm you would like to patch MDC/three-app-limit, press patch to patch, dont patch to launch sidestore without patch", preferredStyle: .alert)
-        
-        // Create OK button with action handler
-        let patch = UIAlertAction(title: "Patch", style: .default, handler: { _ in
-            patch3AppLimit { result in
-                switch result {
-                case .success:
-                    print("patched sucessfully")
-                case .failure(let err):
-                    switch err {
-                    case .NoFDA(let msg):
-                        self.displayError("Failed to get full disk access: \(msg)")
-                        return
-                    case .FailedPatchd:
-                        self.displayError("Failed to install patchd.")
-                        return
-                    }
-                }
-            }
-        })
-        
-        let noPatch = UIAlertAction(title: "Continue without Patch", style: .default, handler: { _ in
-            print("starting SS without mdc patch")
-        })
-        
-        dialogMessage.addAction(patch)
-        dialogMessage.addAction(noPatch)
-
-        self.present(dialogMessage, animated: true, completion: nil)
-        
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
-        
+
         guard let pf = fetchPairingFile() else {
             self.displayError("Device pairing file not found.")
             return
@@ -118,7 +88,7 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
                 types.append(contentsOf: UTType.types(tag: "mobiledevicepairing", tagClass: UTTagClass.filenameExtension, conformingTo: UTType.data))
                 types.append(.xml)
                 let documentPickerController = UIDocumentPickerViewController(forOpeningContentTypes: types)
-                documentPickerController.shouldShowFileExtensions = true
+//                documentPickerController.shouldShowFileExtensions = true
                 documentPickerController.delegate = self
                 self.present(documentPickerController, animated: true, completion: nil)
             })
@@ -242,6 +212,37 @@ extension LaunchViewController {
             self.destinationViewController.view.alpha = 1.0
         }
         
+        if UserDefaults.standard.enableMacDirtyCowExploit, UserDefaults.standard.isMacDirtyCowSupported {
+            if let previous_exploit_time = UserDefaults.standard.object(forKey: "mdcRanBootTime") {
+                let last_rantime = previous_exploit_time as! Date
+                if last_rantime == bootTime() {
+                    return print("exploit has ran this boot - \(last_rantime)")
+                }
+            }
+            self.runExploit()
+        }
+        
         self.didFinishLaunching = true
+    }
+    
+    func runExploit() {
+        if UserDefaults.standard.enableMacDirtyCowExploit && UserDefaults.standard.isMacDirtyCowSupported {
+            patch3AppLimit { result in
+                switch result {
+                case .success:
+                    UserDefaults.standard.set(bootTime(), forKey: "mdcRanBootTime")
+                    print("patched sucessfully")
+                case .failure(let err):
+                    switch err {
+                    case .NoFDA(let msg):
+                        self.displayError("Failed to get full disk access: \(msg)")
+                        return
+                    case .FailedPatchd:
+                        self.displayError("Failed to install patchd.")
+                        return
+                    }
+                }
+            }
+        }
     }
 }

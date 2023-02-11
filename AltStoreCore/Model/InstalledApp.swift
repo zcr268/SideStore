@@ -13,7 +13,21 @@ import AltSign
 import SemanticVersion
 
 // Free developer accounts are limited to only 3 active sideloaded apps at a time as of iOS 13.3.1.
-public let ALTActiveAppsLimit = 99999
+public extension InstalledApp
+{
+    static var freeAccountActiveAppsLimit: Int
+    {
+        if UserDefaults.standard.enableMacDirtyCowExploit && UserDefaults.standard.isMacDirtyCowSupported
+        {
+            return 99999
+        }
+        else
+        {
+            // Free developer accounts are limited to only 3 active sideloaded apps at a time as of iOS 13.3.1.
+            return 3
+        }
+    }
+}
 
 public protocol InstalledAppProtocol: Fetchable
 {
