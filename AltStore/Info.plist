@@ -99,7 +99,7 @@
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>So that we can bypass the 3 app limit and disable revokes using MDC and the tccd exploit.</string>
+	<string>So that we can bypass the 3 app limit and disable revokes.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_altserver._tcp</string>

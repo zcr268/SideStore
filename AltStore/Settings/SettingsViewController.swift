@@ -24,7 +24,7 @@ private extension SettingsViewController
         case appRefresh
         case instructions
         case credits
-        case macDirtyCow
+        case cowExploit
         case debug
     }
     
@@ -74,7 +74,7 @@ final class SettingsViewController: UITableViewController
     @IBOutlet private var accountTypeLabel: UILabel!
     
     @IBOutlet private var backgroundRefreshSwitch: UISwitch!
-    @IBOutlet private var enableMDCExploitSwitch: UISwitch!
+    @IBOutlet private var enableCowExploitSwitch: UISwitch!
 
     @IBOutlet private var versionLabel: UILabel!
     
@@ -151,7 +151,7 @@ private extension SettingsViewController
         }
         
         self.backgroundRefreshSwitch.isOn = UserDefaults.standard.isBackgroundRefreshEnabled
-        self.enableMDCExploitSwitch.isOn = UserDefaults.standard.enableMacDirtyCowExploit
+        self.enableCowExploitSwitch.isOn = UserDefaults.standard.enableCowExploit
 
         if self.isViewLoaded
         {
@@ -209,14 +209,14 @@ private extension SettingsViewController
         case .instructions:
             break
         
-        case .macDirtyCow:
+        case .cowExploit:
             if isHeader
             {
-                settingsHeaderFooterView.primaryLabel.text = NSLocalizedString("MACDIRTYCOW", comment: "")
+                settingsHeaderFooterView.primaryLabel.text = NSLocalizedString("EXPLOITS", comment: "")
             }
             else
             {
-                settingsHeaderFooterView.secondaryLabel.text = NSLocalizedString("Your device supports the MacDirtyCow exploit. When this setting is on, the exploit is used to enable you to sideload more than 3 apps at a time. (warning: might be unstable)", comment: "")
+                settingsHeaderFooterView.secondaryLabel.text = NSLocalizedString("Your device supports the M_D_C exploit. When this setting is on, the exploit is used to enable you to sideload more than 3 apps at a time. (warning: might be unstable)", comment: "")
             }
             
         case .credits:
@@ -243,8 +243,8 @@ private extension SettingsViewController
     {
         switch section
         {
-        case .macDirtyCow:
-            let isHidden = !(UserDefaults.standard.isMacDirtyCowSupported)
+        case .cowExploit:
+            let isHidden = !(UserDefaults.standard.isCowExploitSupported)
             return isHidden
 
         default: return false
@@ -310,9 +310,9 @@ private extension SettingsViewController
         UserDefaults.standard.isBackgroundRefreshEnabled = sender.isOn
     }
     
-    @IBAction func toggleEnableMDCExploit(_ sender: UISwitch)
+    @IBAction func toggleenableCowExploit(_ sender: UISwitch)
     {
-        UserDefaults.standard.enableMacDirtyCowExploit = sender.isOn
+        UserDefaults.standard.enableCowExploit = sender.isOn
 
         if UserDefaults.standard.activeAppsLimit != nil
         {
@@ -441,7 +441,7 @@ extension SettingsViewController
         case _ where self.isSectionHidden(section): return nil
         case .signIn where self.activeTeam != nil: return nil
         case .account where self.activeTeam == nil: return nil
-        case .signIn, .account, .patreon, .appRefresh, .credits, .macDirtyCow, .debug:
+        case .signIn, .account, .patreon, .appRefresh, .credits, .cowExploit, .debug:
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderFooterView") as! SettingsHeaderFooterView
             self.prepare(headerView, for: section, isHeader: true)
             return headerView
@@ -457,7 +457,7 @@ extension SettingsViewController
         {
         case _ where self.isSectionHidden(section): return nil
         case .signIn where self.activeTeam != nil: return nil
-        case .signIn, .patreon, .appRefresh, .macDirtyCow:
+        case .signIn, .patreon, .appRefresh, .cowExploit:
             let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderFooterView") as! SettingsHeaderFooterView
             self.prepare(footerView, for: section, isHeader: false)
             return footerView
@@ -474,7 +474,7 @@ extension SettingsViewController
         case _ where self.isSectionHidden(section): return 1.0
         case .signIn where self.activeTeam != nil: return 1.0
         case .account where self.activeTeam == nil: return 1.0
-        case .signIn, .account, .patreon, .appRefresh, .credits, .debug, .macDirtyCow:
+        case .signIn, .account, .patreon, .appRefresh, .credits, .debug, .cowExploit:
             let height = self.preferredHeight(for: self.prototypeHeaderFooterView, in: section, isHeader: true)
             return height
             
@@ -490,7 +490,7 @@ extension SettingsViewController
         case _ where self.isSectionHidden(section): return 1.0
         case .signIn where self.activeTeam != nil: return 1.0
         case .account where self.activeTeam == nil: return 1.0
-        case .signIn, .patreon, .appRefresh, .macDirtyCow:
+        case .signIn, .patreon, .appRefresh, .cowExploit:
             let height = self.preferredHeight(for: self.prototypeHeaderFooterView, in: section, isHeader: false)
             return height
             
@@ -594,7 +594,7 @@ extension SettingsViewController
                 }
             case .refreshAttempts, .errorLog: break
             }
-        case .macDirtyCow: break
+        case .cowExploit: break
         default: break
         }
     }

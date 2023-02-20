@@ -59,8 +59,8 @@ public extension UserDefaults {
 
     @NSManaged @objc(activeAppsLimit) private var _activeAppsLimit: NSNumber?
 
-    @NSManaged var enableMacDirtyCowExploit: Bool
-    @NSManaged var isMacDirtyCowSupported: Bool
+    @NSManaged var enableCowExploit: Bool
+    @NSManaged var isCowExploitSupported: Bool
 
     class func registerDefaults() {
         let ios13_5 = OperatingSystemVersion(majorVersion: 13, minorVersion: 5, patchVersion: 0)
@@ -75,7 +75,7 @@ public extension UserDefaults {
         let ios15_7_2 = OperatingSystemVersion(majorVersion: 15, minorVersion: 7, patchVersion: 2)
 
         // MacDirtyCow supports iOS 14.0 - 15.7.1 OR 16.0 - 16.1.2
-        let isMacDirtyCowSupported =
+        let isCowExploitSupported =
             (ProcessInfo.processInfo.isOperatingSystemAtLeast(ios14) && !ProcessInfo.processInfo.isOperatingSystemAtLeast(ios15_7_2)) ||
             (ProcessInfo.processInfo.isOperatingSystemAtLeast(ios16) && !ProcessInfo.processInfo.isOperatingSystemAtLeast(ios16_2))
 
@@ -85,16 +85,16 @@ public extension UserDefaults {
             #keyPath(UserDefaults.activeAppLimitIncludesExtensions): activeAppLimitIncludesExtensions,
             #keyPath(UserDefaults.localServerSupportsRefreshing): localServerSupportsRefreshing,
             #keyPath(UserDefaults.requiresAppGroupMigration): true,
-            #keyPath(UserDefaults.enableMacDirtyCowExploit): true,
-            #keyPath(UserDefaults.isMacDirtyCowSupported): isMacDirtyCowSupported,
+            #keyPath(UserDefaults.enableCowExploit): true,
+            #keyPath(UserDefaults.isCowExploitSupported): isCowExploitSupported,
         ]
         
         UserDefaults.standard.register(defaults: defaults)
         UserDefaults.shared.register(defaults: defaults)
         
-        if !isMacDirtyCowSupported {
-            // Disable enableMacDirtyCowExploit if running iOS version that doesn't support MacDirtyCow.
-            UserDefaults.standard.enableMacDirtyCowExploit = false
+        if !isCowExploitSupported {
+            // Disable enableCowExploit if running iOS version that doesn't support MacDirtyCow.
+            UserDefaults.standard.enableCowExploit = false
         }
     }
 }

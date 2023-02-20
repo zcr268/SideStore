@@ -212,8 +212,8 @@ extension LaunchViewController {
             self.destinationViewController.view.alpha = 1.0
         }
         
-        if UserDefaults.standard.enableMacDirtyCowExploit, UserDefaults.standard.isMacDirtyCowSupported {
-            if let previous_exploit_time = UserDefaults.standard.object(forKey: "mdcRanBootTime") {
+        if UserDefaults.standard.enableCowExploit, UserDefaults.standard.isCowExploitSupported {
+            if let previous_exploit_time = UserDefaults.standard.object(forKey: "cowExploitRanBootTime") {
                 let last_rantime = previous_exploit_time as! Date
                 if last_rantime == bootTime() {
                     return print("exploit has ran this boot - \(last_rantime)")
@@ -226,11 +226,11 @@ extension LaunchViewController {
     }
     
     func runExploit() {
-        if UserDefaults.standard.enableMacDirtyCowExploit && UserDefaults.standard.isMacDirtyCowSupported {
+        if UserDefaults.standard.enableCowExploit && UserDefaults.standard.isCowExploitSupported {
             patch3AppLimit { result in
                 switch result {
                 case .success:
-                    UserDefaults.standard.set(bootTime(), forKey: "mdcRanBootTime")
+                    UserDefaults.standard.set(bootTime(), forKey: "cowExploitRanBootTime")
                     print("patched sucessfully")
                 case .failure(let err):
                     switch err {

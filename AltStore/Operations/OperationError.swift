@@ -44,8 +44,8 @@ enum OperationError: LocalizedError {
     case functionArguments
     case profileInstall
     case noConnection
-    case mdcNoFDA
-    case mdcFailedPatchd
+    case cowExploitNoFDA
+    case cowExploitFailedPatchd
     
     var failureReason: String? {
         switch self {
@@ -74,8 +74,8 @@ enum OperationError: LocalizedError {
         case .functionArguments: return NSLocalizedString("A function was passed invalid arguments", comment: "")
         case .profileInstall: return NSLocalizedString("Unable to manage profiles on the device", comment: "")
         case .noConnection: return NSLocalizedString("Unable to connect to the device, make sure Wireguard is enabled and you're connected to WiFi", comment: "")
-        case .mdcNoFDA: return NSLocalizedString("Unable to get Full Disk Access using MDC.", comment: "")
-        case .mdcFailedPatchd: return NSLocalizedString("Unable to patch installd using MDC.", comment: "")
+        case .cowExploitNoFDA: return NSLocalizedString("Unable to get Full Disk Access using exploit.", comment: "")
+        case .cowExploitFailedPatchd: return NSLocalizedString("Unable to patch installd using exploit.", comment: "")
         }
     }
     

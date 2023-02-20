@@ -161,23 +161,23 @@ final class InstallAppOperation: ResultOperation<InstalledApp>
             else if res == -15
             {
                 // try again
-                if UserDefaults.standard.enableMacDirtyCowExploit && UserDefaults.standard.isMacDirtyCowSupported
+                if UserDefaults.standard.enableCowExploit && UserDefaults.standard.isCowExploitSupported
                 {
                     patch3AppLimit
                     { result in
                         switch result
                         {
                         case .success:
-                            UserDefaults.standard.set(bootTime(), forKey: "mdcRanBootTime")
+                            UserDefaults.standard.set(bootTime(), forKey: "cowExploitRanBootTime")
                             print("patched sucessfully")
                         case .failure(let err):
                             switch err
                             {
                             case .NoFDA:
-                                self.finish(.failure(OperationError.mdcNoFDA))
+                                self.finish(.failure(OperationError.cowExploitNoFDA))
                                 return
                             case .FailedPatchd:
-                                self.finish(.failure(OperationError.mdcFailedPatchd))
+                                self.finish(.failure(OperationError.cowExploitFailedPatchd))
                                 return
                             }
                         }

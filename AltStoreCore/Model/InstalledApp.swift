@@ -17,7 +17,7 @@ public extension InstalledApp
 {
     static var freeAccountActiveAppsLimit: Int
     {
-        if UserDefaults.standard.enableMacDirtyCowExploit && UserDefaults.standard.isMacDirtyCowSupported
+        if UserDefaults.standard.enableCowExploit && UserDefaults.standard.isCowExploitSupported
         {
             return 99999
         }

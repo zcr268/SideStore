@@ -964,10 +964,10 @@ private extension MyAppsViewController
         {
             message = NSLocalizedString("Non-developer Apple IDs are limited to 3 apps and app extensions. Inactive apps don't count towards your total, but cannot be opened until activated.", comment: "")
             
-            if UserDefaults.standard.enableMacDirtyCowExploit
+            if UserDefaults.standard.enableCowExploit
             {
                 message += "\n\n"
-                message += NSLocalizedString("If you're using the MacDirtyCow exploit to remove the 3-app limit, you can install up to 10 apps and app extensions per Apple ID instead.", comment: "")
+                message += NSLocalizedString("If you've enabled the exploit in settings to remove the 3-app limit, you can install up to 10 apps and app extensions per Apple ID instead.", comment: "")
             }
         }
         else
