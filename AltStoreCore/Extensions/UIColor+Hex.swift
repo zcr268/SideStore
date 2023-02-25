@@ -20,24 +20,54 @@ public extension UIColor
         let hexString = String.init(format: "%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
         return hexString
     }
-    
-    // Borrowed from https://stackoverflow.com/a/33397427
-    convenience init?(hexString: String)
-    {
-        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int = UInt32()
-        Scanner(string: hex).scanHexInt32(&int)
-        let a, r, g, b: UInt32
-        switch hex.count {
+}
+
+public extension UIColor {
+    convenience init?(hexString: String) {
+        let hexString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner = Scanner(string: hexString)
+
+        if hexString.hasPrefix("#") {
+            scanner.scanLocation = 1
+            // TODO: Test if this works to replace the above deprecation @JoeMatt
+//            scanner.currentIndex = .init(utf16Offset: 1, in: hexString)
+        }
+
+        var hexNumber: UInt64 = 0
+
+        guard scanner.scanHexInt64(&hexNumber) else {
+            return nil
+        }
+
+        var alpha: UInt64 = 255
+        var red: UInt64 = 0
+        var green: UInt64 = 0
+        var blue: UInt64 = 0
+
+        switch hexString.count {
         case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+            red = ((hexNumber & 0xF00) >> 8) * 17
+            green = ((hexNumber & 0x0F0) >> 4) * 17
+            blue = (hexNumber & 0x00F) * 17
         case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+            red = (hexNumber & 0xFF0000) >> 16
+            green = (hexNumber & 0x00FF00) >> 8
+            blue = hexNumber & 0x0000FF
         case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+            alpha = (hexNumber & 0xFF000000) >> 24
+            red = (hexNumber & 0x00FF0000) >> 16
+            green = (hexNumber & 0x0000FF00) >> 8
+            blue = hexNumber & 0x000000FF
         default:
             return nil
         }
-        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+
+        self.init(
+            red: CGFloat(red) / 255,
+            green: CGFloat(green) / 255,
+            blue: CGFloat(blue) / 255,
+            alpha: CGFloat(alpha) / 255
+        )
     }
 }
+
