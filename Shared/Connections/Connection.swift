@@ -10,7 +10,12 @@ import Foundation
 import Network
 import SideKit
 
-public extension Connection
+public protocol SideConnection: Connection {
+    func __send(_ data: Data, completionHandler: @escaping (Bool, Error?) -> Void)
+    func __receiveData(expectedSize: Int, completionHandler: @escaping (Data?, Error?) -> Void)
+}
+
+public extension SideConnection
 {
     func send(_ data: Data, completionHandler: @escaping (Result<Void, ALTServerError>) -> Void)
     {
@@ -24,7 +29,7 @@ public extension Connection
             completionHandler(result)
         }
     }
-    
+
     func receiveData(expectedSize: Int, completionHandler: @escaping (Result<Data, ALTServerError>) -> Void)
     {
         self.__receiveData(expectedSize: expectedSize) { (data, error) in
@@ -32,7 +37,7 @@ public extension Connection
                 guard let nwError = failure as? NWError else { return ALTServerError.init(failure) }
                 return ALTServerError.lostConnection(underlyingError: nwError)
             }
-            
+
             completionHandler(result)
         }
     }

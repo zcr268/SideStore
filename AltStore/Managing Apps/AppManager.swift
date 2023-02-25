@@ -16,7 +16,7 @@ import WidgetKit
 
 import AltStoreCore
 import AltSign
-import Roxas
+import RoxasUI
 
 extension AppManager
 {

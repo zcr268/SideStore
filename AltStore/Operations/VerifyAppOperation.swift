@@ -9,7 +9,7 @@
 import Foundation
 
 import AltSign
-import Roxas
+import RoxasUI
 
 enum VerificationError: ALTLocalizedError
 {

@@ -13,7 +13,7 @@ import System
 
 import AltStoreCore
 import AltSign
-import Roxas
+import RoxasUI
 
 @available(iOS 14, *)
 protocol PatchAppContext

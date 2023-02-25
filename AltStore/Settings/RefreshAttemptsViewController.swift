@@ -9,7 +9,7 @@
 import UIKit
 
 import AltStoreCore
-import Roxas
+import RoxasUI
 
 @objc(RefreshAttemptTableViewCell)
 private final class RefreshAttemptTableViewCell: UITableViewCell

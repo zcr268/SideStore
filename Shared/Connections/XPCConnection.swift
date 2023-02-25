@@ -23,7 +23,7 @@ extension XPCConnection
     public static let machServiceNames = [unc0verMachServiceName, odysseyMachServiceName]
 }
 
-public class XPCConnection: NSObject, Connection
+public class XPCConnection: NSObject, SideConnection
 {
     public let xpcConnection: NSXPCConnection
     

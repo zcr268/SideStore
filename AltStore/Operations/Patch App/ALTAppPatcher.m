@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-@import Roxas;
+@import RoxasUI;
 
 #define CPU_SUBTYPE_PAC    0x80000000
 #define FAT_MAGIC 0xcafebabe

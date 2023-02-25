@@ -10,7 +10,7 @@ import Network
 
 import AltStoreCore
 import AltSign
-import Roxas
+import RoxasUI
 
 @objc(InstallAppOperation)
 final class InstallAppOperation: ResultOperation<InstalledApp>

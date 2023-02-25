@@ -10,7 +10,7 @@ import Foundation
 import Network
 import SideKit
 
-public class NetworkConnection: NSObject, Connection
+public class NetworkConnection: NSObject, SideConnection
 {
     public let nwConnection: NWConnection
     

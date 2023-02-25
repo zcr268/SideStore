@@ -268,11 +268,11 @@ public extension PatreonAPI
             {
                 let account = try result.get()
                 
-                if let context = account.managedObjectContext, !account.isPatron
-                {
+//                if let context = account.managedObjectContext, !account.isPatron
+//                {
                     // Deactivate all beta apps now that we're no longer a patron.
                     //self.deactivateBetaApps(in: context)
-                }
+//                }
                 
                 try account.managedObjectContext?.save()
             }

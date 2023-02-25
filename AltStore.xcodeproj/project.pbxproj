@@ -45,6 +45,8 @@
 		B34AFD1529A9D31200E637B4 /* ServerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFD1229A9D2C100E637B4 /* ServerProtocol.swift */; };
 		B34AFD1729A9D9FC00E637B4 /* RoxasUI in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFD1629A9D9FC00E637B4 /* RoxasUI */; };
 		B34AFD1929A9DB0200E637B4 /* SideKit in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFD1829A9DB0200E637B4 /* SideKit */; };
+		B34AFD1B29A9DFA200E637B4 /* NSError+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFD1A29A9DFA200E637B4 /* NSError+AltStore.swift */; };
+		B34AFD1C29A9DFA200E637B4 /* NSError+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFD1A29A9DFA200E637B4 /* NSError+AltStore.swift */; };
 		B376FE3E29258C8900E18883 /* OSLog+SideStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B376FE3D29258C8900E18883 /* OSLog+SideStore.swift */; };
 		B39F16132918D7C5002E9404 /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39F16122918D7C5002E9404 /* Consts.swift */; };
 		B39F16152918D7DA002E9404 /* Consts+Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39F16142918D7DA002E9404 /* Consts+Proxy.swift */; };
@@ -495,6 +497,7 @@
 		B343F87B295F7C5D002B1159 /* tlv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tlv.c; sourceTree = "<group>"; };
 		B343F886295F7F9B002B1159 /* libfragmentzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libfragmentzip.xcodeproj; path = Dependencies/libfragmentzip/libfragmentzip.xcodeproj; sourceTree = "<group>"; };
 		B34AFD1229A9D2C100E637B4 /* ServerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerProtocol.swift; path = ../../../../Downloads/ServerProtocol.swift; sourceTree = "<group>"; };
+		B34AFD1A29A9DFA200E637B4 /* NSError+AltStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+AltStore.swift"; sourceTree = "<group>"; };
 		B376FE3D29258C8900E18883 /* OSLog+SideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+SideStore.swift"; sourceTree = "<group>"; };
 		B39575F4284F29E20080B4FF /* Roxas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Roxas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B39F16122918D7C5002E9404 /* Consts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
@@ -1657,6 +1660,7 @@
 		BFF767C32489A6800097E58C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				B34AFD1A29A9DFA200E637B4 /* NSError+AltStore.swift */,
 				BFBAC8852295C90300587369 /* Result+Conveniences.swift */,
 				BF1E314122A05D4C00370A3C /* Bundle+AltStore.swift */,
 				BF1FE357251A9FB000C3CE09 /* NSXPCConnection+MachServices.swift */,
@@ -2171,6 +2175,7 @@
 				BFECAC8924FD950E0077C41F /* ConnectionManager.swift in Sources */,
 				BFECAC9524FD98BB0077C41F /* CFNotificationName+AltStore.m in Sources */,
 				BFECAC8E24FD950E0077C41F /* Connection.swift in Sources */,
+				B34AFD1B29A9DFA200E637B4 /* NSError+AltStore.swift in Sources */,
 				BF10EB34248730750055E6DB /* main.swift in Sources */,
 				BF8CAE462489E772004D6CCE /* AppManager.swift in Sources */,
 				BFECAC9024FD950E0077C41F /* Bundle+AltStore.swift in Sources */,
@@ -2304,6 +2309,7 @@
 				BF8B17EB250AC40000F8157F /* FileManager+SharedDirectories.swift in Sources */,
 				BF66EEE02501AECA007EE018 /* Account.swift in Sources */,
 				BF66EED52501AECA007EE018 /* AltStore.xcdatamodeld in Sources */,
+				B34AFD1C29A9DFA200E637B4 /* NSError+AltStore.swift in Sources */,
 				BFAECC582501B0A400528F27 /* ALTConstants.m in Sources */,
 				D5F99A1A28D12B1400476A16 /* StoreApp10ToStoreApp11Policy.swift in Sources */,
 				BFAECC592501B0A400528F27 /* Result+Conveniences.swift in Sources */,

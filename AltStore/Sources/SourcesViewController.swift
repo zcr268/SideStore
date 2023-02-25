@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 import AltStoreCore
-import Roxas
+import RoxasUI
 
 struct SourceError: LocalizedError
 {

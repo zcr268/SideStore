@@ -10,7 +10,7 @@ import UIKit
 import SafariServices
 
 import AltStoreCore
-import Roxas
+import RoxasUI
 
 import Nuke
 

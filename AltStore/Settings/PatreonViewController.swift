@@ -11,7 +11,7 @@ import SafariServices
 import AuthenticationServices
 
 import AltStoreCore
-import Roxas
+import RoxasUI
 
 extension PatreonViewController
 {

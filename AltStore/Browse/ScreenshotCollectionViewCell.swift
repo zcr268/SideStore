@@ -8,7 +8,7 @@
 
 import UIKit
 
-import Roxas
+import RoxasUI
 
 @objc(ScreenshotCollectionViewCell)
 class ScreenshotCollectionViewCell: UICollectionViewCell

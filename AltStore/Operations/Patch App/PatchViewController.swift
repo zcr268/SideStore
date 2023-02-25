@@ -11,7 +11,7 @@ import Combine
 
 import AltStoreCore
 import AltSign
-import Roxas
+import RoxasUI
 
 @available(iOS 14.0, *)
 extension PatchViewController
