@@ -8,17 +8,19 @@
 
 import Foundation
 import Network
+import SideKit
 
 public extension Connection
 {
     func send(_ data: Data, completionHandler: @escaping (Result<Void, ALTServerError>) -> Void)
     {
         self.__send(data) { (success, error) in
-            let result = Result(success, error).mapError { (error) -> ALTServerError in
-                guard let nwError = error as? NWError else { return ALTServerError(error) }
-                return ALTServerError(.lostConnection, underlyingError: nwError)
+            let result = Result(success, error).mapError { (failure :Error) -> ALTServerError in
+                guard let nwError = failure as? NWError else { return ALTServerError.init(failure) }
+                return ALTServerError.lostConnection(underlyingError: nwError)
+
             }
-            
+
             completionHandler(result)
         }
     }
@@ -26,9 +28,9 @@ public extension Connection
     func receiveData(expectedSize: Int, completionHandler: @escaping (Result<Data, ALTServerError>) -> Void)
     {
         self.__receiveData(expectedSize: expectedSize) { (data, error) in
-            let result = Result(data, error).mapError { (error) -> ALTServerError in
-                guard let nwError = error as? NWError else { return ALTServerError(error) }
-                return ALTServerError(.lostConnection, underlyingError: nwError)
+            let result = Result(data, error).mapError { (failure :Error) -> ALTServerError in
+                guard let nwError = failure as? NWError else { return ALTServerError.init(failure) }
+                return ALTServerError.lostConnection(underlyingError: nwError)
             }
             
             completionHandler(result)
@@ -72,7 +74,7 @@ public extension Connection
         }
         catch
         {
-            finish(.failure(.init(.invalidResponse, underlyingError: error)))
+            finish(.failure(.invalidResponse(underlyingError: error)))
         }
     }
     

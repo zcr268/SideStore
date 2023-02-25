@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SideKit
 
 @objc private protocol XPCConnectionProxy
 {
@@ -44,7 +45,7 @@ public class XPCConnection: NSObject, Connection
         super.init()
         
         xpcConnection.interruptionHandler = {
-            self.error = ALTServerError(.lostConnection)
+            self.error = ALTServerError.lostConnection(underlyingError: nil)
         }
                 
         xpcConnection.exportedObject = self

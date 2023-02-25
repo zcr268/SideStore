@@ -8,6 +8,7 @@
 
 import Foundation
 import Network
+import SideKit
 
 public protocol RequestHandler
 {
@@ -26,24 +27,25 @@ public protocol RequestHandler
 
 public protocol ConnectionHandler: AnyObject
 {
-    var connectionHandler: ((Connection) -> Void)? { get set }
-    var disconnectionHandler: ((Connection) -> Void)? { get set }
+    associatedtype ConnectionType = Connection
+    var connectionHandler: ((ConnectionType) -> Void)? { get set }
+    var disconnectionHandler: ((ConnectionType) -> Void)? { get set }
     
     func startListening()
     func stopListening()
 }
 
-public class ConnectionManager<RequestHandlerType: RequestHandler>
+public class ConnectionManager<RequestHandlerType: RequestHandler, ConnectionType: NetworkConnection & AnyObject, ConnectionHandlerType: ConnectionHandler> where ConnectionHandlerType.ConnectionType == ConnectionType
 {
     public let requestHandler: RequestHandlerType
-    public let connectionHandlers: [ConnectionHandler]
+    public let connectionHandlers: [ConnectionHandlerType]
     
     public var isStarted = false
     
-    private var connections = [Connection]()
+    private var connections = [ConnectionType]()
     private let connectionsLock = NSLock()
     
-    public init(requestHandler: RequestHandlerType, connectionHandlers: [ConnectionHandler])
+    public init(requestHandler: RequestHandlerType, connectionHandlers: [ConnectionHandlerType])
     {
         self.requestHandler = requestHandler
         self.connectionHandlers = connectionHandlers
@@ -87,7 +89,7 @@ public class ConnectionManager<RequestHandlerType: RequestHandler>
 
 private extension ConnectionManager
 {
-    func prepare(_ connection: Connection)
+    func prepare(_ connection: ConnectionType)
     {
         self.connectionsLock.lock()
         defer { self.connectionsLock.unlock() }
@@ -98,7 +100,7 @@ private extension ConnectionManager
         self.handleRequest(for: connection)
     }
     
-    func disconnect(_ connection: Connection)
+    func disconnect(_ connection: ConnectionType)
     {
         self.connectionsLock.lock()
         defer { self.connectionsLock.unlock() }
@@ -107,7 +109,7 @@ private extension ConnectionManager
         self.connections.remove(at: index)
     }
     
-    func handleRequest(for connection: Connection)
+    func handleRequest(for connection: ConnectionType)
     {
         func finish<T: ServerMessageProtocol>(_ result: Result<T, Error>)
         {
@@ -167,7 +169,7 @@ private extension ConnectionManager
                 }
                 
             case .success(.unknown):
-                finish(Result<ErrorResponse, Error>.failure(ALTServerError(.unknownRequest)))
+                finish(Result<ErrorResponse, Error>.failure(ALTServerError.unknownRequest))
             }
         }
     }

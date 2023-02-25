@@ -8,6 +8,7 @@
 
 import Foundation
 import Network
+import SideKit
 
 public class NetworkConnection: NSObject, Connection
 {
@@ -29,7 +30,7 @@ public class NetworkConnection: NSObject, Connection
     {
         self.nwConnection.receive(minimumIncompleteLength: expectedSize, maximumLength: expectedSize) { (data, context, isComplete, error) in
             guard data != nil || error != nil else {
-                return completionHandler(nil, ALTServerError(.lostConnection))
+                return completionHandler(nil, ALTServerError.lostConnection(underlyingError: error))
             }
             
             completionHandler(data, error)

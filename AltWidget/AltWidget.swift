@@ -14,6 +14,8 @@ import CoreData
 import AltStoreCore
 import AltSign
 
+import RoxasUIKit
+
 struct AppEntry: TimelineEntry
 {
     var date: Date
