@@ -935,11 +935,12 @@
 			path = "libimobiledevice-glue/src";
 			sourceTree = "<group>";
 		};
-		B33FFB8F295F8CF2002259E6 /* Recovered References */ = {
+		B326763F29AC4FAD00B84318 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				BF58047C246A28F7008AE704 /* AltBackup */,
 			);
-			name = "Recovered References";
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		B343F848295F6321002B1159 /* Products */ = {
@@ -1439,6 +1440,7 @@
 		BFD247612284B9A500981D42 = {
 			isa = PBXGroup;
 			children = (
+				B326763F29AC4FAD00B84318 /* Sources */,
 				B3C39607284F4C8400DA9E2F /* Build.xcconfig */,
 				B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */,
 				B3C39608284F4C8400DA9E2F /* CodeSigning.xcconfig.sample */,
@@ -1450,7 +1452,6 @@
 				BF66EE7F2501AE50007EE018 /* AltStoreCore */,
 				BF1E315122A0616100370A3C /* Shared */,
 				BF45872C2298D31600BD7491 /* libimobiledevice */,
-				BF58047C246A28F7008AE704 /* AltBackup */,
 				BF18BFE824857D7900DD5981 /* AltDaemon */,
 				BF98916C250AABF3002ACF50 /* AltWidget */,
 				19104DB32909C06D00C49C7B /* EmotionalDamage */,
@@ -1458,7 +1459,6 @@
 				B343F886295F7F9B002B1159 /* libfragmentzip.xcodeproj */,
 				BFD247852284BB3300981D42 /* Frameworks */,
 				BFD2476B2284B9A500981D42 /* Products */,
-				B33FFB8F295F8CF2002259E6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -3268,16 +3268,16 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SideStore/SideKit.git";
 			requirement = {
-				branch = feature/swiftall;
-				kind = branch;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 		B34AFD0B29A9CF4000E637B4 /* XCRemoteSwiftPackageReference "Roxas" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JoeMatt/Roxas.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.2;
 			};
 		};
 		B3C395EF284F2DE700DA9E2F /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
