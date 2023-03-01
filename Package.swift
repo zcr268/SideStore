@@ -84,12 +84,12 @@ let dependencies: [Package.Dependency] = [
 ] // + dependencies_cargo
 
 let package = Package(
-    name: "SideStoreCore",
+    name: "SideStore",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v12),
-//        .tvOS(.v12),
-//        .macOS(.v12),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .macCatalyst(.v13),
     ],
 
     products: [
@@ -117,7 +117,7 @@ let package = Package(
 		.executableTarget(
 			name: "SideStore",
 			dependencies: [
-				"AltPatcher",
+				"SidePatcher",
 				"EmotionalDamage",
 				"MiniMuxerSwift",
 				"SideStoreCore",
@@ -175,16 +175,19 @@ let package = Package(
             dependencies: ["EmotionalDamage"]
         ),
 
-		// MARK: - AltPatcher
+		// MARK: - SidePatcher
 
 		.target(
-			name: "AltPatcher",
-			dependencies: []
+			name: "SidePatcher",
+			dependencies: [
+				.product(name: "Roxas", package: "Roxas"),
+				.product(name: "RoxasUI", package: "Roxas"),
+			]
 		),
 
 		.testTarget(
-			name: "AltPatcherTests",
-			dependencies: ["AltPatcher"]
+			name: "SidePatcherTests",
+			dependencies: ["SidePatcher"]
 		),
 
         // MARK: - MiniMuxer
@@ -286,6 +289,55 @@ let package = Package(
 		.testTarget(
 			name: "libfragmentzipTests",
 			dependencies: ["libfragmentzip"]
+		),
+
+		// MARK: - libmobiledevice
+		.target(
+			name: "libimobiledevice",
+			dependencies: [
+				"libimobiledevice-glue",
+				"libplist",
+				"libusbmuxd"
+			],
+			path: "Sources/libimobiledevice/libimobiledevice/",
+			exclude: [
+				"include/asprintf.h",
+				"include/Makefile.am",
+				"include/endianness.h"
+			],
+			publicHeadersPath: "include/libimobiledevice/"
+		),
+		.target(
+			name: "libimobiledevice-glue",
+			dependencies: [
+			],
+			path: "Sources/libimobiledevice/libimobiledevice-glue/",
+			exclude: [
+				"include/Makefile.am",
+				"include/endianness.h"
+			],
+			publicHeadersPath: "include/libimobiledevice-glue/"
+		),
+		.target(
+			name: "libplist",
+			dependencies: [
+			],
+			path: "Sources/libimobiledevice/libplist/",
+			exclude: [
+				"include/Makefile.am",
+			],
+			publicHeadersPath: "include/plist"
+		),
+		.target(
+			name: "libusbmuxd",
+			dependencies: [
+			],
+			path: "Sources/libimobiledevice/libusbmuxd/",
+			exclude: [
+				"include/Makefile.am",
+				"include/usbmuxd-proto.h"
+			],
+			publicHeadersPath: "include"
 		),
     ],
     swiftLanguageVersions: [.v5],
