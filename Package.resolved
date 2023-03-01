@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SideStore/AltSign",
       "state" : {
-        "branch" : "master",
-        "revision" : "b94d53372c62c2ecb1949b98bae1604d68162474"
+        "revision" : "9c63397f0fc6038c04b930dd2d10b030d508d6fa",
+        "version" : "1.0.2"
       }
     },
     {
@@ -25,6 +25,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "e754ab1c80920dd51a8e08290c912ac1c2ac8b58"
+      }
+    },
+    {
+      "identity" : "imobiledevice.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SideStore/iMobileDevice.swift",
+      "state" : {
+        "revision" : "74e481106dd155c0cd21bca6795fd9fe5f751654",
+        "version" : "1.0.5"
       }
     },
     {
@@ -88,6 +97,15 @@
       "state" : {
         "revision" : "7ea34a09b52c104077dea8e0b90f8dc55d43b36b",
         "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "swiftpmplugins",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JoeMatt/SwiftPMPlugins.git",
+      "state" : {
+        "revision" : "2e4833a3ca65d0aaa986138b8ef350b7f549ba28",
+        "version" : "1.0.0"
       }
     }
   ],

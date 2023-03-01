@@ -28,10 +28,13 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/kean/Nuke", from: "7.0.0"),
     .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.0"),
     .package(url: "https://github.com/microsoft/appcenter-sdk-apple", from: "4.2.0"),
-    .package(url: "https://github.com/SideStore/AltSign", branch: "master"),
+    .package(url: "https://github.com/SideStore/AltSign", from: "1.0.2"),
+	.package(url: "https://github.com/SideStore/iMobileDevice.swift", from: "1.0.5"),
+//	.package(path: "../iMobileDevice.swift"),
     .package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
     .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
-	.package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700"))
+	.package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700")),
+	.package(url: "https://github.com/JoeMatt/SwiftPMPlugins.git", .upToNextMinor(from: "1.0.0"))
 ] // + dependencies_cargo
 
 let package = Package(
@@ -59,9 +62,7 @@ let package = Package(
 			name: "SideStoreAppKit",
 			targets: ["SideStoreAppKit"]),
 
-		.plugin(name: "IntentBuilderPlugin", targets: ["IntentBuilderPlugin"]),
-		.plugin(name: "LoggerPlugin", targets: ["LoggerPlugin"])
-
+		.plugin(name: "CargoPlugin", targets: ["CargoPlugin"]),
     ],
 
     dependencies: dependencies,
@@ -80,6 +81,10 @@ let package = Package(
                 "Down",
                 "AltSign",
                 "SideKit",
+				"KeychainAccess",
+				"SemanticVersion",
+//				.product(name: "CrashReporter", package: "PLCrashReporter"),
+				.product(name: "libimobiledevice", package: "iMobileDevice.swift"),
                 .product(name: "Roxas", package: "Roxas"),
 				.product(name: "RoxasUI", package: "Roxas"),
                 .product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
@@ -117,8 +122,8 @@ let package = Package(
 				.linkedLibrary("AppleArchive")
             ],
 			plugins: [
-				"IntentBuilderPlugin",
-				"LoggerPlugin"
+				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
         ),
 
@@ -140,8 +145,6 @@ let package = Package(
 				.product(name: "AppCenterCrashes", package: "appcenter-sdk-apple"),
 			],
 			resources: [
-//				.process("Resources/Intents/Intents.intentdefinition"),
-//				.process("Resources/Intents/ViewApp.intentdefinition"),
 			],
 			linkerSettings: [
 				.linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst, .tvOS])),
@@ -171,8 +174,8 @@ let package = Package(
         .executableTarget(
             name: "SideWidget",
 			plugins: [
-				"IntentBuilderPlugin",
-				"LoggerPlugin"
+				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
         ),
 
@@ -214,10 +217,10 @@ let package = Package(
             name: "MiniMuxerSwift",
             dependencies: [
                 "minimuxer",
-                "libimobiledevice",
+				.product(name: "libimobiledevice", package: "iMobileDevice.swift")
             ],
 			plugins: [
-				"LoggerPlugin"
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
         ),
 
@@ -228,7 +231,10 @@ let package = Package(
 
         .testTarget(
             name: "MiniMuxerTests",
-            dependencies: ["MiniMuxerSwift"]
+            dependencies: [
+				"MiniMuxerSwift",
+				.product(name: "libimobiledevice", package: "iMobileDevice.swift")
+			]
         ),
 
         // MARK: - Shared
@@ -270,7 +276,8 @@ let package = Package(
                 .product(name: "Roxas", package: "Roxas"),
             ],
 			plugins: [
-				"IntentBuilderPlugin",
+				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
         ),
 
@@ -278,233 +285,16 @@ let package = Package(
             name: "SideStoreCoreTests",
             dependencies: [
                 "SideStoreCore",
-            ]
-        ),
-
-        // MARK: - libfragmentzip
-
-        .target(
-            name: "libfragmentzip",
-            dependencies: [],
-            sources: [
-                "libfragmentzip-source/libfragmentzip/libfragmentzip.c",
-            ],
-            cSettings: [
-                .headerSearchPath("libfragmentzip-source/libfragmentzip/include"),
-            ]
-        ),
-
-        .testTarget(
-            name: "libfragmentzipTests",
-            dependencies: ["libfragmentzip"]
-        ),
-
-        // MARK: - libmobiledevice
-
-        .target(
-            name: "libimobiledevice",
-            dependencies: [
-                "libimobiledevice-glue",
-//                "libplist",
-                "libusbmuxd",
-				"OpenSSL"
-            ],
-            path: "Sources/libimobiledevice/libimobiledevice/",
-            publicHeadersPath: "include/",
-			cSettings: [
-				.headerSearchPath("include/"),
-				.headerSearchPath("../dependencies/libimobiledevice"),
-				.headerSearchPath("../dependencies/libimobiledevice/common"),
-				.headerSearchPath("../dependencies/libimobiledevice/include"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
-				.headerSearchPath("../dependencies/libplist/include"),
-				.headerSearchPath("../dependencies/libusbmuxd/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags)
-			],
-			cxxSettings: [
-				.headerSearchPath("include/"),
-				.headerSearchPath("../dependencies/libimobiledevice"),
-				.headerSearchPath("../dependencies/libimobiledevice/common"),
-				.headerSearchPath("../dependencies/libimobiledevice/include"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
-				.headerSearchPath("../dependencies/libplist/include"),
-				.headerSearchPath("../dependencies/libusbmuxd/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags_cxx)
-			]
-        ),
-
-		// MARK: libmobiledevice-glue
-        .target(
-            name: "libimobiledevice-glue",
-            dependencies: [
-				"libplist"
-            ],
-            path: "Sources/libimobiledevice/libimobiledevice-glue/",
-            exclude: [
-				"src/libimobiledevice-glue-1.0.pc.in",
-				"src/common.h"
-			],
-            publicHeadersPath: "include",
-			cSettings: [
-				.headerSearchPath("include/"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
-				.headerSearchPath("../dependencies/libplist/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags)
-			],
-			cxxSettings: [
-				.headerSearchPath("include/"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
-				.headerSearchPath("../dependencies/libplist/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags_cxx)
-			]
-        ),
-
-        // MARK: libplist
-
-        .target(
-            name: "libplist",
-            dependencies: [
-            ],
-            path: "Sources/libimobiledevice/libplist/",
-            sources: [
-                "src/base64.c",
-                "src/bplist.c",
-                "src/bytearray.c",
-                "src/hashtable.c",
-				"src/jplist.c",
-				"src/jsmn.c",
-				"src/oplist.c",
-                "src/plist.c",
-                "src/ptrarray.c",
-                "src/time64.c",
-                "src/xplist.c",
-                "src/Array.cpp",
-                "src/Boolean.cpp",
-                "src/Data.cpp",
-                "src/Date.cpp",
-                "src/Dictionary.cpp",
-                "src/Integer.cpp",
-                "src/Key.cpp",
-                "src/Node.cpp",
-                "src/Real.cpp",
-                "src/String.cpp",
-                "src/Structure.cpp",
-                "src/Uid.cpp",
-				"libcnary/node.c",
-				"libcnary/node_list.c",
-            ],
-            publicHeadersPath: "include",
-            cSettings: [
-				.headerSearchPath("include/"),
-                .headerSearchPath("../dependencies/libplist/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags)
-            ],
-            cxxSettings: [
-				.headerSearchPath("include/"),
-				.headerSearchPath("../dependencies/libplist/include"),
-				.headerSearchPath("../dependencies/libplist/libcnary/include"),
-				.define("HAVE_OPENSSL"),
-				.define("HAVE_STPNCPY"),
-				.define("HAVE_STPCPY"),
-				.define("HAVE_VASPRINTF"),
-				.define("HAVE_ASPRINTF"),
-				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-				.define("HAVE_GETIFADDRS"),
-				.define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags_cxx)
-            ]
-        ),
-
-        // MARK: libusbmuxd
-
-        .target(
-            name: "libusbmuxd",
-            dependencies: [
-//				"libplist",
-				"libimobiledevice-glue"
-            ],
-            path: "Sources/libimobiledevice/libusbmuxd/",
-            sources: [
-                "src/libusbmuxd.c",
-            ],
-            publicHeadersPath: "include",
-            cSettings: [
-				.headerSearchPath("../dependencies/libplist/include"),
-				.headerSearchPath("../dependencies/libplist/libcnary/include"),
-				.headerSearchPath("../dependencies/libusbmuxd/include"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include/"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
-                .define("HAVE_OPENSSL"),
-                .define("HAVE_STPNCPY"),
-                .define("HAVE_STPCPY"),
-                .define("HAVE_VASPRINTF"),
-                .define("HAVE_ASPRINTF"),
-                .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-                .define("HAVE_GETIFADDRS"),
-                .define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags)
-            ],
-            cxxSettings: [
-				.headerSearchPath("../dependencies/libplist/include"),
-				.headerSearchPath("../dependencies/libplist/libcnary/include"),
-				.headerSearchPath("../dependencies/libusbmuxd/include"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include/"),
-				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
-                .define("HAVE_OPENSSL"),
-                .define("HAVE_STPNCPY"),
-                .define("HAVE_STPCPY"),
-                .define("HAVE_VASPRINTF"),
-                .define("HAVE_ASPRINTF"),
-                .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
-                .define("HAVE_GETIFADDRS"),
-                .define("HAVE_STRNDUP"),
-				.unsafeFlags(unsafe_flags_cxx)
+				"KeychainAccess",
+				"AltSign",
+				"SemanticVersion",
+				"SideKit"
             ]
         ),
 
 		// MARK: - Plugins
-		.plugin(name: "IntentBuilderPlugin", capability: .buildTool()),
-		.plugin(name: "LoggerPlugin", capability: .buildTool()),
+		.plugin(name: "CargoPlugin", capability: .buildTool()),
+//		.plugin(name: "CargoPlugin-Generate", capability: .command(intent: PluginCommandIntent)),
 
     ],
     swiftLanguageVersions: [.v5],

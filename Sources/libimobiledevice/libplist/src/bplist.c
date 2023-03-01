@@ -1,1 +1,0 @@
-../../dependencies/libplist/src/bplist.c

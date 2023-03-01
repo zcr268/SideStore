@@ -1,1 +1,0 @@
-../../dependencies/libimobiledevice/src/companion_proxy.h

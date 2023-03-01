@@ -1,1 +1,0 @@
-../../dependencies/libimobiledevice/src/syslog_relay.c

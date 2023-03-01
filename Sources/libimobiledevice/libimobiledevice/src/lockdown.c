@@ -1,1 +1,0 @@
-../../dependencies/libimobiledevice/src/lockdown.c

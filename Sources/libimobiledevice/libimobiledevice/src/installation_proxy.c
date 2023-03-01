@@ -1,1 +1,0 @@
-../../dependencies/libimobiledevice/src/installation_proxy.c
