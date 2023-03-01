@@ -8,11 +8,6 @@
 
 import Foundation
 
-public enum ALTPatreonBenefitType: String, Codable, Equatable, CaseIterable, Hashable {
-	case betaAccess = "7585304"
-	case credits 	= "8490206"
-}
-
 extension PatreonAPI {
     struct BenefitResponse: Decodable {
         var id: String

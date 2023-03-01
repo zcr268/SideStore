@@ -95,7 +95,12 @@ public class AppPermission: NSManagedObject, Decodable, Fetchable {
             usageDescription = try container.decode(String.self, forKey: .usageDescription)
 
             let rawType = try container.decode(String.self, forKey: .type)
-            type = ALTAppPermissionType(rawValue: rawType)
+			guard let type = ALTAppPermissionType(rawValue: rawType) else {
+				throw DecodingError.dataCorrupted(
+					DecodingError.Context(codingPath: [CodingKeys.type],
+										  debugDescription: "Invalid value for `ALTAppPermissionType` \"\(rawType)\""))
+			}
+			self.type = type
         } catch {
             if let context = managedObjectContext {
                 context.delete(self)

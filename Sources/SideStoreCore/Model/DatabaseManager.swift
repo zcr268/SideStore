@@ -172,7 +172,7 @@ public extension DatabaseManager {
 
 private extension DatabaseManager {
     func prepareDatabase(completionHandler: @escaping (Result<Void, Error>) -> Void) {
-        guard !Bundle.isAppExtension else { return completionHandler(.success(())) }
+		guard !Bundle.isAppExtension() else { return completionHandler(.success(())) }
 
         let context = persistentContainer.newBackgroundContext()
         context.performAndWait {

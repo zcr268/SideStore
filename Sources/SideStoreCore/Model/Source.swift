@@ -226,7 +226,12 @@ public class Source: NSManagedObject, Fetchable, Decodable {
             identifier = try container.decode(String.self, forKey: .identifier)
 
             let userInfo = try container.decodeIfPresent([String: String].self, forKey: .userInfo)
-            self.userInfo = userInfo?.reduce(into: [:]) { $0[ALTSourceUserInfoKey($1.key)] = $1.value }
+            self.userInfo = userInfo?.reduce(into: [:]) {
+				guard let infoKey: ALTSourceUserInfoKey = ALTSourceUserInfoKey(rawValue: $1.key) else {
+					return
+				}
+				$0[infoKey] = $1.value
+			}
 
             let apps = try container.decodeIfPresent([StoreApp].self, forKey: .apps) ?? []
             let appsByID = Dictionary(apps.map { ($0.bundleIdentifier, $0) }, uniquingKeysWith: { a, _ in a })

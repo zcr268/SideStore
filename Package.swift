@@ -117,6 +117,7 @@ let package = Package(
 		.executableTarget(
 			name: "SideStore",
 			dependencies: [
+				"AltPatcher",
 				"EmotionalDamage",
 				"MiniMuxerSwift",
 				"SideStoreCore",
@@ -173,6 +174,18 @@ let package = Package(
             name: "EmotionalDamageTests",
             dependencies: ["EmotionalDamage"]
         ),
+
+		// MARK: - AltPatcher
+
+		.target(
+			name: "AltPatcher",
+			dependencies: []
+		),
+
+		.testTarget(
+			name: "AltPatcherTests",
+			dependencies: ["AltPatcher"]
+		),
 
         // MARK: - MiniMuxer
 

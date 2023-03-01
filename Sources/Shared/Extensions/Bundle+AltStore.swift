@@ -7,7 +7,10 @@
 //
 
 import Foundation
+
+#if canImport(Shared)
 import Shared
+#endif
 
 public extension Bundle {
     enum Info {

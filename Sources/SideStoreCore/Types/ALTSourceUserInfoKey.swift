@@ -12,6 +12,13 @@ import Foundation
 public enum ALTSourceUserInfoKey: Int, CaseIterable {
     case patreonAccessToken
 
+	public init?(rawValue: String) {
+		switch rawValue {
+		case Self.patreonAccessToken.stringValue: self = .patreonAccessToken
+		default: return nil
+		}
+	}
+
     public var stringValue: String {
         switch self {
         case .patreonAccessToken:

@@ -13,14 +13,23 @@ import AltSign
 import Roxas
 
 public extension StoreApp {
-    #if ALPHA
-        static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
-    #elseif BETA
-		static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
-    #else
-		static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
-    #endif
-
+	#if SWIFT_PACKAGE
+		#if ALPHA
+			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+		#elseif BETA
+			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+		#else
+			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+		#endif
+	#else
+		#if ALPHA
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
+		#elseif BETA
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
+		#else
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
+		#endif
+	#endif
     static let dolphinAppID = "me.oatmealdome.dolphinios-njb"
 }
 

@@ -28,6 +28,29 @@ public enum ALTAppPermissionType: Int, CaseIterable {
     case siri
     case motion
 
+	public init?(rawValue: String) {
+		switch rawValue {
+		case "photos": self = .photos
+		case "camera": self = .camera
+		case "location": self = .location
+		case "contacts": self = .contacts
+		case "reminders": self = .reminders
+		case "appleMusic", "music": self = .appleMusic
+		case "microphone": self = .microphone
+		case "speechRecognition", "speech-recognition": self = .speechRecognition
+		case "backgroundAudio", "background-audio": self = .backgroundAudio
+		case "backgroundFetch", "background-fetch": self =  .backgroundFetch
+		case "bluetooth": self = .bluetooth
+		case "network": self = .network
+		case "calendars": self = .calendars
+		case "touchID", "touchid": self = .touchID
+		case "faceID", "faceid": self = .faceID
+		case "siri": self = .siri
+		case "motion": self = .motion
+		default: return nil
+		}
+	}
+
     public var stringValue: String {
         switch self {
         case .photos:
