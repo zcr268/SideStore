@@ -13,10 +13,12 @@ import MobileCoreServices
 import UIKit
 import UserNotifications
 import WidgetKit
+import Shared
 
 import AltSign
+import SideKit
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 extension AppManager {
     static let didFetchSourceNotification = Notification.Name("io.altstore.AppManager.didFetchSource")

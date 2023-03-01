@@ -8,7 +8,7 @@
 
 import Foundation
 import Network
-import RoxasUI
+import RoxasUIKit
 
 import AltSign
 import SideStoreCore

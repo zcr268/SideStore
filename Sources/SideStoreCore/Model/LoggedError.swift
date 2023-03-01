@@ -1,6 +1,6 @@
 //
 //  LoggedError.swift
-//  AltStoreCore
+//  SideStoreCore
 //
 //  Created by Riley Testut on 9/6/22.
 //  Copyright © 2022 Riley Testut. All rights reserved.

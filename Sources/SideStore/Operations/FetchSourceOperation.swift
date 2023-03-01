@@ -10,7 +10,7 @@ import CoreData
 import Foundation
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 @objc(FetchSourceOperation)
 final class FetchSourceOperation: ResultOperation<Source> {
@@ -46,7 +46,7 @@ final class FetchSourceOperation: ResultOperation<Source> {
                 do {
                     let (data, _) = try Result((data, response), error).get()
 
-                    let decoder = AltStoreCore.JSONDecoder()
+                    let decoder = SideStoreCore.JSONDecoder()
                     decoder.dateDecodingStrategy = .custom { decoder -> Date in
                         let container = try decoder.singleValueContainer()
                         let text = try container.decode(String.self)

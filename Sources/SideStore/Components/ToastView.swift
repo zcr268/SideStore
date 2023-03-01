@@ -6,9 +6,11 @@
 //  Copyright © 2019 Riley Testut. All rights reserved.
 //
 
-import RoxasUI
-
+import RoxasUIKit
+import Shared
 import SideStoreCore
+import SideKit
+import AltSign
 
 extension TimeInterval {
     static let shortToastViewDuration = 4.0
@@ -47,7 +49,7 @@ final class ToastView: RSTToastView {
 
         if
             let unwrappedUnderlyingError = underlyingError,
-            error.domain == AltServerErrorDomain && error.code == ALTServerError.Code.underlyingError.rawValue
+            error.domain == AltServerErrorDomain && error.code == -1 //ALTServerError.underlyingError().rawValue
         {
             // Treat underlyingError as the primary error.
 

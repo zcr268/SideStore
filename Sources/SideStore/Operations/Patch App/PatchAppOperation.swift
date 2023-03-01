@@ -10,10 +10,11 @@ import AppleArchive
 import Combine
 import System
 import UIKit
+import SidePatcher
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 @available(iOS 14, *)
 protocol PatchAppContext {
@@ -52,7 +53,7 @@ final class PatchAppOperation: ResultOperation<Void> {
 
     var progressHandler: ((Progress, String) -> Void)?
 
-    private let appPatcher = ALTAppPatcher()
+    private let appPatcher = SideAppPatcher()
     private lazy var patchDirectory: URL = self.context.temporaryDirectory.appendingPathComponent("Patch", isDirectory: true)
 
     private var cancellable: AnyCancellable?

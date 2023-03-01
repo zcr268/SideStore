@@ -102,7 +102,7 @@ void *injectApp(void *originalApp, size_t originalAppSize, void *appToInject, si
     return fatBuf;
 }
 
-@implementation ALTAppPatcher
+@implementation SideAppPatcher
 
 - (BOOL)patchAppBinaryAtURL:(NSURL *)appFileURL withBinaryAtURL:(NSURL *)patchFileURL error:(NSError *__autoreleasing *)error
 {

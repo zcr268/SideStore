@@ -22,57 +22,6 @@ let STATIC_LIBRARY = envBool("STATIC_LIBRARY")
 let unsafe_flags: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : []
 let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
 
-// let dependencies_cargo: [Package.Dependency] = {
-//	USE_CARGO ? [
-//		// CargoPlugin
-//		.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.3"),
-//		.package(url: "https://github.com/apple/swift-package-manager.git", branch: "release/5.7"),
-//		.package(url: "https://github.com/apple/swift-tools-support-core.git", branch: "release/5.7"),
-//	] : []
-// }()
-
-// let cargo_targets: [Target] = [
-//	.executableTarget(
-//		name: "Cargo",
-//		dependencies: [
-//			.product(name: "ArgumentParser", package: "swift-argument-parser"),
-//			.product(name: "SwiftPM-auto", package: "swift-package-manager"),
-//			.product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core")
-//		]
-//	),
-//
-//	.testTarget(
-//		name: "CargoTests",
-//		dependencies: ["Cargo"],
-//		exclude: [
-//			"swiftlint",
-//			"xcframework"
-//		]
-//	),
-//
-//	.plugin(
-//		name: "CargoPlugin",
-//		capability: .buildTool(),
-//		dependencies: [
-//			"Cargo"
-//		]
-//	),
-//
-//	.plugin(
-//		name: "CargoPlugin-Generate",
-//		capability: .command(
-//			intent: .custom(
-//				verb: "generate-code-from-rust",
-//				description: "Creates .c code from your `rust` code"
-//			),
-//			permissions: [
-//				.writeToPackageDirectory(reason: "This command generates source code")
-//			]
-//		),
-//		dependencies: ["Cargo"]
-//	)
-// ]
-
 let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/JoeMatt/Roxas", from: "1.2.2"),
     .package(url: "https://github.com/johnxnguyen/Down", branch: "master"),
@@ -89,9 +38,9 @@ let package = Package(
     name: "SideStore",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13),
-        .tvOS(.v13),
-        .macCatalyst(.v13),
+        .iOS(.v14),
+        .tvOS(.v14),
+        .macCatalyst(.v14),
         .macOS(.v11),
     ],
 
@@ -105,6 +54,14 @@ let package = Package(
             name: "SideWidget",
             targets: ["SideWidget"]
         ),
+
+		.library(
+			name: "SideStoreAppKit",
+			targets: ["SideStoreAppKit"]),
+
+		.plugin(name: "IntentBuilderPlugin", targets: ["IntentBuilderPlugin"]),
+		.plugin(name: "LoggerPlugin", targets: ["LoggerPlugin"])
+
     ],
 
     dependencies: dependencies,
@@ -124,15 +81,24 @@ let package = Package(
                 "AltSign",
                 "SideKit",
                 .product(name: "Roxas", package: "Roxas"),
-                .product(name: "RoxasUI", package: "Roxas"),
+				.product(name: "RoxasUI", package: "Roxas"),
                 .product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
                 .product(name: "AppCenterCrashes", package: "appcenter-sdk-apple"),
             ],
+			resources: [
+				.process("Resources/XIB"),
+				.process("Resources/Storyboards"),
+				.process("Resources/Base.lproj"),
+				.process("Resources/Assets"),
+				.process("Resources/Sounds"),
+				.process("Resources/Settings.bundle"),
+				.copy("Resources/JSON/apps-alpha.json"),
+				.copy("Resources/JSON/apps.json")
+			],
             linkerSettings: [
-                .linkedFramework("UIKit"),
+				.linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst, .tvOS])),
                 .linkedFramework("Avfoundation"),
                 .linkedFramework("Combine"),
-                .linkedFramework("AppleArchive"),
                 .linkedFramework("Network"),
                 .linkedFramework("CoreData"),
                 .linkedFramework("UniformTypeIdentifiers"),
@@ -148,13 +114,66 @@ let package = Package(
                 .linkedFramework("WidgetKit", .when(platforms: [.iOS, .macCatalyst])),
                 .linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
                 .linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
-            ]
+				.linkedLibrary("AppleArchive")
+            ],
+			plugins: [
+				"IntentBuilderPlugin",
+				"LoggerPlugin"
+			]
         ),
+
+		.target(
+			name: "SideStoreAppKit",
+			dependencies: [
+				"SidePatcher",
+				"EmotionalDamage",
+				"MiniMuxerSwift",
+				"SideStoreCore",
+				"Shared",
+				"Nuke",
+				"Down",
+				"AltSign",
+				"SideKit",
+				.product(name: "Roxas", package: "Roxas"),
+				.product(name: "RoxasUI", package: "Roxas"),
+				.product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
+				.product(name: "AppCenterCrashes", package: "appcenter-sdk-apple"),
+			],
+			resources: [
+//				.process("Resources/Intents/Intents.intentdefinition"),
+//				.process("Resources/Intents/ViewApp.intentdefinition"),
+			],
+			linkerSettings: [
+				.linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst, .tvOS])),
+				.linkedFramework("Avfoundation"),
+				.linkedFramework("Combine"),
+				.linkedFramework("Network"),
+				.linkedFramework("CoreData"),
+				.linkedFramework("UniformTypeIdentifiers"),
+				.linkedFramework("QuickLook", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("AuthenticationServices", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("SafariServices", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("Intents", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("IntentsUI", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("MessageUI", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("ARKit", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("CoreHaptics", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("AudioToolbox", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("WidgetKit", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
+				.linkedLibrary("AppleArchive")
+			]
+		),
 
         // MARK: - SideWidget
 
         .executableTarget(
-            name: "SideWidget"
+            name: "SideWidget",
+			plugins: [
+				"IntentBuilderPlugin",
+				"LoggerPlugin"
+			]
         ),
 
         // MARK: - EmotionalDamage
@@ -196,7 +215,10 @@ let package = Package(
             dependencies: [
                 "minimuxer",
                 "libimobiledevice",
-            ]
+            ],
+			plugins: [
+				"LoggerPlugin"
+			]
         ),
 
         .binaryTarget(
@@ -246,7 +268,10 @@ let package = Package(
                 "AltSign",
                 "SemanticVersion",
                 .product(name: "Roxas", package: "Roxas"),
-            ]
+            ],
+			plugins: [
+				"IntentBuilderPlugin",
+			]
         ),
 
         .testTarget(
@@ -280,7 +305,7 @@ let package = Package(
             name: "libimobiledevice",
             dependencies: [
                 "libimobiledevice-glue",
-                "libplist",
+//                "libplist",
                 "libusbmuxd",
 				"OpenSSL"
             ],
@@ -435,7 +460,7 @@ let package = Package(
         .target(
             name: "libusbmuxd",
             dependencies: [
-				"libplist",
+//				"libplist",
 				"libimobiledevice-glue"
             ],
             path: "Sources/libimobiledevice/libusbmuxd/",
@@ -476,6 +501,11 @@ let package = Package(
 				.unsafeFlags(unsafe_flags_cxx)
             ]
         ),
+
+		// MARK: - Plugins
+		.plugin(name: "IntentBuilderPlugin", capability: .buildTool()),
+		.plugin(name: "LoggerPlugin", capability: .buildTool()),
+
     ],
     swiftLanguageVersions: [.v5],
     cLanguageStandard: .gnu11,
@@ -512,3 +542,55 @@ func envBool(_ key: String) -> Bool {
 //            name: "SideDaemonTests",
 //            dependencies: ["SideDaemon"]
 //        ),
+
+
+// let dependencies_cargo: [Package.Dependency] = {
+//	USE_CARGO ? [
+//		// CargoPlugin
+//		.package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.3"),
+//		.package(url: "https://github.com/apple/swift-package-manager.git", branch: "release/5.7"),
+//		.package(url: "https://github.com/apple/swift-tools-support-core.git", branch: "release/5.7"),
+//	] : []
+// }()
+
+// let cargo_targets: [Target] = [
+//	.executableTarget(
+//		name: "Cargo",
+//		dependencies: [
+//			.product(name: "ArgumentParser", package: "swift-argument-parser"),
+//			.product(name: "SwiftPM-auto", package: "swift-package-manager"),
+//			.product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core")
+//		]
+//	),
+//
+//	.testTarget(
+//		name: "CargoTests",
+//		dependencies: ["Cargo"],
+//		exclude: [
+//			"swiftlint",
+//			"xcframework"
+//		]
+//	),
+//
+//	.plugin(
+//		name: "CargoPlugin",
+//		capability: .buildTool(),
+//		dependencies: [
+//			"Cargo"
+//		]
+//	),
+//
+//	.plugin(
+//		name: "CargoPlugin-Generate",
+//		capability: .command(
+//			intent: .custom(
+//				verb: "generate-code-from-rust",
+//				description: "Creates .c code from your `rust` code"
+//			),
+//			permissions: [
+//				.writeToPackageDirectory(reason: "This command generates source code")
+//			]
+//		),
+//		dependencies: ["Cargo"]
+//	)
+// ]

@@ -9,6 +9,9 @@ import Foundation
 import Network
 
 import SideStoreCore
+import Shared
+import SideKit
+import MiniMuxerSwift
 
 @objc(SendAppOperation)
 final class SendAppOperation: ResultOperation<Void> {
@@ -58,7 +61,7 @@ final class SendAppOperation: ResultOperation<Void> {
             }
 
         } else {
-            finish(.failure(ALTServerError(.underlyingError)))
+            finish(.failure(ALTServerError.unknownResponse))
         }
     }
 }

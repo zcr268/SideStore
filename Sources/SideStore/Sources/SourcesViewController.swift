@@ -10,7 +10,7 @@ import CoreData
 import UIKit
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 struct SourceError: LocalizedError {
     enum Code {

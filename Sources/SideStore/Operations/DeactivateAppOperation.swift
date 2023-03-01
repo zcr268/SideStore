@@ -11,7 +11,9 @@ import Foundation
 import AltSign
 import SideStoreCore
 import minimuxer
-import RoxasUI
+import MiniMuxerSwift
+import RoxasUIKit
+import SideKit
 
 @objc(DeactivateAppOperation)
 final class DeactivateAppOperation: ResultOperation<InstalledApp> {
@@ -47,7 +49,7 @@ final class DeactivateAppOperation: ResultOperation<InstalledApp> {
                 } catch let Uhoh.Bad(code) {
                     self.finish(.failure(minimuxer_to_operation(code: code)))
                 } catch {
-                    self.finish(.failure(ALTServerError(.unknownResponse)))
+                    self.finish(.failure(ALTServerError.unknownResponse))
                 }
             }
 

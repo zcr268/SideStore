@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ALTAppPatcher : NSObject
+@interface SideAppPatcher : NSObject
 
 - (BOOL)patchAppBinaryAtURL:(NSURL *)appFileURL withBinaryAtURL:(NSURL *)patchFileURL error:(NSError *_Nullable *)error;
 

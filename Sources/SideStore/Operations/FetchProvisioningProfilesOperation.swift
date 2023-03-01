@@ -10,7 +10,7 @@ import Foundation
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 @objc(FetchProvisioningProfilesOperation)
 final class FetchProvisioningProfilesOperation: ResultOperation<[String: ALTProvisioningProfile]> {

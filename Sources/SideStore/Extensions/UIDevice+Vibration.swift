@@ -8,6 +8,7 @@
 
 import AudioToolbox
 import CoreHaptics
+import UIKit
 
 private extension SystemSoundID {
     static let pop = SystemSoundID(1520)

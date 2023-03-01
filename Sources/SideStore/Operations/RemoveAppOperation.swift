@@ -10,6 +10,9 @@ import Foundation
 
 import SideStoreCore
 import minimuxer
+import MiniMuxerSwift
+import Shared
+import SideKit
 
 @objc(RemoveAppOperation)
 final class RemoveAppOperation: ResultOperation<InstalledApp> {
@@ -42,7 +45,7 @@ final class RemoveAppOperation: ResultOperation<InstalledApp> {
             } catch let Uhoh.Bad(code) {
                 self.finish(.failure(minimuxer_to_operation(code: code)))
             } catch {
-                self.finish(.failure(ALTServerError(.appDeletionFailed)))
+                self.finish(.failure(ALTServerError.appDeletionFailed))
             }
             DatabaseManager.shared.persistentContainer.performBackgroundTask { context in
                 self.progress.completedUnitCount += 1

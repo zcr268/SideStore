@@ -11,7 +11,7 @@ import SafariServices
 import UIKit
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 extension PatreonViewController {
     private enum Section: Int, CaseIterable {

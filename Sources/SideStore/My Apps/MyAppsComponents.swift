@@ -6,7 +6,7 @@
 //  Copyright © 2019 Riley Testut. All rights reserved.
 //
 
-import RoxasUI
+import RoxasUIKit
 import UIKit
 
 final class InstalledAppCollectionViewCell: UICollectionViewCell {

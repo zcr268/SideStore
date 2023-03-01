@@ -11,6 +11,7 @@ import IntentsUI
 import MessageUI
 import SafariServices
 import UIKit
+import os.log
 
 import AltSign
 
@@ -33,7 +34,19 @@ final class SelectTeamViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        completionHandler!(.success(teams?[indexPath.row]!))
+		precondition(completionHandler != nil)
+		precondition(teams != nil)
+		precondition(teams!.count <= indexPath.row)
+
+		guard let completionHandler = completionHandler else {
+			os_log("completionHandler was nil", type: .error)
+			return
+		}
+		guard let teams = teams, teams.count <= indexPath.row else {
+			os_log("teams nil or out of bounds", type: .error)
+			return
+		}
+        completionHandler(.success(teams[indexPath.row]))
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

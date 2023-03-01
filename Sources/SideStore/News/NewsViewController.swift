@@ -10,7 +10,7 @@ import SafariServices
 import UIKit
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 import Nuke
 

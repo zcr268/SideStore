@@ -8,7 +8,7 @@
 
 import UIKit
 
-import RoxasUI
+import RoxasUIKit
 
 final class SettingsHeaderFooterView: UITableViewHeaderFooterView {
     @IBOutlet var primaryLabel: UILabel!

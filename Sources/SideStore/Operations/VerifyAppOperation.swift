@@ -9,9 +9,11 @@
 import Foundation
 
 import AltSign
-import RoxasUI
+import RoxasUIKit
+import SideKit
+import Shared
 
-enum VerificationError: ALTLocalizedError {
+enum VerificationError: LocalizedError {
     case privateEntitlements(ALTApplication, entitlements: [String: Any])
     case mismatchedBundleIdentifiers(ALTApplication, sourceBundleID: String)
     case iOSVersionNotSupported(ALTApplication)

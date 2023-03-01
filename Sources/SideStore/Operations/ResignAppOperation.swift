@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RoxasUI
+import RoxasUIKit
 
 import AltSign
 import SideStoreCore

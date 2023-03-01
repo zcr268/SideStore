@@ -10,7 +10,7 @@ import UIKit
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 final class RefreshAltStoreViewController: UIViewController {
     var context: AuthenticatedOperationContext!

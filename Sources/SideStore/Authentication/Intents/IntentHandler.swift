@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 import SideStoreCore
+import Intents
 
 @available(iOS 14, *)
 final class IntentHandler: NSObject, RefreshAllIntentHandling {

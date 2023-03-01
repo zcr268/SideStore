@@ -10,7 +10,9 @@ import Network
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
+import MiniMuxerSwift
+import minimuxer
 
 @objc(InstallAppOperation)
 final class InstallAppOperation: ResultOperation<InstalledApp> {

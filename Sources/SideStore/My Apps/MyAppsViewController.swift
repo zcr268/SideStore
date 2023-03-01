@@ -13,7 +13,7 @@ import UIKit
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 import Nuke
 

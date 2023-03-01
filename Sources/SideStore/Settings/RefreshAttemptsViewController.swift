@@ -9,7 +9,7 @@
 import UIKit
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 @objc(RefreshAttemptTableViewCell)
 private final class RefreshAttemptTableViewCell: UITableViewCell {

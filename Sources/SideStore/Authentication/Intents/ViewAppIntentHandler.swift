@@ -7,6 +7,8 @@
 //
 
 import Intents
+import Shared
+import SideStoreCore
 
 @available(iOS 14, *)
 public class ViewAppIntentHandler: NSObject, ViewAppIntentHandling {

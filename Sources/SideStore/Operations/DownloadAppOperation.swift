@@ -7,10 +7,12 @@
 //
 
 import Foundation
-import RoxasUI
+import RoxasUIKit
 
 import AltSign
+import SideKit
 import SideStoreCore
+import Shared
 
 private extension DownloadAppOperation {
     struct DependencyError: ALTLocalizedError {

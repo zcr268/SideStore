@@ -14,7 +14,7 @@ import UserNotifications
 import AltSign
 import SideStoreCore
 import EmotionalDamage
-import RoxasUI
+import RoxasUIKit
 
 extension AppDelegate {
     static let openPatreonSettingsDeepLinkNotification = Notification.Name(Bundle.Info.appbundleIdentifier + ".OpenPatreonSettingsDeepLinkNotification")

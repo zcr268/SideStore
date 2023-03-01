@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-//! Project version number for ALTAppPatcher.
-FOUNDATION_EXPORT double ALTAppPatcherVersionNumber;
+//! Project version number for SideAppPatcher.
+FOUNDATION_EXPORT double SideAppPatcherVersionNumber;
 
-//! Project version string for ALTAppPatcher.
-FOUNDATION_EXPORT const unsigned char ALTAppPatcherVersionString[];
+//! Project version string for SideAppPatcher.
+FOUNDATION_EXPORT const unsigned char SideAppPatcherVersionString[];
 
 
 # pragma mark - SidePatcher

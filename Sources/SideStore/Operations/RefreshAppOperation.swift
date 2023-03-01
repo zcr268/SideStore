@@ -11,7 +11,8 @@ import Foundation
 import AltSign
 import SideStoreCore
 import minimuxer
-import RoxasUI
+import MiniMuxerSwift
+import RoxasUIKit
 
 @objc(RefreshAppOperation)
 final class RefreshAppOperation: ResultOperation<InstalledApp> {

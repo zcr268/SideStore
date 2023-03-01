@@ -8,6 +8,7 @@
 
 import Combine
 import minimuxer
+import MiniMuxerSwift
 import UIKit
 
 import SideStoreCore

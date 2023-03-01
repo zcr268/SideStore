@@ -34,7 +34,7 @@ private class PersistentContainer: RSTPersistentContainer {
     }
 }
 
-public class DatabaseManager {
+public final class DatabaseManager {
     public static let shared = DatabaseManager()
 
     public let persistentContainer: RSTPersistentContainer

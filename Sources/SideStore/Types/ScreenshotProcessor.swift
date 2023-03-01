@@ -7,6 +7,7 @@
 //
 
 import Nuke
+import UIKit
 
 struct ScreenshotProcessor: ImageProcessing {
     func process(image: Image, context _: ImageProcessingContext) -> Image? {

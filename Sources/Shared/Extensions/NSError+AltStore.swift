@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension NSError {
+public extension NSError {
     @objc(alt_localizedFailure)
     var localizedFailure: String? {
         let localizedFailure = (userInfo[NSLocalizedFailureErrorKey] as? String) ?? (NSError.userInfoValueProvider(forDomain: domain)?(self, NSLocalizedFailureErrorKey) as? String)
@@ -78,7 +78,7 @@ extension NSError {
     }
 }
 
-extension Error {
+public extension Error {
     var underlyingError: Error? {
         let underlyingError = (self as NSError).userInfo[NSUnderlyingErrorKey] as? Error
         return underlyingError
@@ -90,13 +90,13 @@ extension Error {
     }
 }
 
-protocol ALTLocalizedError: LocalizedError, CustomNSError {
+public protocol ALTLocalizedError: LocalizedError, CustomNSError {
     var failure: String? { get }
 
     var underlyingError: Error? { get }
 }
 
-extension ALTLocalizedError {
+public extension ALTLocalizedError {
     var errorUserInfo: [String: Any] {
         let userInfo = ([
             NSLocalizedDescriptionKey: errorDescription,

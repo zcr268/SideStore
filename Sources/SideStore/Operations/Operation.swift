@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import RoxasUI
+import RoxasUIKit
 
 class ResultOperation<ResultType>: Operation {
     var resultHandler: ((Result<ResultType, Error>) -> Void)?

@@ -11,7 +11,7 @@ import UIKit
 
 import AltSign
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 @available(iOS 14.0, *)
 extension PatchViewController {

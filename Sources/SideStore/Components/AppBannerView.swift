@@ -9,7 +9,7 @@
 import UIKit
 
 import SideStoreCore
-import RoxasUI
+import RoxasUIKit
 
 class AppBannerView: RSTNibView {
     override var accessibilityLabel: String? {

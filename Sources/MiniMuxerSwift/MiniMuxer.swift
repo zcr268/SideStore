@@ -7,7 +7,7 @@
 
 import Foundation
 import os.log
-import minimuxer
+@_exported import minimuxer
 
 public enum Uhoh: Error {
     case Good
