@@ -7,12 +7,15 @@
 [submodule "Dependencies/libplist"]
 	path = Dependencies/libplist
 	url = https://github.com/libimobiledevice/libplist.git
-[submodule "Dependencies/MarkdownAttributedString"]
-	path = Dependencies/MarkdownAttributedString
-	url = https://github.com/chockenberry/MarkdownAttributedString.git
 [submodule "Dependencies/libimobiledevice-glue"]
 	path = Dependencies/libimobiledevice-glue
 	url = https://github.com/libimobiledevice/libimobiledevice-glue
-[submodule "Dependencies/libfragmentzip"]
-	path = Dependencies/libfragmentzip
+[submodule "Sources/libfragmentzip"]
+	path = Sources/libfragmentzip/libfragmentzip-source
 	url = https://github.com/SideStore/libfragmentzip.git
+[submodule "Dependencies/em_proxy"]
+	path = Dependencies/em_proxy
+	url = https://github.com/SideStore/em_proxy.git
+[submodule "Dependencies/minimuxer"]
+	path = Dependencies/minimuxer
+	url = https://github.com/SideStore/minimuxer.git
