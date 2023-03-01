@@ -71,16 +71,19 @@ let STATIC_LIBRARY = envBool("STATIC_LIBRARY")
 // ]
 
 let dependencies: [Package.Dependency] = [
-	.package(url: "https://github.com/JoeMatt/Roxas", from: "1.2.2"),
-	.package(url: "https://github.com/johnxnguyen/Down", branch: "master"),
-	.package(url: "https://github.com/kean/Nuke", from: "7.0.0"),
-	.package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.0"),
-//	.package(url: "https://github.com/krzyzanowskim/OpenSSL", from: "1.1.180"),
-	.package(url: "https://github.com/microsoft/appcenter-sdk-apple", from: "4.2.0"),
-	.package(url: "https://github.com/SideStore/AltSign", branch: "master"),
-	.package(url: "https://github.com/SideStore/SideKit", branch: "main"),
-	.package(url: "https://github.com/sindresorhus/LaunchAtLogin", from: "4.1.0"),
-	.package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
+    .package(url: "https://github.com/JoeMatt/Roxas", from: "1.2.2"),
+    .package(url: "https://github.com/johnxnguyen/Down", branch: "master"),
+    .package(url: "https://github.com/kean/Nuke", from: "7.0.0"),
+    .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.0"),
+    .package(url: "https://github.com/microsoft/appcenter-sdk-apple", from: "4.2.0"),
+    .package(url: "https://github.com/SideStore/AltSign", branch: "master"),
+    //	.package(path: "../AltSign"),
+
+    .package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
+    //	.package(path: "../SideKit"),
+
+    //	.package(url: "https://github.com/sindresorhus/LaunchAtLogin", from: "4.1.0"),
+    .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
 ] // + dependencies_cargo
 
 let package = Package(
@@ -90,73 +93,84 @@ let package = Package(
         .iOS(.v13),
         .tvOS(.v13),
         .macCatalyst(.v13),
+        .macOS(.v11),
     ],
 
     products: [
-		.executable(
-			name: "SideStore",
-			targets: ["SideStore"]),
-
-		.executable(
-			name: "SideWidget",
-			targets: ["SideWidget"]),
+        .executable(
+            name: "SideStore",
+            targets: ["SideStore"]
+        ),
 
         .executable(
-            name: "SideDaemon",
-            targets: ["SideDaemon"]),
+            name: "SideWidget",
+            targets: ["SideWidget"]
+        ),
+
+        //        .executable(
+        //            name: "SideDaemon",
+        //            targets: ["SideDaemon"]),
 
         .library(name: "EmotionalDamage", targets: ["EmotionalDamage"]),
         .library(name: "MiniMuxerSwift", targets: ["MiniMuxerSwift"]),
-		.library(name: "SideStoreCore", targets: ["SideStoreCore"]),
+        .library(name: "SideStoreCore", targets: ["SideStoreCore"]),
+
+			.library(name: "libplist", type: .dynamic, targets: ["libplist"]),
+        .library(name: "libusbmuxd", type: .dynamic, targets: ["libusbmuxd"]),
+        .library(name: "libimobiledevice", type: .dynamic, targets: ["libimobiledevice"]),
+        .library(name: "libimobiledevice-glue", type: .dynamic, targets: ["libimobiledevice-glue"]),
+
     ],
 
     dependencies: dependencies,
     targets: [
+        // MARK: - SideStore
 
-		// MARK: - SideStore
-		.executableTarget(
-			name: "SideStore",
-			dependencies: [
-				"SidePatcher",
-				"EmotionalDamage",
-				"MiniMuxerSwift",
-				"SideStoreCore",
-				"Shared",
-				.product(name: "Down", package: "Down"),
-				.product(name: "AltSign", package: "AltSign"),
-				.product(name: "Nuke", package: "Nuke"),
-				.product(name: "Roxas", package: "Roxas"),
-				.product(name: "RoxasUI", package: "Roxas"),
-				.product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
-				.product(name: "AppCenterCrashes", package: "appcenter-sdk-apple")
-			],
-			linkerSettings: [
-				.linkedFramework("UIKit"),
-				.linkedFramework("Avfoundation"),
-				.linkedFramework("Combine"),
-				.linkedFramework("AppleArchive"),
-				.linkedFramework("Network"),
-				.linkedFramework("CoreData"),
-				.linkedFramework("UniformTypeIdentifiers"),
-				.linkedFramework("QuickLook", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("AuthenticationServices", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("SafariServices", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("Intents", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("IntentsUI", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("MessageUI", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("ARKit", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("CoreHaptics", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("AudioToolbox", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("WidgetKit", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
-				.linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
-			]
-		),
+        .executableTarget(
+            name: "SideStore",
+            dependencies: [
+                "SidePatcher",
+                "EmotionalDamage",
+                "MiniMuxerSwift",
+                "SideStoreCore",
+                "Shared",
+                "Nuke",
+                "Down",
+                "AltSign",
+                "SideKit",
+                .product(name: "Roxas", package: "Roxas"),
+                .product(name: "RoxasUI", package: "Roxas"),
+                .product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
+                .product(name: "AppCenterCrashes", package: "appcenter-sdk-apple"),
+            ],
+            linkerSettings: [
+                .linkedFramework("UIKit"),
+                .linkedFramework("Avfoundation"),
+                .linkedFramework("Combine"),
+                .linkedFramework("AppleArchive"),
+                .linkedFramework("Network"),
+                .linkedFramework("CoreData"),
+                .linkedFramework("UniformTypeIdentifiers"),
+                .linkedFramework("QuickLook", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("AuthenticationServices", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("SafariServices", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("Intents", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("IntentsUI", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("MessageUI", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("ARKit", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("CoreHaptics", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("AudioToolbox", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("WidgetKit", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
+            ]
+        ),
 
-		// MARK: - SideWidget
-		.executableTarget(
-			name: "SideWidget"
-		),
+        // MARK: - SideWidget
+
+        .executableTarget(
+            name: "SideWidget"
+        ),
 
         // MARK: - EmotionalDamage
 
@@ -175,28 +189,31 @@ let package = Package(
             dependencies: ["EmotionalDamage"]
         ),
 
-		// MARK: - SidePatcher
+        // MARK: - SidePatcher
 
-		.target(
-			name: "SidePatcher",
-			dependencies: [
-				.product(name: "Roxas", package: "Roxas"),
-				.product(name: "RoxasUI", package: "Roxas"),
-			]
-		),
+        .target(
+            name: "SidePatcher",
+            dependencies: [
+                .product(name: "Roxas", package: "Roxas"),
+                .product(name: "RoxasUI", package: "Roxas"),
+            ]
+        ),
 
-		.testTarget(
-			name: "SidePatcherTests",
-			dependencies: ["SidePatcher"]
-		),
+        .testTarget(
+            name: "SidePatcherTests",
+            dependencies: ["SidePatcher"]
+        ),
 
         // MARK: - MiniMuxer
 
         .target(
             name: "MiniMuxerSwift",
-            dependencies: ["minimuxer"],
+            dependencies: [
+                "minimuxer",
+                "libimobiledevice",
+            ],
             cSettings: [
-//                .headerSearchPath("Dependencies/minimuxer/include"),
+                //                .headerSearchPath("Dependencies/minimuxer/include"),
             ],
             cxxSettings: [
             ],
@@ -220,12 +237,19 @@ let package = Package(
 
         .target(
             name: "Shared",
-            dependencies: ["SideKit"]
+            dependencies: [
+                "SideKit",
+                "AltSign",
+            ]
         ),
 
         .testTarget(
             name: "SharedTests",
-            dependencies: ["Shared"]
+            dependencies: [
+                "Shared",
+                "SideKit",
+                "AltSign",
+            ]
         ),
 
         // MARK: - SideBackup
@@ -237,112 +261,251 @@ let package = Package(
 
         // MARK: - SideDaemon
 
-        .executableTarget(
-            name: "SideDaemon",
-            dependencies: [
-				"Shared",
-				.product(name: "AltSign", package: "AltSign"),
-				.product(name: "LaunchAtLogin", package: "LaunchAtLogin"),
-			]
-        ),
-
-        .testTarget(
-            name: "SideDaemonTests",
-            dependencies: ["SideDaemon"]
-        ),
+        //        .executableTarget(
+        //            name: "SideDaemon",
+        //            dependencies: [
+        //				"Shared",
+        //				.product(name: "SideKit", package: "SideKit"),
+        //				.product(name: "AltSign", package: "AltSign"),
+        //				.product(name: "CoreCrypto", package: "AltSign"),
+        //				.product(name: "CCoreCrypto", package: "AltSign"),
+        //				.product(name: "LaunchAtLogin", package: "LaunchAtLogin"),
+        //			]
+        //        ),
+        //
+        //        .testTarget(
+        //            name: "SideDaemonTests",
+        //            dependencies: ["SideDaemon"]
+        //        ),
 
         // MARK: - SideStoreCore
 
         .target(
             name: "SideStoreCore",
             dependencies: [
-				"Shared",
-				.product(name: "Roxas", package: "Roxas"),
-				.product(name: "AltSign", package: "AltSign"),
-				.product(name: "KeychainAccess", package: "KeychainAccess"),
-				.product(name: "SemanticVersion", package: "SemanticVersion"),
-			],
-			swiftSettings: [
-				.unsafeFlags([
-//					"--xcconfig-overrides", "AltStoreCore.xconfig"
-				])
-			]
+                "Shared",
+                "KeychainAccess",
+                "AltSign",
+                "SemanticVersion",
+                .product(name: "Roxas", package: "Roxas"),
+            ]
+            //			swiftSettings: [
+            //				.unsafeFlags([
+            ////					"--xcconfig-overrides", "AltStoreCore.xconfig"
+            //				])
+            //			]
         ),
 
         .testTarget(
             name: "SideStoreCoreTests",
-            dependencies: ["SideStoreCore"]
+            dependencies: [
+                "SideStoreCore",
+            ]
         ),
 
-		// MARK: - libfragmentzip
-		.target(
-			name: "libfragmentzip",
-			dependencies: [],
-			sources: [
-				"libfragmentzip-source/libfragmentzip/libfragmentzip.c"
+        // MARK: - libfragmentzip
+
+        .target(
+            name: "libfragmentzip",
+            dependencies: [],
+            sources: [
+                "libfragmentzip-source/libfragmentzip/libfragmentzip.c",
+            ],
+            cSettings: [
+                .headerSearchPath("libfragmentzip-source/libfragmentzip/include"),
+            ]
+        ),
+
+        .testTarget(
+            name: "libfragmentzipTests",
+            dependencies: ["libfragmentzip"]
+        ),
+
+        // MARK: - libmobiledevice
+
+        .target(
+            name: "libimobiledevice",
+            dependencies: [
+                "libimobiledevice-glue",
+                "libplist",
+                "libusbmuxd",
+            ],
+            path: "Sources/libimobiledevice/libimobiledevice/",
+            exclude: [
+                "include/asprintf.h",
+                "include/Makefile.am",
+                "include/endianness.h",
+            ],
+            publicHeadersPath: "include/libimobiledevice/"
+        ),
+
+		// MARK: libmobiledevice-glue
+        .target(
+            name: "libimobiledevice-glue",
+            dependencies: [
+				"libplist"
+            ],
+            path: "Sources/libimobiledevice/libimobiledevice-glue/",
+            exclude: [
+				"src/libimobiledevice-glue-1.0.pc.in",
+				"src/common.h"
 			],
+            publicHeadersPath: "include",
 			cSettings: [
-				.headerSearchPath("libfragmentzip-source/libfragmentzip/include")
+				.headerSearchPath("include/"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
+				.headerSearchPath("../dependencies/libplist/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w"
+				])
+			],
+			cxxSettings: [
+				.headerSearchPath("include/"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
+				.headerSearchPath("../dependencies/libplist/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w",
+					"-Wno-module-import-in-extern-c"
+				])
 			]
-		),
+        ),
 
-		.testTarget(
-			name: "libfragmentzipTests",
-			dependencies: ["libfragmentzip"]
-		),
+        // MARK: libplist
 
-		// MARK: - libmobiledevice
-		.target(
-			name: "libimobiledevice",
-			dependencies: [
-				"libimobiledevice-glue",
+        .target(
+            name: "libplist",
+            dependencies: [
+            ],
+            path: "Sources/libimobiledevice/libplist/",
+            sources: [
+                "src/base64.c",
+                "src/bplist.c",
+                "src/bytearray.c",
+                "src/hashtable.c",
+                "src/plist.c",
+                "src/ptrarray.c",
+                "src/time64.c",
+                "src/xplist.c",
+                "src/Array.cpp",
+                "src/Boolean.cpp",
+                "src/Data.cpp",
+                "src/Date.cpp",
+                "src/Dictionary.cpp",
+                "src/Integer.cpp",
+                "src/Key.cpp",
+                "src/Node.cpp",
+                "src/Real.cpp",
+                "src/String.cpp",
+                "src/Structure.cpp",
+                "src/Uid.cpp",
+				"libcnary/node.c",
+				"libcnary/node_list.c",
+            ],
+            publicHeadersPath: "include",
+            cSettings: [
+				.headerSearchPath("include/"),
+                .headerSearchPath("../dependencies/libplist/include"),
+//				.headerSearchPath("../dependencies/libplist/libcnary/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w"
+				])
+            ],
+            cxxSettings: [
+				.headerSearchPath("include/"),
+				.headerSearchPath("../dependencies/libplist/include"),
+				.headerSearchPath("../dependencies/libplist/libcnary/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w",
+					"-Wno-module-import-in-extern-c"
+				])
+            ]
+        ),
+
+        // MARK: libusbmuxd
+
+        .target(
+            name: "libusbmuxd",
+            dependencies: [
 				"libplist",
-				"libusbmuxd"
-			],
-			path: "Sources/libimobiledevice/libimobiledevice/",
-			exclude: [
-				"include/asprintf.h",
-				"include/Makefile.am",
-				"include/endianness.h"
-			],
-			publicHeadersPath: "include/libimobiledevice/"
-		),
-		.target(
-			name: "libimobiledevice-glue",
-			dependencies: [
-			],
-			path: "Sources/libimobiledevice/libimobiledevice-glue/",
-			exclude: [
-				"include/Makefile.am",
-				"include/endianness.h"
-			],
-			publicHeadersPath: "include/libimobiledevice-glue/"
-		),
-		.target(
-			name: "libplist",
-			dependencies: [
-			],
-			path: "Sources/libimobiledevice/libplist/",
-			exclude: [
-				"include/Makefile.am",
-			],
-			publicHeadersPath: "include/plist"
-		),
-		.target(
-			name: "libusbmuxd",
-			dependencies: [
-			],
-			path: "Sources/libimobiledevice/libusbmuxd/",
-			exclude: [
-				"include/Makefile.am",
-				"include/usbmuxd-proto.h"
-			],
-			publicHeadersPath: "include"
-		),
+				"libimobiledevice-glue"
+            ],
+            path: "Sources/libimobiledevice/libusbmuxd/",
+            sources: [
+                "src/libusbmuxd.c",
+            ],
+            publicHeadersPath: "include",
+            cSettings: [
+				.headerSearchPath("../dependencies/libplist/include"),
+				.headerSearchPath("../dependencies/libplist/libcnary/include"),
+				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
+                .define("HAVE_OPENSSL"),
+                .define("HAVE_STPNCPY"),
+                .define("HAVE_STPCPY"),
+                .define("HAVE_VASPRINTF"),
+                .define("HAVE_ASPRINTF"),
+                .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+                .define("HAVE_GETIFADDRS"),
+                .define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w"
+				])
+            ],
+            cxxSettings: [
+				.headerSearchPath("../dependencies/libplist/include"),
+				.headerSearchPath("../dependencies/libplist/libcnary/include"),
+				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
+                .define("HAVE_OPENSSL"),
+                .define("HAVE_STPNCPY"),
+                .define("HAVE_STPCPY"),
+                .define("HAVE_VASPRINTF"),
+                .define("HAVE_ASPRINTF"),
+                .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+                .define("HAVE_GETIFADDRS"),
+                .define("HAVE_STRNDUP"),
+				.unsafeFlags([
+					"-w",
+					"-Wno-module-import-in-extern-c"
+				])
+            ]
+        ),
     ],
     swiftLanguageVersions: [.v5],
-    cLanguageStandard: .c2x,
-    cxxLanguageStandard: .cxx20
+    cLanguageStandard: .gnu11,
+    cxxLanguageStandard: .gnucxx14
 )
 
 // MARK: - Helpers

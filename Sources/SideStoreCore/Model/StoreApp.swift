@@ -15,11 +15,11 @@ import Roxas
 public extension StoreApp {
 	#if SWIFT_PACKAGE
 		#if ALPHA
-			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
 		#elseif BETA
-			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
 		#else
-			static let altstoreAppID = Bundle.main.Info.appbundleIdentifier
+			static let altstoreAppID = Bundle.Info.appbundleIdentifier
 		#endif
 	#else
 		#if ALPHA

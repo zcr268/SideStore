@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Shared
+import SideKit
 
 typealias DaemonConnectionManager = ConnectionManager<DaemonRequestHandler>
 

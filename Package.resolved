@@ -3,10 +3,10 @@
     {
       "identity" : "altsign",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SideStore/AltSign.git",
+      "location" : "https://github.com/SideStore/AltSign",
       "state" : {
         "branch" : "master",
-        "revision" : "7e0e7edcf8fbc44ac1e35da3e9030a297aa18b84"
+        "revision" : "b94d53372c62c2ecb1949b98bae1604d68162474"
       }
     },
     {
@@ -21,7 +21,7 @@
     {
       "identity" : "down",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/johnxnguyen/Down.git",
+      "location" : "https://github.com/johnxnguyen/Down",
       "state" : {
         "branch" : "master",
         "revision" : "e754ab1c80920dd51a8e08290c912ac1c2ac8b58"
@@ -34,15 +34,6 @@
       "state" : {
         "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
         "version" : "4.2.2"
-      }
-    },
-    {
-      "identity" : "launchatlogin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sindresorhus/LaunchAtLogin",
-      "state" : {
-        "revision" : "e8171b3e38a2816f579f58f3dac1522aa39efe41",
-        "version" : "4.2.0"
       }
     },
     {
@@ -93,10 +84,10 @@
     {
       "identity" : "sidekit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SideStore/SideKit.git",
+      "location" : "https://github.com/SideStore/SideKit",
       "state" : {
-        "branch" : "main",
-        "revision" : "7ea34a09b52c104077dea8e0b90f8dc55d43b36b"
+        "revision" : "7ea34a09b52c104077dea8e0b90f8dc55d43b36b",
+        "version" : "0.1.0"
       }
     }
   ],

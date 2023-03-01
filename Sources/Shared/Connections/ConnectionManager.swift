@@ -5,7 +5,7 @@
 //  Created by Riley Testut on 5/23/19.
 //  Copyright © 2019 Riley Testut. All rights reserved.
 //
-#if false
+
 import Foundation
 import Network
 import SideKit
@@ -156,4 +156,3 @@ private extension ConnectionManager {
         }
     }
 }
-#endif

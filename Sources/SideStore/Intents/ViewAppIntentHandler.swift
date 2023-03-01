@@ -6,7 +6,6 @@
 //  Copyright © 2020 Riley Testut. All rights reserved.
 //
 
-import SideStoreCore
 import Intents
 
 @available(iOS 14, *)

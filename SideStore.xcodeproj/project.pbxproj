@@ -1114,7 +1114,7 @@
 				B3CD312529AF8B6D00374AF8 /* libusbmuxd */,
 			);
 			name = libimobiledevice;
-			path = Sources/libmobiledevice;
+			path = Sources/libimobiledevice;
 			sourceTree = "<group>";
 		};
 		BF56D2AD23DF9E170006506D /* App IDs */ = {
@@ -2498,16 +2498,12 @@
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Dependencies/libplist/include\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice/include\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/OpenSSL/macosx/include\"",
-					"\"$(SRCROOT)/Dependencies/libusbmuxd/include\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/libzip/lib\"",
-					"\"$(SRCROOT)/Dependencies/libplist/libcnary/include\"",
-					"\"${SDKROOT}/usr/include/libxml2\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/libzip/xcode\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice-glue/include\"/**",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libplist/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libusbmuxd/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libplist/libcnary/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice-glue/include\"/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = imobiledevice;
@@ -2538,16 +2534,12 @@
 				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Dependencies/libplist/include\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice/include\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/OpenSSL/macosx/include\"",
-					"\"$(SRCROOT)/Dependencies/libusbmuxd/include\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/libzip/lib\"",
-					"\"$(SRCROOT)/Dependencies/libplist/libcnary/include\"",
-					"\"${SDKROOT}/usr/include/libxml2\"",
-					"\"$(SRCROOT)/Dependencies/AltSign/Dependencies/libzip/xcode\"",
-					"\"$(SRCROOT)/Dependencies/libimobiledevice-glue/include\"/**",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libplist/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libusbmuxd/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libplist/libcnary/include\"",
+					"\"$(SRCROOT)/Sources/libimobiledevice/dependencies/libimobiledevice-glue/include\"/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = imobiledevice;

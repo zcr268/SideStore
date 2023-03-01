@@ -7,11 +7,15 @@
 //
 
 import Foundation
+import Shared
 
 public extension FileManager {
     var altstoreSharedDirectory: URL? {
-        guard let appGroup = Bundle.main.appGroups.first else { return nil }
-
+		#if SWIFT_PACKAGE
+		guard let appGroup = Bundle.main.appGroups.first else { return nil }
+		#else
+		guard let appGroup = Bundle.main.appGroups.first else { return nil }
+		#endif
         let sharedDirectoryURL = containerURL(forSecurityApplicationGroupIdentifier: appGroup)
         return sharedDirectoryURL
     }
