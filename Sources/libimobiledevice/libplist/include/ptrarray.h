@@ -1,1 +1,1 @@
-../src/ptrarray.h
+../../dependencies/libplist/src/ptrarray.h

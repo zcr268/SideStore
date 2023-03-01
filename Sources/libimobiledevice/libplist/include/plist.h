@@ -1,1 +1,1 @@
-../src/plist.h
+../../dependencies/libplist/src/plist.h

@@ -928,36 +928,37 @@
 		B3CD310529AF8B6D00374AF8 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B3CD311729AF8B6D00374AF8 /* Array.cpp */,
 				B3CD311D29AF8B6D00374AF8 /* base64.c */,
+				B3CD310C29AF8B6D00374AF8 /* base64.h */,
+				B3CD312029AF8B6D00374AF8 /* Boolean.cpp */,
 				B3CD310829AF8B6D00374AF8 /* bplist.c */,
 				B3CD311929AF8B6D00374AF8 /* bytearray.c */,
-				B3CD311C29AF8B6D00374AF8 /* hashtable.c */,
-				B3CD311429AF8B6D00374AF8 /* plist.c */,
-				B3CD311B29AF8B6D00374AF8 /* ptrarray.c */,
-				B3CD310929AF8B6D00374AF8 /* time64.c */,
-				B3CD310A29AF8B6D00374AF8 /* xplist.c */,
-				B3CD311729AF8B6D00374AF8 /* Array.cpp */,
-				B3CD312029AF8B6D00374AF8 /* Boolean.cpp */,
+				B3CD310729AF8B6D00374AF8 /* bytearray.h */,
 				B3CD311529AF8B6D00374AF8 /* Data.cpp */,
 				B3CD311129AF8B6D00374AF8 /* Date.cpp */,
 				B3CD312429AF8B6D00374AF8 /* Dictionary.cpp */,
+				B3CD311C29AF8B6D00374AF8 /* hashtable.c */,
+				B3CD310E29AF8B6D00374AF8 /* hashtable.h */,
 				B3CD311F29AF8B6D00374AF8 /* Integer.cpp */,
 				B3CD312129AF8B6D00374AF8 /* Key.cpp */,
 				B3CD311229AF8B6D00374AF8 /* Node.cpp */,
+				B3CD311429AF8B6D00374AF8 /* plist.c */,
+				B3CD312329AF8B6D00374AF8 /* plist.h */,
+				B3CD311B29AF8B6D00374AF8 /* ptrarray.c */,
+				B3CD310D29AF8B6D00374AF8 /* ptrarray.h */,
 				B3CD311829AF8B6D00374AF8 /* Real.cpp */,
+				B3CD310629AF8B6D00374AF8 /* strbuf.h */,
 				B3CD311329AF8B6D00374AF8 /* String.cpp */,
 				B3CD310F29AF8B6D00374AF8 /* Structure.cpp */,
-				B3CD311029AF8B6D00374AF8 /* Uid.cpp */,
-				B3CD310C29AF8B6D00374AF8 /* base64.h */,
-				B3CD310729AF8B6D00374AF8 /* bytearray.h */,
-				B3CD310E29AF8B6D00374AF8 /* hashtable.h */,
-				B3CD312329AF8B6D00374AF8 /* plist.h */,
-				B3CD310D29AF8B6D00374AF8 /* ptrarray.h */,
-				B3CD310629AF8B6D00374AF8 /* strbuf.h */,
 				B3CD311A29AF8B6D00374AF8 /* time64_limits.h */,
+				B3CD310929AF8B6D00374AF8 /* time64.c */,
 				B3CD311E29AF8B6D00374AF8 /* time64.h */,
+				B3CD311029AF8B6D00374AF8 /* Uid.cpp */,
+				B3CD310A29AF8B6D00374AF8 /* xplist.c */,
 			);
-			path = src;
+			name = src;
+			path = ../dependencies/libplist/src;
 			sourceTree = "<group>";
 		};
 		B3CD312529AF8B6D00374AF8 /* libusbmuxd */ = {
@@ -1045,7 +1046,8 @@
 				B3CD321D29AF8B6E00374AF8 /* syslog_relay.h */,
 				B3CD322029AF8B6E00374AF8 /* webinspector.h */,
 			);
-			path = src;
+			name = src;
+			path = ../dependencies/libimobiledevice/src;
 			sourceTree = "<group>";
 		};
 		BF0DCA642433BDE200E3A595 /* Analytics */ = {

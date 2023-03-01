@@ -9,7 +9,7 @@ let env: [String: Bool] = [
     "USE_CARGO": false,
     "USE_CXX_INTEROP": false,
     "USE_CXX_MODULES": false,
-    "INHIBIT_UPSTREAM_WARNINGS": false,
+    "INHIBIT_UPSTREAM_WARNINGS": true,
     "STATIC_LIBRARY": false,
 ]
 
@@ -18,6 +18,9 @@ let USE_CXX_INTEROP = envBool("USE_CXX_INTEROP")
 let USE_CXX_MODULES = envBool("USE_CXX_MODULES")
 let INHIBIT_UPSTREAM_WARNINGS = envBool("INHIBIT_UPSTREAM_WARNINGS")
 let STATIC_LIBRARY = envBool("STATIC_LIBRARY")
+
+let unsafe_flags: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : []
+let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
 
 // let dependencies_cargo: [Package.Dependency] = {
 //	USE_CARGO ? [
@@ -77,13 +80,9 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.0"),
     .package(url: "https://github.com/microsoft/appcenter-sdk-apple", from: "4.2.0"),
     .package(url: "https://github.com/SideStore/AltSign", branch: "master"),
-    //	.package(path: "../AltSign"),
-
     .package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
-    //	.package(path: "../SideKit"),
-
-    //	.package(url: "https://github.com/sindresorhus/LaunchAtLogin", from: "4.1.0"),
     .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
+	.package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700"))
 ] // + dependencies_cargo
 
 let package = Package(
@@ -106,20 +105,6 @@ let package = Package(
             name: "SideWidget",
             targets: ["SideWidget"]
         ),
-
-        //        .executable(
-        //            name: "SideDaemon",
-        //            targets: ["SideDaemon"]),
-
-        .library(name: "EmotionalDamage", targets: ["EmotionalDamage"]),
-        .library(name: "MiniMuxerSwift", targets: ["MiniMuxerSwift"]),
-        .library(name: "SideStoreCore", targets: ["SideStoreCore"]),
-
-			.library(name: "libplist", type: .dynamic, targets: ["libplist"]),
-        .library(name: "libusbmuxd", type: .dynamic, targets: ["libusbmuxd"]),
-        .library(name: "libimobiledevice", type: .dynamic, targets: ["libimobiledevice"]),
-        .library(name: "libimobiledevice-glue", type: .dynamic, targets: ["libimobiledevice-glue"]),
-
     ],
 
     dependencies: dependencies,
@@ -211,15 +196,6 @@ let package = Package(
             dependencies: [
                 "minimuxer",
                 "libimobiledevice",
-            ],
-            cSettings: [
-                //                .headerSearchPath("Dependencies/minimuxer/include"),
-            ],
-            cxxSettings: [
-            ],
-            swiftSettings: [
-            ],
-            linkerSettings: [
             ]
         ),
 
@@ -259,24 +235,6 @@ let package = Package(
             dependencies: []
         ),
 
-        // MARK: - SideDaemon
-
-        //        .executableTarget(
-        //            name: "SideDaemon",
-        //            dependencies: [
-        //				"Shared",
-        //				.product(name: "SideKit", package: "SideKit"),
-        //				.product(name: "AltSign", package: "AltSign"),
-        //				.product(name: "CoreCrypto", package: "AltSign"),
-        //				.product(name: "CCoreCrypto", package: "AltSign"),
-        //				.product(name: "LaunchAtLogin", package: "LaunchAtLogin"),
-        //			]
-        //        ),
-        //
-        //        .testTarget(
-        //            name: "SideDaemonTests",
-        //            dependencies: ["SideDaemon"]
-        //        ),
 
         // MARK: - SideStoreCore
 
@@ -289,11 +247,6 @@ let package = Package(
                 "SemanticVersion",
                 .product(name: "Roxas", package: "Roxas"),
             ]
-            //			swiftSettings: [
-            //				.unsafeFlags([
-            ////					"--xcconfig-overrides", "AltStoreCore.xconfig"
-            //				])
-            //			]
         ),
 
         .testTarget(
@@ -329,14 +282,46 @@ let package = Package(
                 "libimobiledevice-glue",
                 "libplist",
                 "libusbmuxd",
+				"OpenSSL"
             ],
             path: "Sources/libimobiledevice/libimobiledevice/",
-            exclude: [
-                "include/asprintf.h",
-                "include/Makefile.am",
-                "include/endianness.h",
-            ],
-            publicHeadersPath: "include/libimobiledevice/"
+            publicHeadersPath: "include/",
+			cSettings: [
+				.headerSearchPath("include/"),
+				.headerSearchPath("../dependencies/libimobiledevice"),
+				.headerSearchPath("../dependencies/libimobiledevice/common"),
+				.headerSearchPath("../dependencies/libimobiledevice/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
+				.headerSearchPath("../dependencies/libplist/include"),
+				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags(unsafe_flags)
+			],
+			cxxSettings: [
+				.headerSearchPath("include/"),
+				.headerSearchPath("../dependencies/libimobiledevice"),
+				.headerSearchPath("../dependencies/libimobiledevice/common"),
+				.headerSearchPath("../dependencies/libimobiledevice/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include"),
+				.headerSearchPath("../dependencies/libplist/include"),
+				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.define("HAVE_OPENSSL"),
+				.define("HAVE_STPNCPY"),
+				.define("HAVE_STPCPY"),
+				.define("HAVE_VASPRINTF"),
+				.define("HAVE_ASPRINTF"),
+				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
+				.define("HAVE_GETIFADDRS"),
+				.define("HAVE_STRNDUP"),
+				.unsafeFlags(unsafe_flags_cxx)
+			]
         ),
 
 		// MARK: libmobiledevice-glue
@@ -363,9 +348,7 @@ let package = Package(
 				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
 				.define("HAVE_GETIFADDRS"),
 				.define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w"
-				])
+				.unsafeFlags(unsafe_flags)
 			],
 			cxxSettings: [
 				.headerSearchPath("include/"),
@@ -379,10 +362,7 @@ let package = Package(
 				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
 				.define("HAVE_GETIFADDRS"),
 				.define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w",
-					"-Wno-module-import-in-extern-c"
-				])
+				.unsafeFlags(unsafe_flags_cxx)
 			]
         ),
 
@@ -398,6 +378,9 @@ let package = Package(
                 "src/bplist.c",
                 "src/bytearray.c",
                 "src/hashtable.c",
+				"src/jplist.c",
+				"src/jsmn.c",
+				"src/oplist.c",
                 "src/plist.c",
                 "src/ptrarray.c",
                 "src/time64.c",
@@ -421,7 +404,6 @@ let package = Package(
             cSettings: [
 				.headerSearchPath("include/"),
                 .headerSearchPath("../dependencies/libplist/include"),
-//				.headerSearchPath("../dependencies/libplist/libcnary/include"),
 				.define("HAVE_OPENSSL"),
 				.define("HAVE_STPNCPY"),
 				.define("HAVE_STPCPY"),
@@ -430,9 +412,7 @@ let package = Package(
 				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
 				.define("HAVE_GETIFADDRS"),
 				.define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w"
-				])
+				.unsafeFlags(unsafe_flags)
             ],
             cxxSettings: [
 				.headerSearchPath("include/"),
@@ -446,10 +426,7 @@ let package = Package(
 				.define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
 				.define("HAVE_GETIFADDRS"),
 				.define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w",
-					"-Wno-module-import-in-extern-c"
-				])
+				.unsafeFlags(unsafe_flags_cxx)
             ]
         ),
 
@@ -470,6 +447,7 @@ let package = Package(
 				.headerSearchPath("../dependencies/libplist/include"),
 				.headerSearchPath("../dependencies/libplist/libcnary/include"),
 				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include/"),
 				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
                 .define("HAVE_OPENSSL"),
                 .define("HAVE_STPNCPY"),
@@ -479,14 +457,13 @@ let package = Package(
                 .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
                 .define("HAVE_GETIFADDRS"),
                 .define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w"
-				])
+				.unsafeFlags(unsafe_flags)
             ],
             cxxSettings: [
 				.headerSearchPath("../dependencies/libplist/include"),
 				.headerSearchPath("../dependencies/libplist/libcnary/include"),
 				.headerSearchPath("../dependencies/libusbmuxd/include"),
+				.headerSearchPath("../dependencies/libimobiledevice-glue/include/"),
 				.headerSearchPath("../dependencies/libimobiledevice-glue/include/libimobiledevice-glue/"),
                 .define("HAVE_OPENSSL"),
                 .define("HAVE_STPNCPY"),
@@ -496,10 +473,7 @@ let package = Package(
                 .define("PACKAGE_STRING", to: "\"AltServer 1.0\""),
                 .define("HAVE_GETIFADDRS"),
                 .define("HAVE_STRNDUP"),
-				.unsafeFlags([
-					"-w",
-					"-Wno-module-import-in-extern-c"
-				])
+				.unsafeFlags(unsafe_flags_cxx)
             ]
         ),
     ],
@@ -515,3 +489,26 @@ func envBool(_ key: String) -> Bool {
     let trueValues = ["1", "on", "true", "yes"]
     return trueValues.contains(value.lowercased())
 }
+
+
+// MARK: - SideDaemon
+//        .executable(
+//            name: "SideDaemon",
+//            targets: ["SideDaemon"]),
+
+//        .executableTarget(
+//            name: "SideDaemon",
+//            dependencies: [
+//				"Shared",
+//				.product(name: "SideKit", package: "SideKit"),
+//				.product(name: "AltSign", package: "AltSign"),
+//				.product(name: "CoreCrypto", package: "AltSign"),
+//				.product(name: "CCoreCrypto", package: "AltSign"),
+//				.product(name: "LaunchAtLogin", package: "LaunchAtLogin"),
+//			]
+//        ),
+//
+//        .testTarget(
+//            name: "SideDaemonTests",
+//            dependencies: ["SideDaemon"]
+//        ),

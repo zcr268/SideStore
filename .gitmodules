@@ -7,3 +7,15 @@
 [submodule "Dependencies/minimuxer"]
 	path = Dependencies/minimuxer
 	url = https://github.com/SideStore/minimuxer.git
+[submodule "Sources/libimobiledevice/dependencies/libimobiledevice-glue"]
+	path = Sources/libimobiledevice/dependencies/libimobiledevice-glue
+	url = https://github.com/libimobiledevice/libimobiledevice-glue
+[submodule "Sources/libimobiledevice/dependencies/libplist"]
+	path = Sources/libimobiledevice/dependencies/libplist
+	url = https://github.com/libimobiledevice/libplist.git
+[submodule "Sources/libimobiledevice/dependencies/libusbmuxd"]
+	path = Sources/libimobiledevice/dependencies/libusbmuxd
+	url = https://github.com/libimobiledevice/libusbmuxd.git
+[submodule "Sources/libimobiledevice/dependencies/libimobiledevice"]
+	path = Sources/libimobiledevice/dependencies/libimobiledevice
+	url = https://github.com/libimobiledevice/libimobiledevice
