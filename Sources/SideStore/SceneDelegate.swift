@@ -8,6 +8,7 @@
 
 import SideStoreCore
 import EmotionalDamage
+import SideStoreAppKit
 import UIKit
 
 @available(iOS 13, *)

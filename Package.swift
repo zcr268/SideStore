@@ -72,6 +72,7 @@ let package = Package(
         .executableTarget(
             name: "SideStore",
             dependencies: [
+				"SideStoreAppKit",
                 "SidePatcher",
                 "EmotionalDamage",
                 "MiniMuxerSwift",
@@ -83,7 +84,6 @@ let package = Package(
                 "SideKit",
 				"KeychainAccess",
 				"SemanticVersion",
-//				.product(name: "CrashReporter", package: "PLCrashReporter"),
 				.product(name: "libimobiledevice", package: "iMobileDevice.swift"),
                 .product(name: "Roxas", package: "Roxas"),
 				.product(name: "RoxasUI", package: "Roxas"),
@@ -166,6 +166,10 @@ let package = Package(
 				.linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
 				.linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
 				.linkedLibrary("AppleArchive")
+			],
+			plugins: [
+				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
 		),
 

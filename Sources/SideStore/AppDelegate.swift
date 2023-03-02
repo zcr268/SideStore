@@ -13,23 +13,12 @@ import UserNotifications
 
 import AltSign
 import SideStoreCore
+import SideStoreAppKit
 import EmotionalDamage
 import RoxasUIKit
 
-extension AppDelegate {
-    static let openPatreonSettingsDeepLinkNotification = Notification.Name(Bundle.Info.appbundleIdentifier + ".OpenPatreonSettingsDeepLinkNotification")
-    static let importAppDeepLinkNotification = Notification.Name(Bundle.Info.appbundleIdentifier + ".ImportAppDeepLinkNotification")
-    static let addSourceDeepLinkNotification = Notification.Name(Bundle.Info.appbundleIdentifier + ".AddSourceDeepLinkNotification")
-
-    static let appBackupDidFinish = Notification.Name(Bundle.Info.appbundleIdentifier + ".AppBackupDidFinish")
-
-    static let importAppDeepLinkURLKey = "fileURL"
-    static let appBackupResultKey = "result"
-    static let addSourceDeepLinkURLKey = "sourceURL"
-}
-
 @UIApplicationMain
-final class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: SideStoreAppDelegate {
     var window: UIWindow?
 
     @available(iOS 14, *)
