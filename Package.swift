@@ -34,7 +34,12 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
     .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
 	.package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700")),
-	.package(url: "https://github.com/JoeMatt/SwiftPMPlugins.git", .upToNextMinor(from: "1.0.0"))
+
+	// Plugins
+	.package(url: "https://github.com/JoeMatt/SwiftPMPlugins.git", .upToNextMinor(from: "1.0.0")),
+	.package(url: "https://github.com/elegantchaos/Versionator.git", from: "1.0.3"),
+	.package(url: "https://github.com/elegantchaos/InfomaticPlugin.git", branch: "main"),
+
 ] // + dependencies_cargo
 
 let package = Package(
@@ -169,7 +174,8 @@ let package = Package(
 			],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "VersionatorPlugin", package: "Versionator")
 			]
 		),
 
