@@ -23,17 +23,21 @@ let unsafe_flags: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : []
 let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
 
 let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/JoeMatt/Roxas", from: "1.2.2"),
+
+	// Side Store
+	.package(url: "https://github.com/SideStore/AltSign", from: "1.0.2"),
+	.package(url: "https://github.com/SideStore/iMobileDevice.swift", from: "1.0.5"),
+	.package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
+
+	// JoeMatt
+	.package(url: "https://github.com/JoeMatt/Roxas", from: "1.2.2"),
+
+	// 3rd Party
     .package(url: "https://github.com/johnxnguyen/Down", branch: "master"),
     .package(url: "https://github.com/kean/Nuke", from: "7.0.0"),
     .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.0"),
     .package(url: "https://github.com/microsoft/appcenter-sdk-apple", from: "4.2.0"),
-    .package(url: "https://github.com/SideStore/AltSign", from: "1.0.2"),
-	.package(url: "https://github.com/SideStore/iMobileDevice.swift", from: "1.0.5"),
-//	.package(path: "../iMobileDevice.swift"),
-    .package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
     .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
-	.package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700")),
 
 	// Plugins
 	.package(url: "https://github.com/JoeMatt/SwiftPMPlugins.git", .upToNextMinor(from: "1.0.0")),
@@ -95,6 +99,13 @@ let package = Package(
                 .product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
                 .product(name: "AppCenterCrashes", package: "appcenter-sdk-apple"),
             ],
+			exclude: [
+				"Resources/Info.plist",
+				"Resources/AltBackup.ipa",
+				"Resources/Info.info",
+				"Resources/Info.plist",
+				"Resources/tempEnt.plist",
+			],
 			resources: [
 				.process("Resources/XIB"),
 				.process("Resources/Storyboards"),
@@ -128,7 +139,9 @@ let package = Package(
             ],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
+//				.plugin(name: "VersionatorPlugin", package: "Versionator"),
+				.plugin(name: "InfomaticPlugin", package: "InfomaticPlugin")
 			]
         ),
 
@@ -175,7 +188,6 @@ let package = Package(
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "VersionatorPlugin", package: "Versionator")
 			]
 		),
 
