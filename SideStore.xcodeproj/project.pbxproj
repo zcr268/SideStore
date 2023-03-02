@@ -29,20 +29,13 @@
 		B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0B29B032DF000F318E /* WidgetView.swift */; };
 		B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFC0D29B032DF000F318E /* Assets.xcassets */; };
 		B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC1029B032DF000F318E /* SideWidget.swift */; };
-		B34AFC1829B03406000F318E /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFC1729B03406000F318E /* Shared */; };
-		BF989177250AABF4002ACF50 /* SideWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */ = {isa = PBXBuildFile; productRef = B3C40F5129B05B4200C93D50 /* SideWidget */; };
+		B3C40F5329B06A0000C93D50 /* PatchApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBD929B0324C000F318E /* PatchApp.storyboard */; };
+		B3C40F5429B06A2B00C93D50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */; };
+		B3C40F5529B06A3200C93D50 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDA29B0324C000F318E /* Authentication.storyboard */; };
+		B3C40F5729B06A6400C93D50 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE529B0324C000F318E /* Settings.bundle */; };
 		D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D533E8B62727841800A9B5DD /* libAppleArchive.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		BF989175250AABF4002ACF50 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFD247622284B9A500981D42 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BF989166250AABF3002ACF50;
-			remoteInfo = AltWidgetExtension;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		BF088D2B2501A087008082D9 /* Embed Frameworks */ = {
@@ -53,17 +46,6 @@
 			files = (
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BF98917B250AABF4002ACF50 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				BF989177250AABF4002ACF50 /* SideWidgetExtension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -104,6 +86,8 @@
 		B34AFC0E29B032DF000F318E /* SideWidgetExtension.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SideWidgetExtension.entitlements; sourceTree = "<group>"; };
 		B34AFC0F29B032DF000F318E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B34AFC1029B032DF000F318E /* SideWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideWidget.swift; sourceTree = "<group>"; };
+		B34AFC1929B04EBB000F318E /* Dangerfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dangerfile.swift; sourceTree = "<group>"; };
+		B34AFC1A29B04EBB000F318E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		B39575F4284F29E20080B4FF /* Roxas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Roxas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CodeSigning.xcconfig; sourceTree = "<group>"; };
 		B3C39607284F4C8400DA9E2F /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
@@ -129,7 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34AFC1829B03406000F318E /* Shared in Frameworks */,
+				B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +264,8 @@
 				B3C39607284F4C8400DA9E2F /* Build.xcconfig */,
 				B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */,
 				B3C39608284F4C8400DA9E2F /* CodeSigning.xcconfig.sample */,
+				B34AFC1929B04EBB000F318E /* Dangerfile.swift */,
+				B34AFC1A29B04EBB000F318E /* Project.swift */,
 				B34AFBD629B0324C000F318E /* SideStore */,
 				B34AFC0829B032DF000F318E /* SideWidget */,
 				B3CD301229AF876000374AF8 /* Configurations */,
@@ -328,7 +314,7 @@
 			);
 			name = SideWidgetExtension;
 			packageProductDependencies = (
-				B34AFC1729B03406000F318E /* Shared */,
+				B3C40F5129B05B4200C93D50 /* SideWidget */,
 			);
 			productName = AltWidgetExtension;
 			productReference = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */;
@@ -342,12 +328,10 @@
 				BFD247672284B9A500981D42 /* Frameworks */,
 				BFD247682284B9A500981D42 /* Resources */,
 				BF088D2B2501A087008082D9 /* Embed Frameworks */,
-				BF98917B250AABF4002ACF50 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				BF989176250AABF4002ACF50 /* PBXTargetDependency */,
 			);
 			name = SideStore;
 			packageProductDependencies = (
@@ -386,7 +370,7 @@
 					};
 				};
 			};
-			buildConfigurationList = BFD247652284B9A500981D42 /* Build configuration list for PBXProject "SideStore-SPM" */;
+			buildConfigurationList = BFD247652284B9A500981D42 /* Build configuration list for PBXProject "SideStore" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -420,9 +404,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3C40F5729B06A6400C93D50 /* Settings.bundle in Resources */,
+				B3C40F5529B06A3200C93D50 /* Authentication.storyboard in Resources */,
 				B34AFBFE29B0327E000F318E /* AppBannerView.xib in Resources */,
 				B34AFC0129B0327E000F318E /* UpdateCollectionViewCell.xib in Resources */,
 				B34AFC0229B0327E000F318E /* InstalledAppsCollectionHeaderView.xib in Resources */,
+				B3C40F5429B06A2B00C93D50 /* LaunchScreen.storyboard in Resources */,
+				B3C40F5329B06A0000C93D50 /* PatchApp.storyboard in Resources */,
 				B34AFBFF29B0327E000F318E /* AboutPatreonHeaderView.xib in Resources */,
 				B34AFC0429B03288000F318E /* Silence.m4a in Resources */,
 				B34AFBFB29B03279000F318E /* Main.storyboard in Resources */,
@@ -461,14 +449,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		BF989176250AABF4002ACF50 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BF989166250AABF3002ACF50 /* SideWidgetExtension */;
-			targetProxy = BF989175250AABF4002ACF50 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */ = {
@@ -603,6 +583,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -665,6 +646,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -685,10 +667,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3CD301829AF876000374AF8 /* SideStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = SideStoreAppSources/SideStore/Resources/SideStore.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -699,11 +680,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Dependencies/fragmentzip",
-					"$(PROJECT_DIR)/Dependencies/libcurl",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -718,10 +695,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3CD301829AF876000374AF8 /* SideStore.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = SideStoreAppSources/SideStore/Resources/SideStore.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -732,11 +708,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Dependencies/fragmentzip",
-					"$(PROJECT_DIR)/Dependencies/libcurl",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -758,7 +730,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BFD247652284B9A500981D42 /* Build configuration list for PBXProject "SideStore-SPM" */ = {
+		BFD247652284B9A500981D42 /* Build configuration list for PBXProject "SideStore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BFD2477C2284B9A700981D42 /* Debug */,
@@ -783,9 +755,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = SideStoreAppKit;
 		};
-		B34AFC1729B03406000F318E /* Shared */ = {
+		B3C40F5129B05B4200C93D50 /* SideWidget */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Shared;
+			productName = SideWidget;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

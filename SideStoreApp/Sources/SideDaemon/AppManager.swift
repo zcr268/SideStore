@@ -71,7 +71,7 @@ struct AppManager {
                     if installingBundleIDs.contains(profile.bundleIdentifier) || (activeProfiles?.contains(profile.bundleIdentifier) == false && profile.isFreeProvisioningProfile) {
                         try FileManager.default.removeItem(at: fileURL)
                     } else {
-                        print("Ignoring:", profile.bundleIdentifier, profile.uuid)
+                        os_log("Ignoring: %@ %@", type: .info , profile.bundleIdentifier, profile.uuid)
                     }
                 }
 

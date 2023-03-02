@@ -10,6 +10,7 @@ import CoreData
 
 import AltSign
 import Roxas
+import os.log
 
 private extension CFNotificationName {
     static let willAccessDatabase = CFNotificationName("com.rileytestut.AltStore.WillAccessDatabase" as CFString)
@@ -117,7 +118,7 @@ public extension DatabaseManager {
 
                 completionHandler(nil)
             } catch {
-                print("Failed to save when signing out.", error)
+				os_log("Failed to save when signing out. %@", type: .error , error.localizedDescription )
                 completionHandler(error)
             }
         }
@@ -265,7 +266,7 @@ private extension DatabaseManager {
 
                         try FileManager.default.copyItem(at: temporaryFileURL, to: fileURL, shouldReplace: true)
                     } catch {
-                        print("Failed to copy AltStore app bundle to its proper location.", error)
+						os_log("Failed to copy AltStore app bundle to its proper location. %@", type: .error , error.localizedDescription )
                     }
                 }
             }
@@ -349,7 +350,7 @@ private extension DatabaseManager {
 
                 finish(.success(()))
             } catch {
-                print("Failed to migrate database to app group:", error)
+				os_log("Failed to migrate database to app group: %@", type: .error , error.localizedDescription )
                 finish(.failure(error))
             }
         }

@@ -11,7 +11,7 @@ import RoxasUIKit
 
 import AltSign
 import SideStoreCore
-
+import os.log
 
 @objc(ResignAppOperation)
 final class ResignAppOperation: ResultOperation<ALTApplication> {
@@ -47,7 +47,7 @@ final class ResignAppOperation: ResultOperation<ALTApplication> {
         let prepareAppBundleProgress = prepareAppBundle(for: app, profiles: profiles) { result in
             guard let appBundleURL = self.process(result) else { return }
 
-            print("Resigning App:", self.context.bundleIdentifier)
+            os_log("Resigning App: %@", type: .info , self.context.bundleIdentifier)
 
             // Resign app bundle
             let resignProgress = self.resignAppBundle(at: appBundleURL, team: team, certificate: certificate, profiles: Array(profiles.values)) { result in

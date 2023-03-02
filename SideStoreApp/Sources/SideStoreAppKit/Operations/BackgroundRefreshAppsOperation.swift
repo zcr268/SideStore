@@ -8,6 +8,7 @@
 
 import CoreData
 import UIKit
+import os.log
 
 import SideStoreCore
 import EmotionalDamage
@@ -85,7 +86,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
 
         managedObjectContext.perform {
-            print("Apps to refresh:", self.installedApps.map(\.bundleIdentifier))
+            os_log("Apps to refresh: %@", type: .error , self.installedApps.map(\.bundleIdentifier))
 
             self.startListeningForRunningApps()
 
@@ -95,7 +96,7 @@ public final class BackgroundRefreshAppsOperation: ResultOperation<[String: Resu
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.managedObjectContext.perform {
                     let filteredApps = self.installedApps.filter { !self.runningApplications.contains($0.bundleIdentifier) }
-                    print("Filtered Apps to Refresh:", filteredApps.map { $0.bundleIdentifier })
+					os_log("Filtered Apps to Refresh: %@", type: .info , filteredApps.map { $0.bundleIdentifier }.joined(separator: "\n"))
 
                     let group = AppManager.shared.refresh(filteredApps, presentingViewController: nil)
                     group.beginInstallationHandler = { installedApp in
@@ -179,7 +180,7 @@ private extension BackgroundRefreshAppsOperation {
             } catch RefreshError.noInstalledApps {
                 shouldPresentAlert = false
             } catch {
-                print("Failed to refresh apps in background.", error)
+                os_log("Failed to refresh apps in background. %@", type: .error , error.localizedDescription)
 
                 content.title = NSLocalizedString("Failed to Refresh Apps", comment: "")
                 content.body = error.localizedDescription
@@ -218,7 +219,7 @@ private extension BackgroundRefreshAppsOperation {
         context.performAndWait {
             _ = RefreshAttempt(identifier: self.refreshIdentifier, result: result, context: context)
 
-            do { try context.save() } catch { print("Failed to save refresh attempt.", error) }
+            do { try context.save() } catch { os_log("Failed to save refresh attempt. %@", type: .error , error.localizedDescription) }
         }
     }
 

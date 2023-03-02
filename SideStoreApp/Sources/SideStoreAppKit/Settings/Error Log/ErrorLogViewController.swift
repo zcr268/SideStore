@@ -14,6 +14,7 @@ import RoxasUIKit
 import SideKit
 import Nuke
 import QuickLook
+import os.log
 
 final class ErrorLogViewController: UITableViewController {
     private lazy var dataSource = self.makeDataSource()
@@ -248,7 +249,7 @@ extension ErrorLogViewController {
                     try context.save()
                     completion(true)
                 } catch {
-                    print("[ALTLog] Failed to delete LoggedError \(loggedError.objectID):", error)
+					os_log("[ALTLog] Failed to delete LoggedError %@: %@", type: .error , loggedError.objectID, error.localizedDescription)
                     completion(false)
                 }
             }

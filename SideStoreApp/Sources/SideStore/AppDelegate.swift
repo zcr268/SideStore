@@ -16,6 +16,7 @@ import SideStoreCore
 import SideStoreAppKit
 import EmotionalDamage
 import RoxasUIKit
+import os.log
 
 @UIApplicationMain
 final class AppDelegate: SideStoreAppDelegate {
@@ -49,9 +50,9 @@ final class AppDelegate: SideStoreAppDelegate {
 
         DatabaseManager.shared.start { error in
             if let error = error {
-                print("Failed to start DatabaseManager. Error:", error as Any)
+				os_log("Failed to start DatabaseManager. Error: %@", type: .error , error.localizedDescription)
             } else {
-                print("Started DatabaseManager.")
+				os_log("Started DatabaseManager.", type: .info)
             }
         }
 
@@ -86,7 +87,7 @@ final class AppDelegate: SideStoreAppDelegate {
         DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo) { result in
             switch result {
             case .success: break
-            case let .failure(error): print("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo).", error)
+			case let .failure(error): os_log("[ALTLog] Failed to purge logged errors before %@. %@", type: .error , midnightOneMonthAgo.debugDescription, error.localizedDescription)
             }
         }
     }
@@ -221,7 +222,7 @@ extension AppDelegate {
         }
 
         let token = tokenParts.joined()
-        print("Push Token:", token)
+        os_log("Push Token: %@", type: .debug , token)
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification _: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -245,7 +246,7 @@ extension AppDelegate {
 
         BackgroundTaskManager.shared.performExtendedBackgroundTask { taskResult, taskCompletionHandler in
             if let error = taskResult.error {
-                print("Error starting extended background task. Aborting.", error)
+                os_log("Error starting extended background task. Aborting. %@", type: .error, error.localizedDescription)
                 backgroundFetchCompletionHandler(.failed)
                 taskCompletionHandler()
                 return
@@ -361,7 +362,7 @@ private extension AppDelegate {
 
                 completionHandler(.success(sources))
             } catch {
-                print("Error fetching apps:", error)
+				os_log("Error fetching apps: %@", type: .error, error.localizedDescription)
                 completionHandler(.failure(error))
             }
         }

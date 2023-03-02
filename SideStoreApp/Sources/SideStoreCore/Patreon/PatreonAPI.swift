@@ -9,6 +9,7 @@
 import AuthenticationServices
 import CoreData
 import Foundation
+import os.log
 
 private let clientID = "ZMx0EGUWe4TVWYXNZZwK_fbIK5jHFVWoUf1Qb-sqNXmT-YzAGwDPxxq7ak3_W5Q2"
 private let clientSecret = "1hktsZB89QyN69cB4R0tu55R4TCPQGXxvebYUUh7Y-5TLSnRswuxs6OUjdJ74IJt"
@@ -242,7 +243,7 @@ public extension PatreonAPI {
 
                 try account.managedObjectContext?.save()
             } catch {
-                print("Failed to fetch Patreon account.", error)
+				os_log("Failed to fetch Patreon account. %@", type: .error , error.localizedDescription)
             }
         }
     }

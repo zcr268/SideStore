@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 extension AppDelegate {
     static let startBackupNotification = Notification.Name("io.altstore.StartBackup")
@@ -104,7 +105,7 @@ private extension AppDelegate {
 
         DispatchQueue.main.async {
             UIApplication.shared.open(responseURL, options: [:]) { success in
-                print("Sent response to app with success:", success)
+                os_log("Sent response to app with success: %@", type: .info , success)
             }
         }
     }

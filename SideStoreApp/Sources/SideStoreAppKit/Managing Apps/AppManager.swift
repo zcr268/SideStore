@@ -19,6 +19,7 @@ import AltSign
 import SideKit
 import SideStoreCore
 import RoxasUIKit
+import os.log
 
 public extension AppManager {
     static let didFetchSourceNotification = Notification.Name("io.altstore.AppManager.didFetchSource")
@@ -166,7 +167,7 @@ public extension AppManager {
 
                     try context.save()
                 } catch {
-                    print("Error while fetching installed apps.", error)
+                    os_log("Error while fetching installed apps. %@", type: .error , error.localizedDescription)
                 }
             #endif
 
@@ -182,15 +183,15 @@ public extension AppManager {
                         guard let isDirectory = resourceValues.isDirectory, let bundleID = resourceValues.name else { continue }
 
                         if isDirectory && !installedAppBundleIDs.contains(bundleID) && !self.isActivelyManagingApp(withBundleID: bundleID) {
-                            print("DELETING CACHED APP:", bundleID)
+                            os_log("DELETING CACHED APP: %@", type: .info , bundleID)
                             try FileManager.default.removeItem(at: appDirectory)
                         }
                     } catch {
-                        print("Failed to remove cached app directory.", error)
+                        os_log("Failed to remove cached app directory. %@", type: .error , error.localizedDescription)
                     }
                 }
             } catch {
-                print("Failed to remove cached apps.", error)
+                os_log("Failed to remove cached apps. %@", type: .error , error.localizedDescription)
             }
         }
     }
@@ -350,7 +351,7 @@ public extension AppManager {
     {
         let authenticationOperation = self.authenticate(presentingViewController: nil) { (result) in
             // result contains name, email, auth token, OTP and other possibly personal/account specific info. we don't want this logged
-            //print("Authenticated for fetching App IDs with result:", result)
+            //os_log("Authenticated for fetching App IDs with result: %@", type: .info , result)
         }
 
         let fetchAppIDsOperation = FetchAppIDsOperation(context: authenticationOperation.context)
@@ -382,7 +383,7 @@ public extension AppManager {
                 try result.get()
                 self.updatePatronsResult = .success(())
             } catch {
-                print("Error updating Friend Zone Patrons:", error)
+                os_log("Error updating Friend Zone Patrons: %@", type: .error , error.localizedDescription)
                 self.updatePatronsResult = .failure(error)
             }
 
@@ -564,7 +565,7 @@ public extension AppManager {
         removeAppBackupOperation.resultHandler = { result in
             switch result {
             case .success: break
-            case let .failure(error): print("Failed to remove app backup.", error)
+            case let .failure(error): os_log("Failed to remove app backup. %@", type: .error , error.localizedDescription)
             }
 
             // Throw the error from removeAppOperation,
@@ -664,7 +665,7 @@ public extension AppManager {
 
 public extension AppManager {
     @discardableResult
-	public func backgroundRefresh(_ installedApps: [InstalledApp], presentsNotifications: Bool = false, completionHandler: @escaping (Result<[String: Result<InstalledApp, Error>], Error>) -> Void) -> BackgroundRefreshAppsOperation {
+	func backgroundRefresh(_ installedApps: [InstalledApp], presentsNotifications: Bool = false, completionHandler: @escaping (Result<[String: Result<InstalledApp, Error>], Error>) -> Void) -> BackgroundRefreshAppsOperation {
         let backgroundRefreshAppsOperation = BackgroundRefreshAppsOperation(installedApps: installedApps)
         backgroundRefreshAppsOperation.resultHandler = completionHandler
         backgroundRefreshAppsOperation.presentsFinishedNotification = presentsNotifications
@@ -1185,7 +1186,7 @@ private extension AppManager {
                         switch result {
                         case let .failure(error):
                             // Don't report error, since it doesn't really matter.
-                            print("Failed to delete app backup.", error)
+                            os_log("Failed to delete app backup. %@", type: .error , error.localizedDescription)
 
                         case .success: break
                         }
@@ -1383,7 +1384,7 @@ private extension AppManager {
                                     let bundleIcons = ["CFBundlePrimaryIcon": ["CFBundleIconFiles": [iconFileURL.lastPathComponent]]]
                                     infoDictionary["CFBundleIcons"] = bundleIcons
                                 } catch {
-                                    print("Failed to write app icon data.", error)
+									os_log("Failed to write app icon data. %@", type: .error , error.localizedErrorCode)
                                 }
                             }
                         }
@@ -1473,7 +1474,7 @@ private extension AppManager {
                 WidgetCenter.shared.reloadAllTimelines()
             }
 
-            do { try installedApp.managedObjectContext?.save() } catch { print("Error saving installed app.", error) }
+            do { try installedApp.managedObjectContext?.save() } catch { os_log("Error saving installed app. %@", type: .error, error.localizedDescription) }
         } catch {
             group.set(.failure(error), forAppWithBundleIdentifier: operation.bundleIdentifier)
 
@@ -1527,7 +1528,11 @@ private extension AppManager {
                 _ = LoggedError(error: sanitizedError, app: app, operation: loggedErrorOperation, context: context)
                 try context.save()
             } catch let saveError {
-                print("[ALTLog] Failed to log error \(sanitizedError.domain) code \(sanitizedError.code) for \(app.bundleIdentifier):", saveError)
+				os_log("[ALTLog] Failed to log error %@ code %@ for %@: %@", type: .error,
+					   sanitizedError.domain,
+					   sanitizedError.code,
+					   app.bundleIdentifier,
+					   saveError.localizedErrorCode)
             }
         }
     }

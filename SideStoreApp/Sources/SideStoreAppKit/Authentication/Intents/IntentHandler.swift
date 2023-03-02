@@ -9,6 +9,7 @@
 import Foundation
 import SideStoreCore
 import Intents
+import os.log
 
 @available(iOS 14, *)
 public final class IntentHandler: NSObject, RefreshAllIntentHandling {
@@ -107,7 +108,7 @@ private extension IntentHandler {
                 } catch RefreshError.noInstalledApps {
                     self.finish(intent, response: RefreshAllIntentResponse(code: .success, userActivity: nil))
                 } catch let error as NSError {
-                    print("Failed to refresh apps in background.", error)
+                    os_log("Failed to refresh apps in background. %@", type: .error , error.localizedDescription)
                     self.finish(intent, response: RefreshAllIntentResponse.failure(localizedDescription: error.localizedFailureReason ?? error.localizedDescription))
                 }
 

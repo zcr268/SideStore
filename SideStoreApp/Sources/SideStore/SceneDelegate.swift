@@ -10,6 +10,7 @@ import SideStoreCore
 import EmotionalDamage
 import SideStoreAppKit
 import UIKit
+import os.log
 
 @available(iOS 13, *)
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -57,7 +58,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo) { result in
             switch result {
             case .success: break
-            case let .failure(error): print("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo).", error)
+			case let .failure(error): os_log("[ALTLog] Failed to purge logged errors before %@. %@", type: .error, midnightOneMonthAgo.debugDescription, error.localizedDescription)
             }
         }
     }

@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "aexml",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tadija/AEXML",
+      "state" : {
+        "revision" : "54bb8ea6fb693dd3f92a89e5fcc19e199fdeedd0",
+        "version" : "4.3.3"
+      }
+    },
+    {
       "identity" : "altsign",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SideStore/AltSign",
       "state" : {
-        "revision" : "9c63397f0fc6038c04b930dd2d10b030d508d6fa",
-        "version" : "1.0.2"
+        "revision" : "eb4c74dcf6be2fb00a3edc0381aae59fbbdb4cf3",
+        "version" : "1.0.3"
       }
     },
     {
@@ -19,15 +28,6 @@
       }
     },
     {
-      "identity" : "danger-swift-coverage",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/f-meloni/danger-swift-coverage",
-      "state" : {
-        "revision" : "104ded872b6e1af1def04b897bc3a29fe04865ba",
-        "version" : "0.3.0"
-      }
-    },
-    {
       "identity" : "down",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/johnxnguyen/Down",
@@ -37,12 +37,12 @@
       }
     },
     {
-      "identity" : "files",
+      "identity" : "ignore",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/Files.git",
+      "location" : "https://github.com/IgorMuzyka/ignore",
       "state" : {
-        "revision" : "a84615f4558151fab52ac38df697ce2442991f93",
-        "version" : "2.3.0"
+        "revision" : "49780cf3d46053eb40f4c425a46aaaf662f0665c",
+        "version" : "0.0.2"
       }
     },
     {
@@ -75,19 +75,10 @@
     {
       "identity" : "logger",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shibapm/Logger",
+      "location" : "https://github.com/f-meloni/Logger",
       "state" : {
         "revision" : "53c3ecca5abe8cf46697e33901ee774236d94cce",
         "version" : "0.2.3"
-      }
-    },
-    {
-      "identity" : "marathon",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/Marathon",
-      "state" : {
-        "revision" : "35b672e05ac411fb104e462fbfd6541f995abc17",
-        "version" : "3.3.0"
       }
     },
     {
@@ -109,15 +100,6 @@
       }
     },
     {
-      "identity" : "octokit.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nerdishbynature/octokit.swift",
-      "state" : {
-        "revision" : "f762f1566f7cd0e683b9329f169c28ab6ef993cc",
-        "version" : "0.12.0"
-      }
-    },
-    {
       "identity" : "openssl",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/OpenSSL",
@@ -136,39 +118,30 @@
       }
     },
     {
+      "identity" : "packageconfig",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/orta/PackageConfig.git",
+      "state" : {
+        "revision" : "bf90dc69fa0792894b08a0b74cf34029694ae486",
+        "version" : "0.13.0"
+      }
+    },
+    {
+      "identity" : "pathkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylef/PathKit",
+      "state" : {
+        "revision" : "e2f5be30e4c8f531c9c1e8765aa7b71c0a45d7a0",
+        "version" : "0.9.2"
+      }
+    },
+    {
       "identity" : "plcrashreporter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/microsoft/PLCrashReporter.git",
       "state" : {
         "revision" : "81cdec2b3827feb03286cb297f4c501a8eb98df1",
         "version" : "1.10.2"
-      }
-    },
-    {
-      "identity" : "releases",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/Releases.git",
-      "state" : {
-        "revision" : "ea62f33a429185b0ed21344c2355862c5bc4fcce",
-        "version" : "4.0.0"
-      }
-    },
-    {
-      "identity" : "requestkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nerdishbynature/RequestKit.git",
-      "state" : {
-        "revision" : "8b0258ea2a4345cbcac90509b764faacea12efb0",
-        "version" : "3.2.1"
-      }
-    },
-    {
-      "identity" : "require",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/Require.git",
-      "state" : {
-        "revision" : "7cfbd0d8a2dede0e01f6f0d8ab2c7acef1df112e",
-        "version" : "2.0.1"
       }
     },
     {
@@ -208,15 +181,6 @@
       }
     },
     {
-      "identity" : "shellout",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JohnSundell/ShellOut",
-      "state" : {
-        "revision" : "e1577acf2b6e90086d01a6d5e2b8efdaae033568",
-        "version" : "2.3.0"
-      }
-    },
-    {
       "identity" : "sidekit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SideStore/SideKit",
@@ -226,21 +190,12 @@
       }
     },
     {
-      "identity" : "sourcekitten",
+      "identity" : "spectre",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/SourceKitten.git",
+      "location" : "https://github.com/kylef/Spectre.git",
       "state" : {
-        "revision" : "b6dc09ee51dfb0c66e042d2328c017483a1a5d56",
-        "version" : "0.34.1"
-      }
-    },
-    {
-      "identity" : "swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/danger/swift.git",
-      "state" : {
-        "revision" : "33d35bf94f54155be505ffecfca745e4cc1cd0cc",
-        "version" : "1.6.5"
+        "revision" : "f79d4ecbf8bc4e1579fbd86c3e1d652fb6876c53",
+        "version" : "0.9.2"
       }
     },
     {
@@ -298,21 +253,12 @@
       }
     },
     {
-      "identity" : "swiftsafeurl",
+      "identity" : "swiftshell",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/baguio/SwiftSafeURL",
+      "location" : "https://github.com/kareman/SwiftShell",
       "state" : {
-        "revision" : "b124e5280c3fb4588db38df1047628f52f2713ac",
-        "version" : "0.4.2"
-      }
-    },
-    {
-      "identity" : "swxmlhash",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/drmohundro/SWXMLHash.git",
-      "state" : {
-        "revision" : "4d0f62f561458cbe1f732171e625f03195151b60",
-        "version" : "7.0.1"
+        "revision" : "beebe43c986d89ea5359ac3adcb42dac94e5e08a",
+        "version" : "4.1.2"
       }
     },
     {
@@ -325,12 +271,12 @@
       }
     },
     {
-      "identity" : "xcodeissuereporting",
+      "identity" : "xcodeproj",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/baguio/XcodeIssueReporting",
+      "location" : "https://github.com/tuist/xcodeproj.git",
       "state" : {
-        "revision" : "76165bb2c12adee23d3d9f4ed0b475c9c438d94a",
-        "version" : "1.4.1"
+        "revision" : "065f348754b6155b8037dc43876a8f2ee354b95d",
+        "version" : "6.7.0"
       }
     },
     {

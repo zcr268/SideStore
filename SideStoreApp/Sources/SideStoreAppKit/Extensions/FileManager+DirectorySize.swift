@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 extension FileManager {
     func directorySize(at directoryURL: URL) -> Int? {
@@ -21,7 +22,7 @@ extension FileManager {
 
                 total += fileSize
             } catch {
-                print("Failed to read file size for item: \(fileURL).", error)
+				os_log("Failed to read file size for item: %@. %@", type: .error, fileURL.absoluteString, error.localizedDescription)
             }
         }
 

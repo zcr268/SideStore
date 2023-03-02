@@ -12,6 +12,7 @@ import UIKit
 import AltSign
 import SideStoreCore
 import RoxasUIKit
+import os.log
 
 @available(iOS 14.0, *)
 extension PatchViewController {
@@ -75,7 +76,7 @@ public final class PatchViewController: UIViewController {
         do {
             try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            print("Failed to create temporary directory:", error)
+            os_log("Failed to create temporary directory: %@", type: .error , error.localizedDescription)
         }
 
         update()
@@ -178,7 +179,7 @@ private extension PatchViewController {
         do {
             try FileManager.default.removeItem(at: temporaryDirectory)
         } catch {
-            print("Failed to remove temporary directory:", error)
+            os_log("Failed to remove temporary directory: %@", type: .error , error.localizedDescription)
         }
 
         if let observation = didEnterBackgroundObservation {
@@ -275,7 +276,7 @@ private extension PatchViewController {
 
                 self.resignedApp = ALTApplication(fileURL: resignedAppURL)
             } catch {
-                print("Error unzipping app bundle:", error)
+                os_log("Error unzipping app bundle: %@", type: .error , error.localizedDescription)
                 unzippingError = error
             }
         }

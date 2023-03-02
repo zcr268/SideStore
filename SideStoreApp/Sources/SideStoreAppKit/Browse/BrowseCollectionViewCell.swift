@@ -9,6 +9,7 @@
 import UIKit
 
 import RoxasUIKit
+import os.log
 
 import Nuke
 
@@ -68,7 +69,7 @@ private extension BrowseCollectionViewCell {
             cell.imageView.image = image
 
             if let error = error {
-                print("Error loading image:", error)
+                os_log("Error loading image: %@", type: .error , error.localizedDescription)
             }
         }
 

@@ -27,7 +27,7 @@ struct AnisetteDataManager {
     }
 
     func requestAnisetteData() throws -> ALTAnisetteData {
-        var request = URLRequest(url: URL(string: "https://developerservices2.apple.com/services/QH65B2/listTeams.action?clientId=XABBG36SBA")!)
+		var request = URLRequest(url: URL(string: "https://developerservices2.apple.com/services/QH65B2/listTeams.action?clientId=XABBG36SBA")!)
         request.httpMethod = "POST"
 
         let akAppleIDSession = unsafeBitCast(NSClassFromString("AKAppleIDSession")!, to: AKAppleIDSession.Type.self)

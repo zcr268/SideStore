@@ -10,6 +10,7 @@ import UIKit
 
 import SideStoreCore
 import RoxasUIKit
+import os.log
 
 import Nuke
 
@@ -140,7 +141,7 @@ private extension BrowseViewController {
             cell.bannerView.iconImageView.image = image
 
             if let error = error {
-                print("Error loading image:", error)
+                os_log("Error loading image: %@", type: .error , error.localizedDescription)
             }
         }
 
@@ -240,7 +241,7 @@ private extension BrowseViewController {
                     let toastView = ToastView(error: error)
                     toastView.show(in: self)
 
-                case .success: print("Installed app:", app.bundleIdentifier)
+                case .success: os_log("Installed app: %@", type: .info , app.bundleIdentifier)
                 }
 
                 self.collectionView.reloadItems(at: [indexPath])

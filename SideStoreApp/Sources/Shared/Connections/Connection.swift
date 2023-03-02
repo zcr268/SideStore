@@ -9,6 +9,7 @@
 import Foundation
 import Network
 import SideKit
+import os.log
 
 public protocol SideConnection: Connection {
     func __send(_ data: Data, completionHandler: @escaping (Bool, Error?) -> Void)
@@ -74,7 +75,7 @@ public extension SideConnection {
     func receiveRequest(completionHandler: @escaping (Result<ServerRequest, ALTServerError>) -> Void) {
         let size = MemoryLayout<Int32>.size
 
-        print("Receiving request size from connection:", self)
+        os_log("Receiving request size from connection: %@", type: .info , String(describing: self))
         receiveData(expectedSize: size) { result in
             do {
                 let data = try result.get()
@@ -87,7 +88,7 @@ public extension SideConnection {
                         let data = try result.get()
                         let request = try JSONDecoder().decode(ServerRequest.self, from: data)
 
-                        print("Received request:", request)
+						os_log("Received request: %@", type: .info , String(describing: request))
                         completionHandler(.success(request))
                     } catch {
                         completionHandler(.failure(ALTServerError(error)))

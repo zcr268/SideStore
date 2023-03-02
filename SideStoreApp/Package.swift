@@ -29,7 +29,7 @@ let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ?
 let dependencies: [Package.Dependency] = [
 
 	// Side Store
-	.package(url: "https://github.com/SideStore/AltSign", from: "1.0.2"),
+	.package(url: "https://github.com/SideStore/AltSign", from: "1.0.3"),
 	.package(url: "https://github.com/SideStore/iMobileDevice.swift", from: "1.0.5"),
 	.package(url: "https://github.com/SideStore/SideKit", from: "0.1.0"),
 
@@ -71,7 +71,7 @@ let dependencies: [Package.Dependency] = [
 		// let validUrl = URL(safeString: "https://example.tld")
 		// This won't
 		// let invalidUrl = URL(safeString: "https://example./tld")
-	.package(url: "https://github.com/baguio/SwiftSafeURL", from: "0.4.2"),
+//	.package(url: "https://github.com/JoeMatt/SwiftSafeURL", branch: "main"),//from: "0.4.2"),
 
 		// Secrets manager using `.env`
 	.package(url: "https://github.com/vdka/SecretsManager.git", from: "1.0.0"),
@@ -89,8 +89,11 @@ let dependencies: [Package.Dependency] = [
 	 */
 
 	// Old style plugins
-	.package(url: "https://github.com/f-meloni/danger-swift-coverage", from: "0.1.0") // dev
-
+		// `Danger` https://danger.systems/swift/ for CI/CD
+		// Additinal plugins https://github.com/danger/awesome-danger
+//	.package(url: "https://github.com/danger/swift.git", from: "3.0.0"), // dev
+//	.package(url: "https://github.com/f-meloni/danger-swift-coverage", from: "0.1.0") // dev
+	.package(url: "https://github.com/IgorMuzyka/ignore", from: "0.0.2"),
 ] // + dependencies_cargo
 
 let package = Package(
@@ -100,7 +103,7 @@ let package = Package(
         .iOS(.v14),
         .tvOS(.v14),
         .macCatalyst(.v14),
-        .macOS(.v11),
+        .macOS(.v12),
     ],
 
     products: [
@@ -108,12 +111,6 @@ let package = Package(
         .executable(
             name: "SideStore",
             targets: ["SideStore"]
-        ),
-
-		// SideWidget Executable
-        .executable(
-            name: "SideWidget",
-            targets: ["SideWidget"]
         ),
 
 		// SideStoreAppKit
@@ -146,20 +143,20 @@ let package = Package(
 			type: .dynamic,
 			targets: ["SideStoreCore"]),
 
-		// Shared (for widget)
+		// WidgetKit
 		.library(
-			name: "Shared",
-			targets: ["Shared"]),
+			name: "SideWidget",
+			targets: ["SideWidget"]),
 
 		.library(
-			name: "Shared-Static",
+			name: "SideWidget-Static",
 			type: .static,
-			targets: ["Shared"]),
+			targets: ["SideWidget"]),
 
 		.library(
-			name: "Shared-Dynamic",
+			name: "SideWidget-Dynamic",
 			type: .dynamic,
-			targets: ["Shared"]),
+			targets: ["SideWidget"]),
 
 		// Plugins
 		.plugin(name: "CargoPlugin", targets: ["CargoPlugin"]),
@@ -225,17 +222,17 @@ let package = Package(
                 .linkedFramework("AudioToolbox", .when(platforms: [.iOS, .macCatalyst])),
                 .linkedFramework("WidgetKit", .when(platforms: [.iOS, .macCatalyst])),
                 .linkedFramework("UserNotifications", .when(platforms: [.iOS, .macCatalyst])),
-                .linkedFramework("MobileCoreServices", .when(platforms: [.iOS, .macCatalyst])),
+                .linkedFramework("MobileCoreServiceGits", .when(platforms: [.iOS, .macCatalyst])),
 				.linkedLibrary("AppleArchive")
             ],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
-//				.plugin(name: "VersionatorPlugin", package: "Versionator"),
 				.plugin(name: "InfomaticPlugin", package: "InfomaticPlugin"),
-				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
-				.plugin(name: "packageBuildInfoPlugin", package: "PackageBuildInfo"),
+				.plugin(name: "PackageBuildInfoPlugin", package: "PackageBuildInfo"),
 				.plugin(name: "SecretsManagerPlugin", package: "SecretsManager"),
+//				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
+//				.plugin(name: "VersionatorPlugin", package: "Versionator"),
 			]
         ),
 
@@ -251,6 +248,9 @@ let package = Package(
 				"Down",
 				"AltSign",
 				"SideKit",
+				"KeychainAccess",
+				.product(name: "libimobiledevice", package: "iMobileDevice.swift"),
+				.product(name: "CCoreCrypto", package: "AltSign"),
 				.product(name: "Roxas", package: "Roxas"),
 				.product(name: "RoxasUI", package: "Roxas"),
 				.product(name: "AppCenterAnalytics", package: "appcenter-sdk-apple"),
@@ -282,23 +282,33 @@ let package = Package(
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
+//				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
 			]
 		),
 
         // MARK: - SideWidget
 
-        .executableTarget(
-            name: "SideWidget",
+		.target(
+			name: "SideWidget",
 			dependencies: [
 				"Shared",
-				"SideStoreCore"
+				"SideStoreCore",
+				"AltSign",
+				"SideKit",
+				"SemanticVersion",
+				"KeychainAccess",
+				.product(name: "RoxasUI", package: "Roxas"),
+				.product(name: "CCoreCrypto", package: "AltSign"),
+			],
+			exclude: [
+				"Resources/Info.plist",
+				"Resources/SideWidgetExtension.entitlements",
 			],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
-        ),
+		),
 
         // MARK: - EmotionalDamage
 
@@ -348,7 +358,6 @@ let package = Package(
 				.product(name: "libimobiledevice", package: "iMobileDevice.swift")
             ],
 			plugins: [
-				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
 			]
         ),
 
@@ -379,9 +388,10 @@ let package = Package(
             dependencies: [
                 "SideKit",
                 "AltSign",
+				.product(name: "CCoreCrypto", package: "AltSign"),
             ],
 			plugins: [
-				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
 			]
         ),
 
@@ -398,7 +408,10 @@ let package = Package(
 
         .executableTarget(
             name: "SideBackup",
-            dependencies: []
+            dependencies: [],
+			plugins: [
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
+			]
         ),
 
 
@@ -416,7 +429,6 @@ let package = Package(
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
 			]
         ),
 
@@ -435,8 +447,16 @@ let package = Package(
 		.plugin(name: "CargoPlugin", capability: .buildTool()),
 //		.plugin(name: "CargoPlugin-Generate", capability: .command(intent: PluginCommandIntent)),
 
+		.target(name: "PackageConfigs", dependencies: [
+			"IgnoreConfig",
+		])
 		// MARK: Danger.swift
-		.target(name: "DangerDependencies", dependencies: ["Danger", "DangerSwiftCoverage"]), // dev
+//		.target(
+//			name: "DangerDependencies",
+//			dependencies: [
+//				.product(name: "Danger", package: "swift"),
+//				.product(name: "DangerSwiftCoverage", package: "danger-swift-coverage"),
+//			]), // dev
 
     ],
     swiftLanguageVersions: [.v5],
@@ -452,6 +472,14 @@ func envBool(_ key: String) -> Bool {
     return trueValues.contains(value.lowercased())
 }
 
+#if canImport(IgnoreConfig)
+// https://github.com/IgorMuzyka/ignore
+// Ignore warnings in Packages
+import IgnoreConfig
+
+// add the list of targets you wish to preserve the warnings for as excluded
+IgnoreConfig(excludedTargets: ["YourMainTarget", "SomeOtherTargetOfYours"]).write()
+#endif
 
 // MARK: - SideDaemon
 //        .executable(

@@ -9,6 +9,7 @@
 import CoreData
 
 import Roxas
+import os.log
 
 open class MergePolicy: RSTRelationshipPreservingMergePolicy {
     override open func resolve(constraintConflicts conflicts: [NSConstraintConflict]) throws {
@@ -40,7 +41,10 @@ open class MergePolicy: RSTRelationshipPreservingMergePolicy {
                     if let primaryAppVersion = conflictingAppVersions.first(where: { $0.latestVersionApp?.latestVersion == $0 }),
                        let secondaryAppVersion = conflictingAppVersions.first(where: { $0 != primaryAppVersion }) {
                         secondaryAppVersion.managedObjectContext?.delete(secondaryAppVersion)
-                        print("[ALTLog] Resolving AppVersion context-level conflict. Most likely due to migrating from pre-AppVersion model version.", primaryAppVersion)
+                        os_log(
+							"[ALTLog] Resolving AppVersion context-level conflict. Most likely due to migrating from pre-AppVersion model version. %@",
+							type: .error ,
+							primaryAppVersion )
                     }
 
                 default:
@@ -65,7 +69,11 @@ open class MergePolicy: RSTRelationshipPreservingMergePolicy {
                 if let contextApp = conflict.conflictingObjects.first as? StoreApp {
                     let contextVersions = Set(contextApp._versions.lazy.compactMap { $0 as? AppVersion }.map { $0.version })
                     for case let appVersion as AppVersion in databaseObject._versions where !contextVersions.contains(appVersion.version) {
-                        print("[ALTLog] Deleting cached app version: \(appVersion.appBundleID + "_" + appVersion.version), not in:", contextApp.versions.map { $0.appBundleID + "_" + $0.version })
+						os_log("[ALTLog] Deleting cached app version: %@_%@, not in: %@",
+							   type: .info,
+							   appVersion.appBundleID,
+							   appVersion.version,
+							   contextApp.versions.map { $0.appBundleID + "_" + $0.version })
                         appVersion.managedObjectContext?.delete(appVersion)
                     }
                 }

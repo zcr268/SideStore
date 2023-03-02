@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 @objc(RemoveAppBackupOperation)
 final class RemoveAppBackupOperation: ResultOperation<Void> {
@@ -53,12 +54,12 @@ final class RemoveAppBackupOperation: ResultOperation<Void> {
 
                     #else
 
-                        print("Failed to remove app backup directory:", error)
+                        os_log("Failed to remove app backup directory: %@", type: .error , error.localizedDescription)
                         self.finish(.failure(error))
 
                     #endif
                 } catch {
-                    print("Failed to remove app backup directory:", error)
+                    os_log("Failed to remove app backup directory: %@", type: .error , error.localizedDescription)
                     self.finish(.failure(error))
                 }
             }

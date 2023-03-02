@@ -17,7 +17,7 @@ private extension URL {
 }
 
 public extension FetchTrustedSourcesOperation {
-	public struct TrustedSource: Decodable {
+	struct TrustedSource: Decodable {
 		public var identifier: String
 		public var sourceURL: URL?
     }

@@ -14,6 +14,7 @@ import UIKit
 import AltSign
 import SideStoreCore
 import RoxasUIKit
+import os.log
 
 import Nuke
 
@@ -242,7 +243,7 @@ private extension MyAppsViewController {
             cell.bannerView.iconImageView.image = image
 
             if let error = error {
-                print("Error loading image:", error)
+                os_log("Error loading image: %@", type: .error , error.localizedDescription)
             }
         }
 
@@ -442,7 +443,7 @@ private extension MyAppsViewController {
                 let (_, context) = try result.get()
                 try context.save()
             } catch {
-                print("Failed to fetch App IDs.", error)
+                os_log("Failed to fetch App IDs. %@", type: .error , error.localizedDescription)
             }
         }
     }
@@ -575,7 +576,7 @@ private extension MyAppsViewController {
             let interaction = INInteraction.refreshAllApps()
             interaction.donate { error in
                 guard let error = error else { return }
-                print("Failed to donate intent \(interaction.intent).", error)
+                os_log("Failed to donate intent %@ . %@", type: .error , interaction.intent, error.localizedDescription)
             }
         }
     }
@@ -605,7 +606,7 @@ private extension MyAppsViewController {
                     self.collectionView.reloadItems(at: [indexPath])
 
                 case .success:
-                    print("Updated app:", installedApp.bundleIdentifier)
+                    os_log("Updated app: %@", type: .info , installedApp.bundleIdentifier)
                     // No need to reload, since the the update cell is gone now.
                 }
 
@@ -774,7 +775,7 @@ private extension MyAppsViewController {
                     completion(.success(()))
 
                     app.managedObjectContext?.perform {
-                        print("Successfully installed app:", app.bundleIdentifier)
+                        os_log("Successfully installed app: %@", type: .info , app.bundleIdentifier)
                     }
 
                 case .failure(OperationError.cancelled):
@@ -900,7 +901,15 @@ private extension MyAppsViewController {
                 }
             }
 
-            print("Finished refreshing with results:", results.map { ($0, $1.error?.localizedDescription ?? "success") })
+
+			let errors = results.filter({ $1.error != nil }).map{ ($0, $1.error?.localizedDescription ?? "no description") }
+			let successes = results.filter({ $1.error == nil }).map{ ($0, "success") }
+			if !errors.isEmpty {
+				os_log("Finished refreshing Errors: %@", type: .error, errors.map { "\($0.0) - \($0.1)" }.joined(separator: "\n"))
+			}
+			if !successes.isEmpty {
+				os_log("Finished refreshing success: %@", type: .info, successes.map { "\($0.0) - \($0.1)" }.joined(separator: "\n"))
+			}
         }
     }
 
@@ -914,7 +923,7 @@ private extension MyAppsViewController {
             } catch OperationError.cancelled {
                 // Ignore
             } catch {
-                print("Failed to activate app:", error)
+                os_log("Failed to activate app: %@", type: .error , error.localizedDescription)
 
                 DispatchQueue.main.async {
                     installedApp.isActive = false
@@ -977,9 +986,9 @@ private extension MyAppsViewController {
                 let app = try result.get()
                 try? app.managedObjectContext?.save()
 
-                print("Finished deactivating app:", app.bundleIdentifier)
+                os_log("Finished deactivating app: %@", type: .info , app.bundleIdentifier)
             } catch {
-                print("Failed to activate app:", error)
+                os_log("Failed to activate app: %@", type: .error , error.localizedDescription)
 
                 DispatchQueue.main.async {
                     installedApp.isActive = true
@@ -1035,9 +1044,9 @@ private extension MyAppsViewController {
                     let app = try result.get()
                     try? app.managedObjectContext?.save()
 
-                    print("Finished backing up app:", app.bundleIdentifier)
+                    os_log("Finished backing up app: %@", type: .info , app.bundleIdentifier)
                 } catch {
-                    print("Failed to back up app:", error)
+                    os_log("Failed to back up app: %@", type: .error , error.localizedDescription)
 
                     DispatchQueue.main.async {
                         let toastView = ToastView(error: error)
@@ -1066,9 +1075,9 @@ private extension MyAppsViewController {
                     let app = try result.get()
                     try? app.managedObjectContext?.save()
 
-                    print("Finished restoring app:", app.bundleIdentifier)
+                    os_log("Finished restoring app: %@", type: .info , app.bundleIdentifier)
                 } catch {
-                    print("Failed to restore app:", error)
+                    os_log("Failed to restore app: %@", type: .error , error.localizedDescription)
 
                     DispatchQueue.main.async {
                         let toastView = ToastView(error: error)
@@ -1131,7 +1140,7 @@ private extension MyAppsViewController {
                     }
                 }
             } catch {
-                print("Failed to change app icon.", error)
+                os_log("Failed to change app icon. %@", type: .error , error.localizedDescription)
 
                 DispatchQueue.main.async {
                     let toastView = ToastView(error: error)
@@ -1160,7 +1169,7 @@ private extension MyAppsViewController {
     @objc func didFetchSource(_: Notification) {
         DispatchQueue.main.async {
             if self.updatesDataSource.fetchedResultsController.fetchedObjects == nil {
-                do { try self.updatesDataSource.fetchedResultsController.performFetch() } catch { print("Error fetching:", error) }
+                do { try self.updatesDataSource.fetchedResultsController.performFetch() } catch { os_log("Error fetching: %@", type: .error , error.localizedDescription) }
             }
 
             self.update()
@@ -1179,7 +1188,7 @@ private extension MyAppsViewController {
             do {
                 try FileManager.default.removeItem(at: url)
             } catch {
-                print("Unable to remove imported .ipa.", error)
+                os_log("Unable to remove imported .ipa. %@", type: .error , error.localizedDescription)
             }
         }
     }
@@ -1415,7 +1424,7 @@ extension MyAppsViewController {
                     actions.append(restoreBackupAction)
                 }
             } else if let error = outError {
-                print("Unable to check if backup exists:", error)
+                os_log("Unable to check if backup exists: %@", type: .error , error.localizedDescription)
             }
         }
 
@@ -1784,7 +1793,7 @@ extension MyAppsViewController: UIDocumentPickerDelegate {
         switch controller.documentPickerMode {
         case .import, .open:
             sideloadApp(at: fileURL) { result in
-                print("Sideloaded app at \(fileURL) with result:", result)
+				os_log("Sideloaded app at %@ with result: %@", type: .info , fileURL.absoluteString, String(describing: result))
             }
 
         case .exportToService, .moveToService: break

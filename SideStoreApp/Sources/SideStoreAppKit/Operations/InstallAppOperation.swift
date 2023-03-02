@@ -13,6 +13,7 @@ import SideStoreCore
 import RoxasUIKit
 import MiniMuxerSwift
 import minimuxer
+import os.log
 
 @objc(InstallAppOperation)
 final class InstallAppOperation: ResultOperation<InstalledApp> {
@@ -156,7 +157,7 @@ final class InstallAppOperation: ResultOperation<InstalledApp> {
             do {
                 try FileManager.default.removeItem(at: fileURL)
             } catch {
-                print("Failed to remove refreshed .ipa:", error)
+                os_log("Failed to remove refreshed .ipa: %@", type: .error , error.localizedDescription)
             }
         }
 
@@ -172,7 +173,7 @@ private extension InstallAppOperation {
         do {
             try FileManager.default.removeItem(at: context.temporaryDirectory)
         } catch {
-            print("Failed to remove temporary directory.", error)
+            os_log("Failed to remove temporary directory. %@", type: .error , error.localizedDescription)
         }
     }
 }

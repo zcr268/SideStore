@@ -13,6 +13,7 @@ import AltSign
 import SideKit
 import SideStoreCore
 import Shared
+import os.log
 
 private extension DownloadAppOperation {
     struct DependencyError: ALTLocalizedError {
@@ -63,7 +64,7 @@ final class DownloadAppOperation: ResultOperation<ALTApplication> {
             return
         }
 
-        print("Downloading App:", bundleIdentifier)
+        os_log("Downloading App: %@", type: .info , bundleIdentifier)
 
         guard let sourceURL = sourceURL else { return finish(.failure(OperationError.appNotFound)) }
 
@@ -104,7 +105,7 @@ final class DownloadAppOperation: ResultOperation<ALTApplication> {
         do {
             try FileManager.default.removeItem(at: temporaryDirectory)
         } catch {
-            print("Failed to remove DownloadAppOperation temporary directory: \(temporaryDirectory).", error)
+			os_log("Failed to remove DownloadAppOperation temporary directory: %@. %@", type: .error , temporaryDirectory.absoluteString, error.localizedDescription)
         }
 
         super.finish(result)

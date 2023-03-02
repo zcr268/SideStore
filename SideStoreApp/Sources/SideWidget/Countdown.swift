@@ -1,6 +1,6 @@
 //
 //  Countdown.swift
-//  AltWidgetExtension
+//  SideWidgetExtension
 //
 //  Created by Riley Testut on 7/6/20.
 //  Copyright © 2020 Riley Testut. All rights reserved.

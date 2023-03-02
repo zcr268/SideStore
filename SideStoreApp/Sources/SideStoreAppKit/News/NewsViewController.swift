@@ -13,6 +13,7 @@ import SideStoreCore
 import RoxasUIKit
 
 import Nuke
+import os.log
 
 private final class AppBannerFooterView: UICollectionReusableView {
     let bannerView = AppBannerView(frame: .zero)
@@ -159,7 +160,7 @@ private extension NewsViewController {
             cell.imageView.image = image
 
             if let error = error {
-                print("Error loading image:", error)
+                os_log("Error loading image: %@", type: .error , error.localizedDescription)
             }
         }
 
@@ -278,7 +279,7 @@ private extension NewsViewController {
                     let toastView = ToastView(error: error)
                     toastView.show(in: self)
 
-                case .success: print("Installed app:", storeApp.bundleIdentifier)
+                case .success: os_log("Installed app: %@", type: .info, storeApp.bundleIdentifier)
                 }
 
                 UIView.performWithoutAnimation {

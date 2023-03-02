@@ -11,6 +11,7 @@ import UIKit
 
 import SideStoreCore
 import RoxasUIKit
+import os.log
 
 struct SourceError: LocalizedError {
     enum Code {
@@ -285,12 +286,12 @@ private extension SourcesViewController {
             DispatchQueue.main.async {
                 do {
                     let sources = try result.get()
-                    print("Fetched trusted sources:", sources.map { $0.identifier })
+					os_log("Fetched trusted sources: %@", type: .info , sources.map { $0.identifier }.joined(separator: "\n"))
 
                     let sectionUpdate = RSTCellContentChange(type: .update, sectionIndex: 0)
                     self.trustedSourcesDataSource.setItems(sources, with: [sectionUpdate])
                 } catch {
-                    print("Error fetching trusted sources:", error)
+                    os_log("Error fetching trusted sources: %@", type: .error , error.localizedDescription)
 
                     let sectionUpdate = RSTCellContentChange(type: .update, sectionIndex: 0)
                     self.trustedSourcesDataSource.setItems([], with: [sectionUpdate])

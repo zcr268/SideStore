@@ -9,7 +9,7 @@
 import Foundation
 import Network
 import RoxasUIKit
-
+import os.log
 import AltSign
 import SideStoreCore
 
@@ -178,7 +178,11 @@ public final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertifi
     override func finish(_ result: Result<(ALTTeam, ALTCertificate, ALTAppleAPISession), Error>) {
         guard !isFinished else { return }
 
-        print("Finished authenticating with result:", result.error?.localizedDescription ?? "success")
+		if let error = result.error {
+			os_log("Failed to finish authenticating wirth error: %@", type: .error, error.localizedDescription)
+		} else {
+			os_log("Successfully authenticating", type: .info)
+		}
 
         let context = DatabaseManager.shared.persistentContainer.newBackgroundContext()
         context.perform {

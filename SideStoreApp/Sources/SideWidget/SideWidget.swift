@@ -1,6 +1,6 @@
 //
-//  AltWidget.swift
-//  AltWidget
+//  SideWidget.swift
+//  SideWidget
 //
 //  Created by Riley Testut on 6/26/20.
 //  Copyright © 2020 Riley Testut. All rights reserved.
@@ -15,6 +15,7 @@ import AltSign
 import SideStoreCore
 import Roxas
 import RoxasUIKit
+import os.log
 
 struct AppEntry: TimelineEntry {
     var date: Date
@@ -66,7 +67,7 @@ struct Provider: IntentTimelineProvider {
                 let entry = AppEntry(date: Date(), app: snapshot)
                 completion(entry)
             } catch {
-                print("Error preparing widget snapshot:", error)
+                os_log(" %@", type: .error , error.localizedDescription)
 
                 let entry = AppEntry(date: Date(), app: nil)
                 completion(entry)
@@ -131,7 +132,7 @@ struct Provider: IntentTimelineProvider {
                     let timeline = Timeline(entries: entries, policy: .atEnd)
                     completion(timeline)
                 } catch {
-                    print("Error preparing widget timeline:", error)
+                    os_log(" %@", type: .error , error.localizedDescription)
 
                     let entry = AppEntry(date: Date(), app: nil)
                     let timeline = Timeline(entries: [entry], policy: .atEnd)
@@ -164,7 +165,7 @@ struct HomeScreenWidget: Widget {
             WidgetView(entry: entry)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("AltWidget")
+        .configurationDisplayName("SideWidget")
         .description("View remaining days until your sideloaded apps expire.")
     }
 }
@@ -180,7 +181,7 @@ struct TextLockScreenWidget: Widget {
                 ComplicationView(entry: entry, style: .text)
             }
             .supportedFamilies([.accessoryCircular])
-            .configurationDisplayName("AltWidget (Text)")
+            .configurationDisplayName("SideWidget (Text)")
             .description("View remaining days until SideStore expires.")
         } else {
             return EmptyWidgetConfiguration()
@@ -199,7 +200,7 @@ struct IconLockScreenWidget: Widget {
                 ComplicationView(entry: entry, style: .icon)
             }
             .supportedFamilies([.accessoryCircular])
-            .configurationDisplayName("AltWidget (Icon)")
+            .configurationDisplayName("SideWidget (Icon)")
             .description("View remaining days until SideStore expires.")
         } else {
             return EmptyWidgetConfiguration()
@@ -221,7 +222,7 @@ struct IconLockScreenWidget: Widget {
 //                ComplicationView(entry: entry, style: .icon)
 //            }
 //            .supportedFamilies([.accessoryCircular])
-//            .configurationDisplayName("AltWidget")
+//            .configurationDisplayName("SideWidget")
 //            .description("View remaining days until SideStore expires.")
 //        }
 //        else
@@ -232,7 +233,7 @@ struct IconLockScreenWidget: Widget {
 // }
 
 @main
-struct AltWidgets: WidgetBundle {
+struct SideWidgets: WidgetBundle {
     var body: some Widget {
         HomeScreenWidget()
         IconLockScreenWidget()

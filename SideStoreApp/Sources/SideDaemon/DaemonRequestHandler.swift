@@ -9,6 +9,7 @@
 import Foundation
 import Shared
 import SideKit
+import os.log
 
 typealias DaemonConnectionManager = ConnectionManager<DaemonRequestHandler>
 
@@ -39,7 +40,7 @@ struct DaemonRequestHandler: RequestHandler {
         print("Awaiting begin installation request...")
 
         connection.receiveRequest { result in
-            print("Received begin installation request with result:", result)
+            os_log("Received begin installation request with result: %@", type: .info , String(describing: result))
 
             do {
                 guard case let .beginInstallation(request) = try result.get() else { throw ALTServerError(.unknownRequest) }
@@ -47,7 +48,7 @@ struct DaemonRequestHandler: RequestHandler {
 
                 AppManager.shared.installApp(at: fileURL, bundleIdentifier: bundleIdentifier, activeProfiles: request.activeProfiles) { result in
                     let result = result.map { InstallationProgressResponse(progress: 1.0) }
-                    print("Installed app with result:", result)
+					os_log("Installed app with result: %@", type: .info, String(describing: result))
 
                     completionHandler(result)
                 }
@@ -62,11 +63,11 @@ struct DaemonRequestHandler: RequestHandler {
         AppManager.shared.install(request.provisioningProfiles, activeProfiles: request.activeProfiles) { result in
             switch result {
             case let .failure(error):
-                print("Failed to install profiles \(request.provisioningProfiles.map { $0.bundleIdentifier }):", error)
+				os_log("Failed to install profiles %@ : %@", type: .error , request.provisioningProfiles.map { $0.bundleIdentifier }.joined(separator: "\n"), error.localizedDescription)
                 completionHandler(.failure(error))
 
             case .success:
-                print("Installed profiles:", request.provisioningProfiles.map { $0.bundleIdentifier })
+				os_log("Installed profiles: %@", type: .info , request.provisioningProfiles.map { $0.bundleIdentifier }.joined(separator: "\n"))
 
                 let response = InstallProvisioningProfilesResponse()
                 completionHandler(.success(response))
@@ -79,11 +80,11 @@ struct DaemonRequestHandler: RequestHandler {
         AppManager.shared.removeProvisioningProfiles(forBundleIdentifiers: request.bundleIdentifiers) { result in
             switch result {
             case let .failure(error):
-                print("Failed to remove profiles \(request.bundleIdentifiers):", error)
+				os_log("Failed to remove profiles %@ : %@", type: .error, request.bundleIdentifiers, error.localizedDescription)
                 completionHandler(.failure(error))
 
             case .success:
-                print("Removed profiles:", request.bundleIdentifiers)
+                os_log("Removed profiles: %@", type: .info , request.bundleIdentifiers)
 
                 let response = RemoveProvisioningProfilesResponse()
                 completionHandler(.success(response))
@@ -95,11 +96,11 @@ struct DaemonRequestHandler: RequestHandler {
         AppManager.shared.removeApp(forBundleIdentifier: request.bundleIdentifier) { result in
             switch result {
             case let .failure(error):
-                print("Failed to remove app \(request.bundleIdentifier):", error)
+                os_log("Failed to remove app %@ : %@", type: .error , request.bundleIdentifier, error.localizedDescription)
                 completionHandler(.failure(error))
 
             case .success:
-                print("Removed app:", request.bundleIdentifier)
+                os_log("Removed app: %@", type: .info , request.bundleIdentifier)
 
                 let response = RemoveAppResponse()
                 completionHandler(.success(response))

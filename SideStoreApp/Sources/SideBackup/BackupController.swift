@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import AltSign
+import os.log
 
 extension ErrorUserInfoKey {
     static let sourceFile: String = "alt_sourceFile"
@@ -144,11 +146,11 @@ class BackupController: NSObject {
                     // Replace previous backup with new backup.
                     _ = try FileManager.default.replaceItemAt(appBackupDirectory, withItemAt: temporaryAppBackupDirectory)
 
-                    print("Replaced previous backup with new backup:", temporaryAppBackupDirectory)
+                    os_log("Replaced previous backup with new backup: %@", type: .info , temporaryAppBackupDirectory)
 
                     completionHandler(.success(()))
                 } catch {
-                    do { try FileManager.default.removeItem(at: temporaryAppBackupDirectory) } catch { print("Failed to remove temporary directory.", error) }
+                    do { try FileManager.default.removeItem(at: temporaryAppBackupDirectory) } catch { os_log("Failed to remove temporary directory. %@", type: .error , error.localizedDescription) }
 
                     completionHandler(.failure(error))
                 }
@@ -239,7 +241,7 @@ private extension BackupController {
                 print("Copied item from \(fileURL) to \(destinationURL)")
             } catch let error where fileURL.lastPathComponent == "Inbox" && fileURL.deletingLastPathComponent().lastPathComponent == "Documents" {
                 // Ignore errors for /Documents/Inbox
-                print("Failed to copy Inbox directory:", error)
+                os_log("Failed to copy Inbox directory: %@", type: .error , error.localizedDescription)
             } catch {
                 print(error)
                 throw error

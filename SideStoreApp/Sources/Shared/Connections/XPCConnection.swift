@@ -8,6 +8,7 @@
 
 import Foundation
 import SideKit
+import os.log
 
 @objc private protocol XPCConnectionProxy {
     func ping(completionHandler: @escaping () -> Void)
@@ -56,7 +57,7 @@ public class XPCConnection: NSObject, SideConnection {
 private extension XPCConnection {
     func makeProxy(errorHandler: @escaping (Error) -> Void) -> XPCConnectionProxy {
         let proxy = xpcConnection.remoteObjectProxyWithErrorHandler { error in
-            print("Error messaging remote object proxy:", error)
+			os_log("Error messaging remote object proxy: %@", type: .error , error.localizedDescription)
             self.error = error
             errorHandler(error)
         } as! XPCConnectionProxy

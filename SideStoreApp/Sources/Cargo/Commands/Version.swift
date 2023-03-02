@@ -1,5 +1,6 @@
 import ArgumentParser
 import SwiftLintFramework
+import os.log
 
 extension Cargo {
     struct Version: ParsableCommand {
@@ -12,8 +13,8 @@ extension Cargo {
 
         func run() throws {
             if verbose, let buildID = ExecutableInfo.buildID {
-                print("Version:", Self.value)
-                print("Build ID:", buildID)
+                os_log("Version: %@", type: .info , Self.value)
+                os_log("Build ID: %@", type: .info , buildID)
             } else {
                 print(Self.value)
             }

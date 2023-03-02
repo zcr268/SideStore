@@ -9,6 +9,7 @@
 import Foundation
 import Network
 import SideKit
+import os.log
 
 public protocol RequestHandler {
     func handleAnisetteDataRequest(_ request: AnisetteDataRequest, for connection: Connection, completionHandler: @escaping (Result<AnisetteDataResponse, Error>) -> Void)
@@ -102,18 +103,18 @@ private extension ConnectionManager {
             do {
                 let response = try result.get()
                 connection.send(response, shouldDisconnect: true) { result in
-                    print("Sent response \(response) with result:", result)
+					os_log("Sent response %@ with result: %@", type: .error , response.identifier, String(describing: result))
                 }
             } catch {
                 let response = ErrorResponse(error: ALTServerError(error))
                 connection.send(response, shouldDisconnect: true) { result in
-                    print("Sent error response \(response) with result:", result)
+					os_log("Sent error response %@ with result: %@", type: .error , response.error.localizedDescription, String(describing: result))
                 }
             }
         }
 
         connection.receiveRequest { result in
-            print("Received request with result:", result)
+			os_log("Received request with result: %@", type: .info, String(describing: result))
 
             switch result {
             case let .failure(error): finish(Result<ErrorResponse, Error>.failure(error))
