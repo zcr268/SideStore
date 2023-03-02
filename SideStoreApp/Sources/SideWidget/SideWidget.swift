@@ -13,7 +13,7 @@ import WidgetKit
 
 import AltSign
 import SideStoreCore
-
+import Roxas
 import RoxasUIKit
 
 struct AppEntry: TimelineEntry {

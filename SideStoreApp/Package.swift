@@ -19,8 +19,12 @@ let USE_CXX_MODULES = envBool("USE_CXX_MODULES")
 let INHIBIT_UPSTREAM_WARNINGS = envBool("INHIBIT_UPSTREAM_WARNINGS")
 let STATIC_LIBRARY = envBool("STATIC_LIBRARY")
 
-let unsafe_flags: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : []
-let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
+let unsafe_flags: [String] = INHIBIT_UPSTREAM_WARNINGS ?
+	["-w"] :
+	[]
+let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ?
+	["-w", "-Wno-module-import-in-extern-c"] :
+	["-Wno-module-import-in-extern-c"]
 
 let dependencies: [Package.Dependency] = [
 
@@ -40,9 +44,52 @@ let dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
 
 	// Plugins
+		// IntentBuilder for spm support of intents and Logger injection
 	.package(url: "https://github.com/JoeMatt/SwiftPMPlugins.git", .upToNextMinor(from: "1.0.0")),
+		// Generate swift files with git head info
 	.package(url: "https://github.com/elegantchaos/Versionator.git", from: "1.0.3"),
+		// plists from .json, including Info.plist
 	.package(url: "https://github.com/elegantchaos/InfomaticPlugin.git", branch: "main"),
+		// Swiftlint
+	.package(url: "https://github.com/lukepistrol/SwiftLintPlugin", from: "0.2.2"),
+		// git secrets from env (for adding sensative api keys via CI/CD,
+		// `swift package plugin --allow-writing-to-package-directory secret-keys generate`
+		// or `mint run secret-keys generate`
+	.package(url: "https://github.com/simorgh3196/swift-secret-keys", from: "0.0.1"),
+		// Swift docc generator
+		// `swift package generate-documentation` to call
+		// or inline creation
+		// `swift package --allow-writing-to-directory ./docs \
+		//	generate-documentation --target MyFramework --output-path ./docs`
+		// to preview:
+		// `swift package --disable-sandbox preview-documentation --target MyFramework
+		// Hosting https://apple.github.io/swift-docc-plugin/documentation/swiftdoccplugin/
+	.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.1.0"),
+
+		// Generate compile time checked URLs
+		// This will compile
+		// let validUrl = URL(safeString: "https://example.tld")
+		// This won't
+		// let invalidUrl = URL(safeString: "https://example./tld")
+	.package(url: "https://github.com/baguio/SwiftSafeURL", from: "0.4.2"),
+
+		// Secrets manager using `.env`
+	.package(url: "https://github.com/vdka/SecretsManager.git", from: "1.0.0"),
+
+		// Generate `PackageBuild` struct with build time info about repo
+	.package(url: "https://github.com/DimaRU/PackageBuildInfo", branch: "master"),
+
+	/*
+		//  Plugin for simply updating your Package.swift file consistently and understandably.
+	 .package(url: "https://github.com/mackoj/PackageGeneratorPlugin.git", from: "0.3.0"),
+		// Plugin for quickly updating your Schemes files
+	 .package(url: "https://github.com/mackoj/SchemeGeneratorPlugin.git", from: "0.5.5"),
+	 .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "0.45.0"),
+
+	 */
+
+	// Old style plugins
+	.package(url: "https://github.com/f-meloni/danger-swift-coverage", from: "0.1.0") // dev
 
 ] // + dependencies_cargo
 
@@ -57,20 +104,64 @@ let package = Package(
     ],
 
     products: [
+		// SideWidget Executable
         .executable(
             name: "SideStore",
             targets: ["SideStore"]
         ),
 
+		// SideWidget Executable
         .executable(
             name: "SideWidget",
             targets: ["SideWidget"]
         ),
 
+		// SideStoreAppKit
 		.library(
 			name: "SideStoreAppKit",
 			targets: ["SideStoreAppKit"]),
 
+		.library(
+			name: "SideStoreAppKit-Static",
+			type: .static,
+			targets: ["SideStoreAppKit"]),
+
+		.library(
+			name: "SideStoreAppKit-Dynamic",
+			type: .dynamic,
+			targets: ["SideStoreAppKit"]),
+
+		// SideStoreCore
+		.library(
+			name: "SideStoreCore",
+			targets: ["SideStoreCore"]),
+
+		.library(
+			name: "SideStoreCore-Static",
+			type: .static,
+			targets: ["SideStoreCore"]),
+
+		.library(
+			name: "SideStoreCore-Dynamic",
+			type: .dynamic,
+			targets: ["SideStoreCore"]),
+
+		// Shared (for widget)
+		.library(
+			name: "Shared",
+			targets: ["Shared"]),
+
+		.library(
+			name: "Shared-Static",
+			type: .static,
+			targets: ["Shared"]),
+
+		.library(
+			name: "Shared-Dynamic",
+			type: .dynamic,
+			targets: ["Shared"]),
+
+		// Plugins
 		.plugin(name: "CargoPlugin", targets: ["CargoPlugin"]),
     ],
 
@@ -141,7 +232,10 @@ let package = Package(
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
 //				.plugin(name: "VersionatorPlugin", package: "Versionator"),
-				.plugin(name: "InfomaticPlugin", package: "InfomaticPlugin")
+				.plugin(name: "InfomaticPlugin", package: "InfomaticPlugin"),
+				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
+				.plugin(name: "packageBuildInfoPlugin", package: "PackageBuildInfo"),
+				.plugin(name: "SecretsManagerPlugin", package: "SecretsManager"),
 			]
         ),
 
@@ -188,6 +282,7 @@ let package = Package(
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
 			]
 		),
 
@@ -195,6 +290,10 @@ let package = Package(
 
         .executableTarget(
             name: "SideWidget",
+			dependencies: [
+				"Shared",
+				"SideStoreCore"
+			],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
 				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
@@ -208,6 +307,7 @@ let package = Package(
             dependencies: ["em_proxy"]
         ),
 
+		// For local, run `make zip`
 //        .binaryTarget(
 //            name: "em_proxy",
 //            path: "Dependencies/em_proxy/em_proxy.xcframework.zip"
@@ -252,6 +352,7 @@ let package = Package(
 			]
         ),
 
+		// For local, run `make zip`
 //        .binaryTarget(
 //            name: "minimuxer",
 //            path: "Dependencies/minimuxer/minimuxer.xcframework.zip"
@@ -278,7 +379,10 @@ let package = Package(
             dependencies: [
                 "SideKit",
                 "AltSign",
-            ]
+            ],
+			plugins: [
+				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
+			]
         ),
 
         .testTarget(
@@ -311,7 +415,8 @@ let package = Package(
             ],
 			plugins: [
 				.plugin(name: "IntentBuilderPlugin", package: "SwiftPMPlugins"),
-				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins")
+				.plugin(name: "LoggerPlugin", package: "SwiftPMPlugins"),
+				.plugin(name: "SafeURLPlugin", package: "SafeURLPlugin"),
 			]
         ),
 
@@ -329,6 +434,9 @@ let package = Package(
 		// MARK: - Plugins
 		.plugin(name: "CargoPlugin", capability: .buildTool()),
 //		.plugin(name: "CargoPlugin-Generate", capability: .command(intent: PluginCommandIntent)),
+
+		// MARK: Danger.swift
+		.target(name: "DangerDependencies", dependencies: ["Danger", "DangerSwiftCoverage"]), // dev
 
     ],
     swiftLanguageVersions: [.v5],

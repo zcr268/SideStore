@@ -3,11 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3CD301C29AF87EE00374AF8 /* SideStore in Frameworks */ = {isa = PBXBuildFile; productRef = B3CD301B29AF87EE00374AF8 /* SideStore */; };
+		B34AFBD529B03235000F318E /* SideStoreAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFBD429B03235000F318E /* SideStoreAppKit */; };
+		B34AFBF829B03251000F318E /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF629B0324C000F318E /* LaunchViewController.swift */; };
+		B34AFBF929B03251000F318E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF729B0324C000F318E /* SceneDelegate.swift */; };
+		B34AFBFA29B03251000F318E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF529B0324C000F318E /* AppDelegate.swift */; };
+		B34AFBFB29B03279000F318E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE829B0324C000F318E /* Main.storyboard */; };
+		B34AFBFC29B0327E000F318E /* SettingsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE329B0324C000F318E /* SettingsHeaderFooterView.xib */; };
+		B34AFBFD29B0327E000F318E /* BrowseCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDD29B0324C000F318E /* BrowseCollectionViewCell.xib */; };
+		B34AFBFE29B0327E000F318E /* AppBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDE29B0324C000F318E /* AppBannerView.xib */; };
+		B34AFBFF29B0327E000F318E /* AboutPatreonHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE029B0324C000F318E /* AboutPatreonHeaderView.xib */; };
+		B34AFC0029B0327E000F318E /* NewsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE229B0324C000F318E /* NewsCollectionViewCell.xib */; };
+		B34AFC0129B0327E000F318E /* UpdateCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE129B0324C000F318E /* UpdateCollectionViewCell.xib */; };
+		B34AFC0229B0327E000F318E /* InstalledAppsCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDF29B0324C000F318E /* InstalledAppsCollectionHeaderView.xib */; };
+		B34AFC0329B03283000F318E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDB29B0324C000F318E /* Settings.storyboard */; };
+		B34AFC0429B03288000F318E /* Silence.m4a in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBEB29B0324C000F318E /* Silence.m4a */; };
+		B34AFC0529B0328D000F318E /* apps.json in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBED29B0324C000F318E /* apps.json */; };
+		B34AFC0629B0328D000F318E /* apps-alpha.json in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBEE29B0324C000F318E /* apps-alpha.json */; };
+		B34AFC0729B03291000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBF229B0324C000F318E /* Assets.xcassets */; };
+		B34AFC1129B032DF000F318E /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0929B032DF000F318E /* Countdown.swift */; };
+		B34AFC1229B032DF000F318E /* ComplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0A29B032DF000F318E /* ComplicationView.swift */; };
+		B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0B29B032DF000F318E /* WidgetView.swift */; };
+		B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFC0D29B032DF000F318E /* Assets.xcassets */; };
+		B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC1029B032DF000F318E /* SideWidget.swift */; };
+		B34AFC1829B03406000F318E /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFC1729B03406000F318E /* Shared */; };
 		BF989177250AABF4002ACF50 /* SideWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D533E8B62727841800A9B5DD /* libAppleArchive.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -49,11 +71,43 @@
 /* Begin PBXFileReference section */
 		191E5FB5290A5E1F001A3B7C /* libminimuxer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libminimuxer.a; path = "Dependencies/minimuxer/target/aarch64-apple-ios/debug/libminimuxer.a"; sourceTree = "<group>"; };
 		B343F86C295F759E002B1159 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
+		B347773629B0314A00201FCA /* SideStoreApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SideStoreApp; sourceTree = "<group>"; };
+		B34AFBD929B0324C000F318E /* PatchApp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PatchApp.storyboard; sourceTree = "<group>"; };
+		B34AFBDA29B0324C000F318E /* Authentication.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Authentication.storyboard; sourceTree = "<group>"; };
+		B34AFBDB29B0324C000F318E /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		B34AFBDD29B0324C000F318E /* BrowseCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BrowseCollectionViewCell.xib; sourceTree = "<group>"; };
+		B34AFBDE29B0324C000F318E /* AppBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppBannerView.xib; sourceTree = "<group>"; };
+		B34AFBDF29B0324C000F318E /* InstalledAppsCollectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InstalledAppsCollectionHeaderView.xib; sourceTree = "<group>"; };
+		B34AFBE029B0324C000F318E /* AboutPatreonHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutPatreonHeaderView.xib; sourceTree = "<group>"; };
+		B34AFBE129B0324C000F318E /* UpdateCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpdateCollectionViewCell.xib; sourceTree = "<group>"; };
+		B34AFBE229B0324C000F318E /* NewsCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsCollectionViewCell.xib; sourceTree = "<group>"; };
+		B34AFBE329B0324C000F318E /* SettingsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsHeaderFooterView.xib; sourceTree = "<group>"; };
+		B34AFBE429B0324C000F318E /* SideStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SideStore.entitlements; sourceTree = "<group>"; };
+		B34AFBE529B0324C000F318E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		B34AFBE729B0324C000F318E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B34AFBE929B0324C000F318E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B34AFBEB29B0324C000F318E /* Silence.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = Silence.m4a; sourceTree = "<group>"; };
+		B34AFBED29B0324C000F318E /* apps.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = apps.json; sourceTree = "<group>"; };
+		B34AFBEE29B0324C000F318E /* apps-alpha.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "apps-alpha.json"; sourceTree = "<group>"; };
+		B34AFBEF29B0324C000F318E /* Info.info */ = {isa = PBXFileReference; lastKnownFileType = text; path = Info.info; sourceTree = "<group>"; };
+		B34AFBF029B0324C000F318E /* tempEnt.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = tempEnt.plist; sourceTree = "<group>"; };
+		B34AFBF229B0324C000F318E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B34AFBF329B0324C000F318E /* AltBackup.ipa */ = {isa = PBXFileReference; lastKnownFileType = file; path = AltBackup.ipa; sourceTree = "<group>"; };
+		B34AFBF429B0324C000F318E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B34AFBF529B0324C000F318E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B34AFBF629B0324C000F318E /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
+		B34AFBF729B0324C000F318E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B34AFC0929B032DF000F318E /* Countdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
+		B34AFC0A29B032DF000F318E /* ComplicationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationView.swift; sourceTree = "<group>"; };
+		B34AFC0B29B032DF000F318E /* WidgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
+		B34AFC0D29B032DF000F318E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B34AFC0E29B032DF000F318E /* SideWidgetExtension.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SideWidgetExtension.entitlements; sourceTree = "<group>"; };
+		B34AFC0F29B032DF000F318E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B34AFC1029B032DF000F318E /* SideWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideWidget.swift; sourceTree = "<group>"; };
 		B39575F4284F29E20080B4FF /* Roxas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Roxas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CodeSigning.xcconfig; sourceTree = "<group>"; };
 		B3C39607284F4C8400DA9E2F /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
 		B3C39608284F4C8400DA9E2F /* CodeSigning.xcconfig.sample */ = {isa = PBXFileReference; lastKnownFileType = text; path = CodeSigning.xcconfig.sample; sourceTree = "<group>"; };
-		B3CD301129AF854600374AF8 /* SideStore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SideStore; sourceTree = "<group>"; };
 		B3CD301329AF876000374AF8 /* SideBackup.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SideBackup.xcconfig; sourceTree = "<group>"; };
 		B3CD301429AF876000374AF8 /* SideWidgetExtension.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SideWidgetExtension.xcconfig; sourceTree = "<group>"; };
 		B3CD301529AF876000374AF8 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
@@ -75,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFC1829B03406000F318E /* Shared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,14 +137,118 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFBD529B03235000F318E /* SideStoreAppKit in Frameworks */,
 				D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */,
-				B3CD301C29AF87EE00374AF8 /* SideStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B34AFBD629B0324C000F318E /* SideStore */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBD729B0324C000F318E /* Resources */,
+				B34AFBF529B0324C000F318E /* AppDelegate.swift */,
+				B34AFBF629B0324C000F318E /* LaunchViewController.swift */,
+				B34AFBF729B0324C000F318E /* SceneDelegate.swift */,
+			);
+			name = SideStore;
+			path = SideStoreApp/Sources/SideStore;
+			sourceTree = "<group>";
+		};
+		B34AFBD729B0324C000F318E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBD829B0324C000F318E /* Storyboards */,
+				B34AFBDC29B0324C000F318E /* XIB */,
+				B34AFBE429B0324C000F318E /* SideStore.entitlements */,
+				B34AFBE529B0324C000F318E /* Settings.bundle */,
+				B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */,
+				B34AFBE829B0324C000F318E /* Main.storyboard */,
+				B34AFBEA29B0324C000F318E /* Sounds */,
+				B34AFBEC29B0324C000F318E /* JSON */,
+				B34AFBEF29B0324C000F318E /* Info.info */,
+				B34AFBF029B0324C000F318E /* tempEnt.plist */,
+				B34AFBF129B0324C000F318E /* Assets */,
+				B34AFBF329B0324C000F318E /* AltBackup.ipa */,
+				B34AFBF429B0324C000F318E /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B34AFBD829B0324C000F318E /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBD929B0324C000F318E /* PatchApp.storyboard */,
+				B34AFBDA29B0324C000F318E /* Authentication.storyboard */,
+				B34AFBDB29B0324C000F318E /* Settings.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		B34AFBDC29B0324C000F318E /* XIB */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBDD29B0324C000F318E /* BrowseCollectionViewCell.xib */,
+				B34AFBDE29B0324C000F318E /* AppBannerView.xib */,
+				B34AFBDF29B0324C000F318E /* InstalledAppsCollectionHeaderView.xib */,
+				B34AFBE029B0324C000F318E /* AboutPatreonHeaderView.xib */,
+				B34AFBE129B0324C000F318E /* UpdateCollectionViewCell.xib */,
+				B34AFBE229B0324C000F318E /* NewsCollectionViewCell.xib */,
+				B34AFBE329B0324C000F318E /* SettingsHeaderFooterView.xib */,
+			);
+			path = XIB;
+			sourceTree = "<group>";
+		};
+		B34AFBEA29B0324C000F318E /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBEB29B0324C000F318E /* Silence.m4a */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		B34AFBEC29B0324C000F318E /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBED29B0324C000F318E /* apps.json */,
+				B34AFBEE29B0324C000F318E /* apps-alpha.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		B34AFBF129B0324C000F318E /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFBF229B0324C000F318E /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		B34AFC0829B032DF000F318E /* SideWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFC0929B032DF000F318E /* Countdown.swift */,
+				B34AFC0A29B032DF000F318E /* ComplicationView.swift */,
+				B34AFC0B29B032DF000F318E /* WidgetView.swift */,
+				B34AFC0C29B032DF000F318E /* Resources */,
+				B34AFC1029B032DF000F318E /* SideWidget.swift */,
+			);
+			name = SideWidget;
+			path = SideStoreApp/Sources/SideWidget;
+			sourceTree = "<group>";
+		};
+		B34AFC0C29B032DF000F318E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B34AFC0D29B032DF000F318E /* Assets.xcassets */,
+				B34AFC0E29B032DF000F318E /* SideWidgetExtension.entitlements */,
+				B34AFC0F29B032DF000F318E /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		B3CD301229AF876000374AF8 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,13 +261,14 @@
 				B3CD301929AF876000374AF8 /* Archive.xcconfig */,
 				B3CD301A29AF876000374AF8 /* SideStoreCore.xcconfig */,
 			);
-			path = Configurations;
+			name = Configurations;
+			path = SideStoreApp/Configurations;
 			sourceTree = "<group>";
 		};
 		B3E8749729AF639C00745374 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				B3CD301129AF854600374AF8 /* SideStore */,
+				B347773629B0314A00201FCA /* SideStoreApp */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -120,6 +280,8 @@
 				B3C39607284F4C8400DA9E2F /* Build.xcconfig */,
 				B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */,
 				B3C39608284F4C8400DA9E2F /* CodeSigning.xcconfig.sample */,
+				B34AFBD629B0324C000F318E /* SideStore */,
+				B34AFC0829B032DF000F318E /* SideWidget */,
 				B3CD301229AF876000374AF8 /* Configurations */,
 				BFD247852284BB3300981D42 /* Frameworks */,
 				BFD2476B2284B9A500981D42 /* Products */,
@@ -165,6 +327,9 @@
 			dependencies = (
 			);
 			name = SideWidgetExtension;
+			packageProductDependencies = (
+				B34AFC1729B03406000F318E /* Shared */,
+			);
 			productName = AltWidgetExtension;
 			productReference = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -186,7 +351,7 @@
 			);
 			name = SideStore;
 			packageProductDependencies = (
-				B3CD301B29AF87EE00374AF8 /* SideStore */,
+				B34AFBD429B03235000F318E /* SideStoreAppKit */,
 			);
 			productName = AltStore;
 			productReference = BFD2476A2284B9A500981D42 /* SideStore.app */;
@@ -198,6 +363,7 @@
 		BFD247622284B9A500981D42 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1400;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = SideStore;
@@ -246,6 +412,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +420,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFBFE29B0327E000F318E /* AppBannerView.xib in Resources */,
+				B34AFC0129B0327E000F318E /* UpdateCollectionViewCell.xib in Resources */,
+				B34AFC0229B0327E000F318E /* InstalledAppsCollectionHeaderView.xib in Resources */,
+				B34AFBFF29B0327E000F318E /* AboutPatreonHeaderView.xib in Resources */,
+				B34AFC0429B03288000F318E /* Silence.m4a in Resources */,
+				B34AFBFB29B03279000F318E /* Main.storyboard in Resources */,
+				B34AFC0729B03291000F318E /* Assets.xcassets in Resources */,
+				B34AFC0629B0328D000F318E /* apps-alpha.json in Resources */,
+				B34AFBFC29B0327E000F318E /* SettingsHeaderFooterView.xib in Resources */,
+				B34AFC0529B0328D000F318E /* apps.json in Resources */,
+				B34AFC0329B03283000F318E /* Settings.storyboard in Resources */,
+				B34AFBFD29B0327E000F318E /* BrowseCollectionViewCell.xib in Resources */,
+				B34AFC0029B0327E000F318E /* NewsCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +443,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */,
+				B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */,
+				B34AFC1229B032DF000F318E /* ComplicationView.swift in Sources */,
+				B34AFC1129B032DF000F318E /* Countdown.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +454,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34AFBFA29B03251000F318E /* AppDelegate.swift in Sources */,
+				B34AFBF829B03251000F318E /* LaunchViewController.swift in Sources */,
+				B34AFBF929B03251000F318E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +470,25 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B34AFBE729B0324C000F318E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B34AFBE829B0324C000F318E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B34AFBE929B0324C000F318E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		BF989179250AABF4002ACF50 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -293,13 +499,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CODE_SIGN_ENTITLEMENTS = Sources/SideWidget/Resources/SideWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideWidget/Resources/SideWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Sources/SideWidget/Resources/Info.plist;
+				INFOPLIST_FILE = SideStoreApp/Sources/SideWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -324,12 +530,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CODE_SIGN_ENTITLEMENTS = Sources/SideWidget/Resources/SideWidgetExtension.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideWidget/Resources/SideWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = Sources/SideWidget/Resources/Info.plist;
+				INFOPLIST_FILE = SideStoreApp/Sources/SideWidget/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -479,14 +685,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3CD301829AF876000374AF8 /* SideStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Sources/SideStore/Resources/SideStore.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreAppSources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Sources/SideStore/Resources/Info.plist;
+				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -511,14 +718,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3CD301829AF876000374AF8 /* SideStore.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Sources/SideStore/Resources/SideStore.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SideStoreAppSources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = Sources/SideStore/Resources/Info.plist;
+				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -571,9 +779,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B3CD301B29AF87EE00374AF8 /* SideStore */ = {
+		B34AFBD429B03235000F318E /* SideStoreAppKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SideStore;
+			productName = SideStoreAppKit;
+		};
+		B34AFC1729B03406000F318E /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Shared;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

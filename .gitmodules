@@ -1,6 +1,6 @@
 [submodule "Dependencies/em_proxy"]
-	path = Dependencies/em_proxy
+	path = SideStoreApp/Dependencies/em_proxy
 	url = https://github.com/SideStore/em_proxy.git
 [submodule "Dependencies/minimuxer"]
-	path = Dependencies/minimuxer
+	path = SideStoreApp/Dependencies/minimuxer
 	url = https://github.com/SideStore/minimuxer.git
