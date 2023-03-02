@@ -33,7 +33,7 @@ struct CargoPlugin: BuildToolPlugin {
 		// Manually look for configuration files, to avoid issues when the plugin does not execute our tool from the
 		// package source directory.
 		if let configuration = packageDirectory.firstConfigurationFileInParentDirectories() {
-			arguments.append(contentsOf: ["--config", "\(configuration.string)"])
+			arguments.append(contentsOf: ["--manifest-path", "\(configuration.string)"])
 		}
 		arguments += inputFiles.map(\.string)
 
@@ -57,7 +57,7 @@ import XcodeProjectPlugin
 extension CargoPlugin: XcodeBuildToolPlugin {
 	func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
 		let inputFilePaths = target.inputFiles
-			.filter { $0.type == .source && $0.path.extension == "swift" }
+			.filter { $0.type == .source && $0.path.extension == "toml" }
 			.map(\.path)
 		return createBuildCommands(
 			inputFiles: inputFilePaths,
@@ -80,7 +80,7 @@ extension Path {
 	///
 	/// - returns: Path to the configuration file, or nil if one cannot be found.
 	func firstConfigurationFileInParentDirectories() -> Path? {
-		let defaultConfigurationFileName = ".swiftlint.yml"
+		let defaultConfigurationFileName = "Cargo.toml"
 		let proposedDirectory = sequence(
 			first: self,
 			next: { path in

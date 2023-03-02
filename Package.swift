@@ -190,10 +190,16 @@ let package = Package(
             dependencies: ["em_proxy"]
         ),
 
-        .binaryTarget(
-            name: "em_proxy",
-            path: "Dependencies/em_proxy/em_proxy.xcframework.zip"
-        ),
+//        .binaryTarget(
+//            name: "em_proxy",
+//            path: "Dependencies/em_proxy/em_proxy.xcframework.zip"
+//        ),
+
+		.binaryTarget(
+			name: "em_proxy",
+			url: "https://github.com/SideStore/em_proxy/releases/download/build/em_proxy.xcframework.zip",
+			checksum: "8c745d9fdf121ab33b1007394c283d1a1a74a30efa0a52b22c29b766ea7d6a8e"
+		),
 
         .testTarget(
             name: "EmotionalDamageTests",
@@ -228,10 +234,16 @@ let package = Package(
 			]
         ),
 
-        .binaryTarget(
-            name: "minimuxer",
-            path: "Dependencies/minimuxer/minimuxer.xcframework.zip"
-        ),
+//        .binaryTarget(
+//            name: "minimuxer",
+//            path: "Dependencies/minimuxer/minimuxer.xcframework.zip"
+//        ),
+
+		.binaryTarget(
+			name: "minimuxer",
+			url: "https://github.com/SideStore/minimuxer/releases/download/build/minimuxer.xcframework.zip",
+			checksum: "7a5423ad301dacc664ee5141942781f69753346bae148699ea21b1debdc0d3b5"
+		),
 
         .testTarget(
             name: "MiniMuxerTests",
