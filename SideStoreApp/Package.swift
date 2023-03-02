@@ -448,7 +448,7 @@ let package = Package(
 //		.plugin(name: "CargoPlugin-Generate", capability: .command(intent: PluginCommandIntent)),
 
 		.target(name: "PackageConfigs", dependencies: [
-			"IgnoreConfig",
+			.product(name: "IgnoreConfig", package: "ignore"),
 		])
 		// MARK: Danger.swift
 //		.target(
