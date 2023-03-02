@@ -336,7 +336,7 @@ private extension SourcesViewController {
 
                 dispatchGroup.notify(queue: .main) {
                     if let error = fetchError {
-                        print(error)
+						os_log("fetch error: %@", type: .error, error.localizedErrorCode)
                         // 1 error doesn't mean all trusted sources failed to load! Riley, why did you do this???????
 //                        finish(.failure(error))
                     }

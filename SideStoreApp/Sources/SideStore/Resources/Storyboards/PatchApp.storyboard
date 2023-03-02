@@ -12,7 +12,7 @@
         <!--Navigation Controller-->
         <scene sceneID="dx2-fp-qDX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WBb-E1-bN8" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WBb-E1-bN8" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="cVa-8m-fW6" customClass="NavigationBar" customModule="SideStore" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>

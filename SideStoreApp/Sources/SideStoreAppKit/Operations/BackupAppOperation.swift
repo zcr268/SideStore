@@ -10,6 +10,7 @@ import Foundation
 
 import AltSign
 import SideStoreCore
+import os.log
 
 extension BackupAppOperation {
     enum Action: String {
@@ -25,6 +26,9 @@ class BackupAppOperation: ResultOperation<Void> {
 
     private var appName: String?
     private var timeoutTimer: Timer?
+
+	private var applicationWillReturnObserver: NSObjectProtocol?
+	private var backupResponseObserver: NSObjectProtocol?
 
     init(action: Action, context: InstallAppOperationContext) {
         self.action = action
@@ -128,9 +132,11 @@ class BackupAppOperation: ResultOperation<Void> {
 
 private extension BackupAppOperation {
     func registerObservers() {
-        var applicationWillReturnObserver: NSObjectProtocol!
         applicationWillReturnObserver = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self, !self.isFinished else { return }
+            guard let self = self, !self.isFinished else {
+				os_log("nil self", type: .error)
+				return
+			}
 
             self.timeoutTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak self] _ in
                 // Final delay to ensure we don't prematurely return failure
@@ -142,17 +148,27 @@ private extension BackupAppOperation {
                 }
             }
 
-            NotificationCenter.default.removeObserver(applicationWillReturnObserver!)
+			if let applicationWillReturnObserver = self.applicationWillReturnObserver {
+				NotificationCenter.default.removeObserver(applicationWillReturnObserver)
+			}
+			self.applicationWillReturnObserver = nil
         }
 
-        var backupResponseObserver: NSObjectProtocol!
-        backupResponseObserver = NotificationCenter.default.addObserver(forName: SideStoreAppDelegate.appBackupDidFinish, object: nil, queue: nil) { [weak self] notification in
-            self?.timeoutTimer?.invalidate()
+		backupResponseObserver = NotificationCenter.default.addObserver(forName: SideStoreAppDelegate.appBackupDidFinish, object: nil, queue: nil) { [weak self] notification in
+			guard let self = self else {
+				os_log("nil self", type: .error)
+				return
+			}
+
+            self.timeoutTimer?.invalidate()
 
             let result = notification.userInfo?[SideStoreAppDelegate.appBackupResultKey] as? Result<Void, Error> ?? .failure(OperationError.unknownResult)
-            self?.finish(result)
+            self.finish(result)
 
-            NotificationCenter.default.removeObserver(backupResponseObserver!)
+			if let backupResponseObserver = self.backupResponseObserver {
+				NotificationCenter.default.removeObserver(backupResponseObserver)
+			}
+			self.backupResponseObserver = nil
         }
     }
 }

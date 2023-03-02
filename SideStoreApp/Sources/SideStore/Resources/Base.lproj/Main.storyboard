@@ -592,7 +592,7 @@ World</string>
         <!--Browse-->
         <scene sceneID="VHa-uP-bFU">
             <objects>
-                <navigationController storyboardIdentifier="forwardingNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="faz-B4-Sub" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="forwardingNavigationControllerBrowse" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="faz-B4-Sub" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Browse" image="Browse" id="Uwh-Bg-Ymq"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="dIv-qd-9L5" customClass="NavigationBar" customModule="SideStore" customModuleProvider="target">
@@ -620,7 +620,7 @@ World</string>
         <!--My Apps-->
         <scene sceneID="nhh-BJ-XiT">
             <objects>
-                <navigationController storyboardIdentifier="forwardingNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Ew-ox-i4n" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="forwardingNavigationControllerNyApps" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Ew-ox-i4n" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="My Apps" image="MyApps" id="4gT-9u-k7y">
                         <color key="badgeColor" name="Primary"/>
                     </tabBarItem>
@@ -905,7 +905,7 @@ World</string>
         <!--News-->
         <scene sceneID="BV8-6J-nIv">
             <objects>
-                <navigationController storyboardIdentifier="forwardingNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kjR-gi-fgT" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="forwardingNavigationControllerNews" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kjR-gi-fgT" customClass="ForwardingNavigationController" customModule="SideStoreAppKit" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="News" image="News" id="fVN-ed-uO1"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="525-jF-uDK" customClass="NavigationBar" customModule="SideStore" customModuleProvider="target">
