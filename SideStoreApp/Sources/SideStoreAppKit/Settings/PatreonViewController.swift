@@ -33,7 +33,7 @@ final class PatreonViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let aboutHeaderNib = UINib(nibName: "AboutPatreonHeaderView", bundle: nil)
+		let aboutHeaderNib = UINib(nibName: "AboutPatreonHeaderView", bundle: Bundle(for: PatronsHeaderView.self))
         prototypeAboutHeader = aboutHeaderNib.instantiate(withOwner: nil, options: nil)[0] as? AboutPatreonHeaderView
 
         collectionView.dataSource = dataSource

@@ -962,7 +962,7 @@ private extension AppManager {
                 let patchApp = AnyApp(name: app.name, bundleIdentifier: app.bundleIdentifier, url: patchAppURL)
 
                 DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "PatchApp", bundle: nil)
+                    let storyboard = UIStoryboard(name: "PatchApp", bundle: Bundle.init(for: PatchViewController.self))
                     let navigationController = storyboard.instantiateInitialViewController() as! UINavigationController
 
                     let patchViewController = navigationController.topViewController as! PatchViewController

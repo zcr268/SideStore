@@ -324,7 +324,7 @@ final class AppViewController: UIViewController {
 
 extension AppViewController {
     final class func makeAppViewController(app: StoreApp) -> AppViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+		let storyboard = UIStoryboard(name: "Main", bundle: Bundle.init(for: AppViewController.self))
 
         let appViewController = storyboard.instantiateViewController(withIdentifier: "appViewController") as! AppViewController
         appViewController.app = app

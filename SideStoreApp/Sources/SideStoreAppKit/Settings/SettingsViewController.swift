@@ -82,7 +82,7 @@ final class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let nib = UINib(nibName: "SettingsHeaderFooterView", bundle: nil)
+		let nib = UINib(nibName: "SettingsHeaderFooterView", bundle: Bundle(for: SettingsHeaderFooterView.self))
         prototypeHeaderFooterView = nib.instantiate(withOwner: nil, options: nil)[0] as? SettingsHeaderFooterView
 
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: "HeaderFooterView")

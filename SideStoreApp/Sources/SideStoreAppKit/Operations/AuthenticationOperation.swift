@@ -46,7 +46,7 @@ public final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertifi
         return navigationController
     }()
 
-    private lazy var storyboard = UIStoryboard(name: "Authentication", bundle: nil)
+    private lazy var storyboard = UIStoryboard(name: "Authentication", bundle: Bundle.init(for: AuthenticationViewController.self))
 
     private var appleIDEmailAddress: String?
     private var appleIDPassword: String?
