@@ -51,7 +51,12 @@ public final class DatabaseManager {
     private var ignoreWillAccessDatabaseNotification = false
 
     private init() {
-        persistentContainer = PersistentContainer(name: "AltStore", bundle: Bundle(for: DatabaseManager.self))
+		#if SWIFT_PACKAGE
+		let bundle: Bundle = Bundle.main
+		#else
+		let bundle: Bundle =  Bundle(for: DatabaseManager.self)
+		#endif
+        persistentContainer = PersistentContainer(name: "AltStore", bundle: bundle)
         persistentContainer.preferredMergePolicy = MergePolicy()
 
         let observer = Unmanaged.passUnretained(self).toOpaque()
