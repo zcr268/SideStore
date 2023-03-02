@@ -52,7 +52,7 @@ public final class DatabaseManager {
 
     private init() {
 		#if SWIFT_PACKAGE
-		let bundle: Bundle = Bundle.main
+		let bundle: Bundle = Bundle.module
 		#else
 		let bundle: Bundle =  Bundle(for: DatabaseManager.self)
 		#endif
