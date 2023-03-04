@@ -45,6 +45,7 @@ enum OperationError: LocalizedError
     case functionArguments
     case profileInstall
     case noConnection
+    case attach
     
     var failureReason: String? {
         switch self {
@@ -73,6 +74,7 @@ enum OperationError: LocalizedError
         case .functionArguments: return NSLocalizedString("A function was passed invalid arguments", comment: "")
         case .profileInstall: return NSLocalizedString("Unable to manage profiles on the device", comment: "")
         case .noConnection: return NSLocalizedString("Unable to connect to the device, make sure Wireguard is enabled and you're connected to WiFi", comment: "")
+        case .attach: return NSLocalizedString("Unable to attach to the app's process", comment: "")
         }
     }
     
@@ -160,6 +162,8 @@ func minimuxer_to_operation(code: Int32) -> OperationError {
         return OperationError.profileInstall
     case 20:
         return OperationError.noConnection
+    case 21:
+        return OperationError.attach
     default:
         return OperationError.unknown
     }
