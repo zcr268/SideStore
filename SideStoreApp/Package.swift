@@ -291,6 +291,7 @@ let package = Package(
 		.target(
 			name: "SideWidget",
 			dependencies: [
+				"SideStoreAppKit",
 				"Shared",
 				"SideStoreCore",
 				"AltSign",

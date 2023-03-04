@@ -68,9 +68,30 @@ public extension ALTAppPermissionType {
 }
 
 @objc(AppPermission)
-public class AppPermission: NSManagedObject, Decodable, Fetchable {
+public class AppPermission: NSManagedObject, Decodable, Fetchable, NSKeyValueObservingCustomization {
+	public static func keyPathsAffectingValue(for key: AnyKeyPath) -> Set<AnyKeyPath> {
+		print("keyPathsAffectingValue: \(String(describing: key))")
+		return Set<AnyKeyPath>([key])
+	}
+
+	public static func automaticallyNotifiesObservers(for key: AnyKeyPath) -> Bool {
+		print("automaticallyNotifiesObservers: \(String(describing: key))")
+		return true
+	}
+
     /* Properties */
-    @NSManaged public var type: ALTAppPermissionType
+	@objc(type)
+    @NSManaged public var _type: String
+	@nonobjc
+	public var type: ALTAppPermissionType {
+		get {
+			ALTAppPermissionType(rawValue: _type)
+		}
+		set {
+			_type = newValue.stringValue
+		}
+	}
+
     @NSManaged public var usageDescription: String
 
     /* Relationships */
@@ -95,11 +116,13 @@ public class AppPermission: NSManagedObject, Decodable, Fetchable {
             usageDescription = try container.decode(String.self, forKey: .usageDescription)
 
             let rawType = try container.decode(String.self, forKey: .type)
-			guard let type = ALTAppPermissionType(rawValue: rawType) else {
-				throw DecodingError.dataCorrupted(
-					DecodingError.Context(codingPath: [CodingKeys.type],
-										  debugDescription: "Invalid value for `ALTAppPermissionType` \"\(rawType)\""))
-			}
+//			guard
+				let type = ALTAppPermissionType(rawValue: rawType)
+//			else {
+//				throw DecodingError.dataCorrupted(
+//					DecodingError.Context(codingPath: [CodingKeys.type],
+//										  debugDescription: "Invalid value for `ALTAppPermissionType` \"\(rawType)\""))
+//			}
 			self.type = type
         } catch {
             if let context = managedObjectContext {

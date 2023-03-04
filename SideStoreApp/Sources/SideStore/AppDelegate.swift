@@ -10,13 +10,13 @@ import AVFoundation
 import Intents
 import UIKit
 import UserNotifications
+import os.log
 
 import AltSign
 import SideStoreCore
 import SideStoreAppKit
 import EmotionalDamage
 import RoxasUIKit
-import os.log
 
 @UIApplicationMain
 final class AppDelegate: SideStoreAppDelegate {
@@ -53,6 +53,8 @@ final class AppDelegate: SideStoreAppDelegate {
 				os_log("Failed to start DatabaseManager. Error: %@", type: .error , error.localizedDescription)
             } else {
 				os_log("Started DatabaseManager.", type: .info)
+				let transformer = ALTAppPermissionTypeTransformer()
+				ValueTransformer.setValueTransformer(transformer, forName: NSValueTransformerName(rawValue: "ALTAppPermissionTypeTransformer"))
             }
         }
 

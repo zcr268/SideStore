@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,6 +29,8 @@
 		B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0B29B032DF000F318E /* WidgetView.swift */; };
 		B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFC0D29B032DF000F318E /* Assets.xcassets */; };
 		B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC1029B032DF000F318E /* SideWidget.swift */; };
+		B34BA8E629B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34BA8E529B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift */; };
+		B34BA8EC29B332FF0055A710 /* SideStoreAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = B34BA8EB29B332FF0055A710 /* SideStoreAppKit */; };
 		B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */ = {isa = PBXBuildFile; productRef = B3C40F5129B05B4200C93D50 /* SideWidget */; };
 		B3C40F5329B06A0000C93D50 /* PatchApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBD929B0324C000F318E /* PatchApp.storyboard */; };
 		B3C40F5429B06A2B00C93D50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */; };
@@ -88,6 +90,7 @@
 		B34AFC1029B032DF000F318E /* SideWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideWidget.swift; sourceTree = "<group>"; };
 		B34AFC1929B04EBB000F318E /* Dangerfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dangerfile.swift; sourceTree = "<group>"; };
 		B34AFC1A29B04EBB000F318E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		B34BA8E529B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BackgroundFetch.swift"; sourceTree = "<group>"; };
 		B39575F4284F29E20080B4FF /* Roxas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Roxas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C39606284F4C8400DA9E2F /* CodeSigning.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CodeSigning.xcconfig; sourceTree = "<group>"; };
 		B3C39607284F4C8400DA9E2F /* Build.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Build.xcconfig; sourceTree = "<group>"; };
@@ -113,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B34BA8EC29B332FF0055A710 /* SideStoreAppKit in Frameworks */,
 				B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,6 +138,7 @@
 			children = (
 				B34AFBD729B0324C000F318E /* Resources */,
 				B34AFBF529B0324C000F318E /* AppDelegate.swift */,
+				B34BA8E529B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift */,
 				B34AFBF629B0324C000F318E /* LaunchViewController.swift */,
 				B34AFBF729B0324C000F318E /* SceneDelegate.swift */,
 			);
@@ -315,6 +320,7 @@
 			name = SideWidgetExtension;
 			packageProductDependencies = (
 				B3C40F5129B05B4200C93D50 /* SideWidget */,
+				B34BA8EB29B332FF0055A710 /* SideStoreAppKit */,
 			);
 			productName = AltWidgetExtension;
 			productReference = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */;
@@ -371,7 +377,7 @@
 				};
 			};
 			buildConfigurationList = BFD247652284B9A500981D42 /* Build configuration list for PBXProject "SideStore" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -445,6 +451,7 @@
 				B34AFBFA29B03251000F318E /* AppDelegate.swift in Sources */,
 				B34AFBF829B03251000F318E /* LaunchViewController.swift in Sources */,
 				B34AFBF929B03251000F318E /* SceneDelegate.swift in Sources */,
+				B34BA8E629B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,7 +681,7 @@
 				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				DEVELOPMENT_TEAM = S32Z3HMYVQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -702,7 +709,7 @@
 				CODE_SIGN_ENTITLEMENTS = SideStoreApp/Sources/SideStore/Resources/SideStore.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
+				DEVELOPMENT_TEAM = S32Z3HMYVQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -754,6 +761,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		B34AFBD429B03235000F318E /* SideStoreAppKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SideStoreAppKit;
+		};
+		B34BA8EB29B332FF0055A710 /* SideStoreAppKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SideStoreAppKit;
 		};

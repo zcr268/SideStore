@@ -10,7 +10,9 @@ import UIKit
 
 import RoxasUIKit
 
+@objc
 final class NavigationBar: UINavigationBar {
+	@objc
     @IBInspectable var automaticallyAdjustsItemPositions: Bool = true
 
     private let backgroundColorView = UIView()

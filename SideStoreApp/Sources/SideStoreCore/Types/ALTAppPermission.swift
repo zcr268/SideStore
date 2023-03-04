@@ -27,8 +27,9 @@ public enum ALTAppPermissionType: Int, CaseIterable {
     case faceID
     case siri
     case motion
+	case null
 
-	public init?(rawValue: String) {
+	public init(rawValue: String) {
 		switch rawValue {
 		case "photos": self = .photos
 		case "camera": self = .camera
@@ -47,7 +48,7 @@ public enum ALTAppPermissionType: Int, CaseIterable {
 		case "faceID", "faceid": self = .faceID
 		case "siri": self = .siri
 		case "motion": self = .motion
-		default: return nil
+		default: self = .null
 		}
 	}
 
@@ -87,6 +88,21 @@ public enum ALTAppPermissionType: Int, CaseIterable {
             return "siri"
         case .motion:
             return "motion"
-        }
+		case .null:
+			return ""
+		}
     }
+}
+
+@objc
+public final class ALTAppPermissionTypeTransformer: ValueTransformer {
+	public override func transformedValue(_ value: Any?) -> Any? {
+		guard let enumValue = value as? ALTAppPermissionType else { return "" }
+		return enumValue.rawValue
+	}
+
+	public override func reverseTransformedValue(_ value: Any?) -> Any? {
+		guard let rawValue = value as? String else { return ALTAppPermissionType.null }
+		return ALTAppPermissionType(rawValue: rawValue)
+	}
 }
