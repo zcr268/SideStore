@@ -8,7 +8,7 @@
 
 import EmotionalDamage
 import minimuxer
-import MiniMuxerSwift
+import MiniMuxer
 import SideStoreAppKit
 import RoxasUIKit
 import UIKit

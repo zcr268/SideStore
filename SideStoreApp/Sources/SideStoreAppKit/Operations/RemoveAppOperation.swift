@@ -10,7 +10,7 @@ import Foundation
 
 import SideStoreCore
 import minimuxer
-import MiniMuxerSwift
+import MiniMuxer
 
 import SideKit
 

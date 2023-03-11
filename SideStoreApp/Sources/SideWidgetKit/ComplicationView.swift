@@ -17,7 +17,7 @@ extension ComplicationView {
     }
 }
 
-@available(iOS 16, *)
+@available(iOS 16, iOSApplicationExtension 16, *)
 struct ComplicationView: View {
     let entry: AppEntry
     let style: Style

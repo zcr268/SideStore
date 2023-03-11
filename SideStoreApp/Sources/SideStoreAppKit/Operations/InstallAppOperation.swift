@@ -11,7 +11,7 @@ import Network
 import AltSign
 import SideStoreCore
 import RoxasUIKit
-import MiniMuxerSwift
+import MiniMuxer
 import minimuxer
 import os.log
 

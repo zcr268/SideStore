@@ -17,6 +17,8 @@ import Roxas
 import RoxasUIKit
 import os.log
 
+import class SideStoreAppKit.ViewAppIntent
+
 struct AppEntry: TimelineEntry {
     var date: Date
     var relevance: TimelineEntryRelevance?

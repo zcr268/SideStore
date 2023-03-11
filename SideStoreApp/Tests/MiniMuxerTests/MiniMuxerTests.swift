@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import MiniMuxerSwift
+@testable import MiniMuxer
 
 class MiniMuxerTests: XCTestCase {
     override func setUp() {

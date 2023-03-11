@@ -11,7 +11,7 @@ import Foundation
 import AltSign
 import SideStoreCore
 import minimuxer
-import MiniMuxerSwift
+import MiniMuxer
 import RoxasUIKit
 import SideKit
 

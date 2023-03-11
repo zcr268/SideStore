@@ -8,6 +8,8 @@
 
 import CoreData
 import Foundation
+import class UIKit.UIColor
+
 import Roxas
 
 public extension StoreApp {

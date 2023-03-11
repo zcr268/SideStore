@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AltSign
 
 public typealias AltXPCProtocol = SideXPCProtocol
 
@@ -14,8 +15,4 @@ public typealias AltXPCProtocol = SideXPCProtocol
 public protocol SideXPCProtocol {
 	func ping(completionHandler: @escaping () -> Void)
 	func requestAnisetteData(completionHandler: @escaping (ALTAnisetteData?, Error?) -> Void)
-}
-
-@objc public class ALTAnisetteData: NSObject {
-	// implementation
 }

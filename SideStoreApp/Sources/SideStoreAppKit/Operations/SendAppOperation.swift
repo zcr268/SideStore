@@ -11,7 +11,7 @@ import Network
 import SideStoreCore
 
 import SideKit
-import MiniMuxerSwift
+import MiniMuxer
 
 @objc(SendAppOperation)
 final class SendAppOperation: ResultOperation<Void> {
