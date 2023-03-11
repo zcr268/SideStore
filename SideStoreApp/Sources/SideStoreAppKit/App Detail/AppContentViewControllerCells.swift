@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc
 final class PermissionCollectionViewCell: UICollectionViewCell {
     @IBOutlet var button: UIButton!
     @IBOutlet var textLabel: UILabel!
@@ -26,6 +27,7 @@ final class PermissionCollectionViewCell: UICollectionViewCell {
     }
 }
 
+@objc
 final class AppContentTableViewCell: UITableViewCell {
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
         // Ensure cell is laid out so it will report correct size.

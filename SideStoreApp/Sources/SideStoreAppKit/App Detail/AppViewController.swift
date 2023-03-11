@@ -13,7 +13,9 @@ import RoxasUIKit
 
 import Nuke
 
-final class AppViewController: UIViewController {
+@objc
+@objcMembers
+public final class AppViewController: UIViewController {
     var app: StoreApp!
 
     private var contentViewController: AppContentViewController!
@@ -46,11 +48,11 @@ final class AppViewController: UIViewController {
 
     private var _preferredStatusBarStyle: UIStatusBarStyle = .default
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
+	public override var preferredStatusBarStyle: UIStatusBarStyle {
         _preferredStatusBarStyle
     }
 
-    override func viewDidLoad() {
+	public override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationBarTitleView.sizeToFit()
@@ -123,7 +125,7 @@ final class AppViewController: UIViewController {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+	public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         prepareBlur()
@@ -137,7 +139,7 @@ final class AppViewController: UIViewController {
         }, completion: nil)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
+	public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         _shouldResetLayout = true
@@ -145,7 +147,7 @@ final class AppViewController: UIViewController {
         view.layoutIfNeeded()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
+	public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
         // Guard against "dismissing" when presenting via 3D Touch pop.
@@ -164,7 +166,7 @@ final class AppViewController: UIViewController {
         })
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
+	public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
         if navigationController == nil {
@@ -172,7 +174,7 @@ final class AppViewController: UIViewController {
         }
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+	public override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         guard segue.identifier == "embedAppContentViewController" else { return }
 
         contentViewController = segue.destination as? AppContentViewController
@@ -185,7 +187,7 @@ final class AppViewController: UIViewController {
         }
     }
 
-    override func viewDidLayoutSubviews() {
+	public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         if _shouldResetLayout {
@@ -311,7 +313,7 @@ final class AppViewController: UIViewController {
         bannerView.backgroundEffectView.backgroundColor = .clear
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         _shouldResetLayout = true
     }
@@ -496,7 +498,7 @@ private extension AppViewController {
 }
 
 extension AppViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_: UIScrollView) {
+	public func scrollViewDidScroll(_: UIScrollView) {
         view.setNeedsLayout()
         view.layoutIfNeeded()
     }

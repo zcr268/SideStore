@@ -1,5 +1,5 @@
 //
-//  SharedTests.swift
+//  SideStoreSharedTests.swift
 //  SideStore
 //
 //  Created by Joseph Mattiello on 2/28/23.
@@ -7,9 +7,9 @@
 //
 
 import XCTest
-@testable import Shared
+@testable import SideStoreShared
 
-class SharedTests: XCTestCase {
+class SideStoreSharedTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.

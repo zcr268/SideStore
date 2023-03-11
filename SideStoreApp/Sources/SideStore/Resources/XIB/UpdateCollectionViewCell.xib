@@ -30,7 +30,7 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uYl-PH-DuP">
                                             <rect key="frame" x="0.0" y="0.0" width="343" height="125"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nop-pL-Icx" customClass="AppBannerView" customModule="SideStore" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nop-pL-Icx" customClass="AppBannerView" customModule="SideStoreAppKit">
                                                     <rect key="frame" x="0.0" y="0.0" width="343" height="88"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="88" id="EPP-7O-1Ad"/>

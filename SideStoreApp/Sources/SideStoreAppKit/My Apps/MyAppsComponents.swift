@@ -9,6 +9,7 @@
 import RoxasUIKit
 import UIKit
 
+@objc
 final class InstalledAppCollectionViewCell: UICollectionViewCell {
     private(set) var deactivateBadge: UIView?
 
@@ -52,11 +53,13 @@ final class InstalledAppCollectionViewCell: UICollectionViewCell {
     }
 }
 
+@objc
 final class InstalledAppsCollectionFooterView: UICollectionReusableView {
     @IBOutlet var textLabel: UILabel!
     @IBOutlet var button: UIButton!
 }
 
+@objc
 final class NoUpdatesCollectionViewCell: UICollectionViewCell {
     @IBOutlet var blurView: UIVisualEffectView!
 
@@ -67,6 +70,7 @@ final class NoUpdatesCollectionViewCell: UICollectionViewCell {
     }
 }
 
+@objc
 final class UpdatesCollectionHeaderView: UICollectionReusableView {
     let button = PillButton(type: .system)
 

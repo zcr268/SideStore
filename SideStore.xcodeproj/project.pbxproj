@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B34AFBD529B03235000F318E /* SideStoreAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = B34AFBD429B03235000F318E /* SideStoreAppKit */; };
-		B34AFBF829B03251000F318E /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF629B0324C000F318E /* LaunchViewController.swift */; };
-		B34AFBF929B03251000F318E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF729B0324C000F318E /* SceneDelegate.swift */; };
-		B34AFBFA29B03251000F318E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFBF529B0324C000F318E /* AppDelegate.swift */; };
 		B34AFBFB29B03279000F318E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE829B0324C000F318E /* Main.storyboard */; };
 		B34AFBFC29B0327E000F318E /* SettingsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE329B0324C000F318E /* SettingsHeaderFooterView.xib */; };
 		B34AFBFD29B0327E000F318E /* BrowseCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDD29B0324C000F318E /* BrowseCollectionViewCell.xib */; };
@@ -24,14 +20,9 @@
 		B34AFC0529B0328D000F318E /* apps.json in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBED29B0324C000F318E /* apps.json */; };
 		B34AFC0629B0328D000F318E /* apps-alpha.json in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBEE29B0324C000F318E /* apps-alpha.json */; };
 		B34AFC0729B03291000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBF229B0324C000F318E /* Assets.xcassets */; };
-		B34AFC1129B032DF000F318E /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0929B032DF000F318E /* Countdown.swift */; };
-		B34AFC1229B032DF000F318E /* ComplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0A29B032DF000F318E /* ComplicationView.swift */; };
-		B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC0B29B032DF000F318E /* WidgetView.swift */; };
 		B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFC0D29B032DF000F318E /* Assets.xcassets */; };
-		B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34AFC1029B032DF000F318E /* SideWidget.swift */; };
-		B34BA8E629B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34BA8E529B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift */; };
-		B34BA8EC29B332FF0055A710 /* SideStoreAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = B34BA8EB29B332FF0055A710 /* SideStoreAppKit */; };
-		B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */ = {isa = PBXBuildFile; productRef = B3C40F5129B05B4200C93D50 /* SideWidget */; };
+		B34BA8EE29B3432C0055A710 /* SideStore in Frameworks */ = {isa = PBXBuildFile; productRef = B34BA8ED29B3432C0055A710 /* SideStore */; };
+		B34BA92829B5ED510055A710 /* SideWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B3C40F5329B06A0000C93D50 /* PatchApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBD929B0324C000F318E /* PatchApp.storyboard */; };
 		B3C40F5429B06A2B00C93D50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */; };
 		B3C40F5529B06A3200C93D50 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDA29B0324C000F318E /* Authentication.storyboard */; };
@@ -39,7 +30,28 @@
 		D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D533E8B62727841800A9B5DD /* libAppleArchive.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B34BA92929B5ED510055A710 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFD247622284B9A500981D42 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BF989166250AABF3002ACF50;
+			remoteInfo = SideWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		B34BA92B29B5ED510055A710 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B34BA92829B5ED510055A710 /* SideWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BF088D2B2501A087008082D9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -81,13 +93,9 @@
 		B34AFBF529B0324C000F318E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B34AFBF629B0324C000F318E /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		B34AFBF729B0324C000F318E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B34AFC0929B032DF000F318E /* Countdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
-		B34AFC0A29B032DF000F318E /* ComplicationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplicationView.swift; sourceTree = "<group>"; };
-		B34AFC0B29B032DF000F318E /* WidgetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
 		B34AFC0D29B032DF000F318E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B34AFC0E29B032DF000F318E /* SideWidgetExtension.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SideWidgetExtension.entitlements; sourceTree = "<group>"; };
 		B34AFC0F29B032DF000F318E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B34AFC1029B032DF000F318E /* SideWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideWidget.swift; sourceTree = "<group>"; };
 		B34AFC1929B04EBB000F318E /* Dangerfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dangerfile.swift; sourceTree = "<group>"; };
 		B34AFC1A29B04EBB000F318E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		B34BA8E529B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BackgroundFetch.swift"; sourceTree = "<group>"; };
@@ -116,8 +124,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34BA8EC29B332FF0055A710 /* SideStoreAppKit in Frameworks */,
-				B3C40F5229B05B4200C93D50 /* SideWidget in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,8 +131,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34AFBD529B03235000F318E /* SideStoreAppKit in Frameworks */,
 				D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */,
+				B34BA8EE29B3432C0055A710 /* SideStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,11 +224,7 @@
 		B34AFC0829B032DF000F318E /* SideWidget */ = {
 			isa = PBXGroup;
 			children = (
-				B34AFC0929B032DF000F318E /* Countdown.swift */,
-				B34AFC0A29B032DF000F318E /* ComplicationView.swift */,
-				B34AFC0B29B032DF000F318E /* WidgetView.swift */,
 				B34AFC0C29B032DF000F318E /* Resources */,
-				B34AFC1029B032DF000F318E /* SideWidget.swift */,
 			);
 			name = SideWidget;
 			path = SideStoreApp/Sources/SideWidget;
@@ -319,8 +321,6 @@
 			);
 			name = SideWidgetExtension;
 			packageProductDependencies = (
-				B3C40F5129B05B4200C93D50 /* SideWidget */,
-				B34BA8EB29B332FF0055A710 /* SideStoreAppKit */,
 			);
 			productName = AltWidgetExtension;
 			productReference = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */;
@@ -334,14 +334,16 @@
 				BFD247672284B9A500981D42 /* Frameworks */,
 				BFD247682284B9A500981D42 /* Resources */,
 				BF088D2B2501A087008082D9 /* Embed Frameworks */,
+				B34BA92B29B5ED510055A710 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B34BA92A29B5ED510055A710 /* PBXTargetDependency */,
 			);
 			name = SideStore;
 			packageProductDependencies = (
-				B34AFBD429B03235000F318E /* SideStoreAppKit */,
+				B34BA8ED29B3432C0055A710 /* SideStore */,
 			);
 			productName = AltStore;
 			productReference = BFD2476A2284B9A500981D42 /* SideStore.app */;
@@ -437,10 +439,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34AFC1629B032DF000F318E /* SideWidget.swift in Sources */,
-				B34AFC1329B032DF000F318E /* WidgetView.swift in Sources */,
-				B34AFC1229B032DF000F318E /* ComplicationView.swift in Sources */,
-				B34AFC1129B032DF000F318E /* Countdown.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,14 +446,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B34AFBFA29B03251000F318E /* AppDelegate.swift in Sources */,
-				B34AFBF829B03251000F318E /* LaunchViewController.swift in Sources */,
-				B34AFBF929B03251000F318E /* SceneDelegate.swift in Sources */,
-				B34BA8E629B0FE8D0055A710 /* AppDelegate+BackgroundFetch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B34BA92A29B5ED510055A710 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BF989166250AABF3002ACF50 /* SideWidgetExtension */;
+			targetProxy = B34BA92929B5ED510055A710 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */ = {
@@ -493,7 +495,6 @@
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SideStoreApp/Sources/SideWidget/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -523,7 +524,6 @@
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SideStoreApp/Sources/SideWidget/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -541,6 +541,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3C39607284F4C8400DA9E2F /* Build.xcconfig */;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -590,7 +591,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -599,11 +600,13 @@
 					"$(OTHER_CFLAGS)",
 					"-Wno-module-import-in-extern-c",
 				);
-				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Dependencies/AltSign/Dependencies\"";
+				TVOS_DEPLOYMENT_TARGET = 14.2;
 			};
 			name = Debug;
 		};
@@ -611,6 +614,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3C39607284F4C8400DA9E2F /* Build.xcconfig */;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -654,7 +658,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -662,12 +666,14 @@
 					"$(OTHER_CFLAGS)",
 					"-Wno-module-import-in-extern-c",
 				);
-				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG BETA";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Dependencies/AltSign/Dependencies\"";
+				TVOS_DEPLOYMENT_TARGET = 14.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -684,7 +690,6 @@
 				DEVELOPMENT_TEAM = S32Z3HMYVQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -693,7 +698,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -712,7 +716,6 @@
 				DEVELOPMENT_TEAM = S32Z3HMYVQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = SideStoreApp/Sources/SideStore/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -721,7 +724,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -760,17 +762,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B34AFBD429B03235000F318E /* SideStoreAppKit */ = {
+		B34BA8ED29B3432C0055A710 /* SideStore */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SideStoreAppKit;
-		};
-		B34BA8EB29B332FF0055A710 /* SideStoreAppKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SideStoreAppKit;
-		};
-		B3C40F5129B05B4200C93D50 /* SideWidget */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SideWidget;
+			productName = SideStore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

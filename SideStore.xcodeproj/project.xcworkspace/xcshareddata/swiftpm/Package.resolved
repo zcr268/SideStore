@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "aexml",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tadija/AEXML",
-      "state" : {
-        "revision" : "54bb8ea6fb693dd3f92a89e5fcc19e199fdeedd0",
-        "version" : "4.3.3"
-      }
-    },
-    {
       "identity" : "altsign",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SideStore/AltSign",
@@ -37,30 +28,12 @@
       }
     },
     {
-      "identity" : "ignore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/IgorMuzyka/ignore",
-      "state" : {
-        "revision" : "49780cf3d46053eb40f4c425a46aaaf662f0665c",
-        "version" : "0.0.2"
-      }
-    },
-    {
       "identity" : "imobiledevice.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SideStore/iMobileDevice.swift",
       "state" : {
         "revision" : "74e481106dd155c0cd21bca6795fd9fe5f751654",
         "version" : "1.0.5"
-      }
-    },
-    {
-      "identity" : "infomaticplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elegantchaos/InfomaticPlugin.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "735c0f1431f65977fcb3f808b74f6eeb728183ef"
       }
     },
     {
@@ -73,12 +46,12 @@
       }
     },
     {
-      "identity" : "logger",
+      "identity" : "launchatlogin",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/f-meloni/Logger",
+      "location" : "https://github.com/sindresorhus/LaunchAtLogin.git",
       "state" : {
-        "revision" : "53c3ecca5abe8cf46697e33901ee774236d94cce",
-        "version" : "0.2.3"
+        "revision" : "7ad6331f9c38953eb1ce8737758e18f7607e984a",
+        "version" : "5.0.0"
       }
     },
     {
@@ -109,33 +82,6 @@
       }
     },
     {
-      "identity" : "packagebuildinfo",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/DimaRU/PackageBuildInfo",
-      "state" : {
-        "branch" : "master",
-        "revision" : "7fe63ad12b50bad5d86e6abaef5a944f931ce765"
-      }
-    },
-    {
-      "identity" : "packageconfig",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/orta/PackageConfig.git",
-      "state" : {
-        "revision" : "bf90dc69fa0792894b08a0b74cf34029694ae486",
-        "version" : "0.13.0"
-      }
-    },
-    {
-      "identity" : "pathkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/PathKit",
-      "state" : {
-        "revision" : "e2f5be30e4c8f531c9c1e8765aa7b71c0a45d7a0",
-        "version" : "0.9.2"
-      }
-    },
-    {
       "identity" : "plcrashreporter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/microsoft/PLCrashReporter.git",
@@ -163,15 +109,6 @@
       }
     },
     {
-      "identity" : "secretsmanager",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vdka/SecretsManager.git",
-      "state" : {
-        "revision" : "7e7eb0304726a2d9788432a3b90d79817ce2f6e1",
-        "version" : "1.1.1"
-      }
-    },
-    {
       "identity" : "semanticversion",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftPackageIndex/SemanticVersion.git",
@@ -190,75 +127,12 @@
       }
     },
     {
-      "identity" : "spectre",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kylef/Spectre.git",
-      "state" : {
-        "revision" : "f79d4ecbf8bc4e1579fbd86c3e1d652fb6876c53",
-        "version" : "0.9.2"
-      }
-    },
-    {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser",
-      "state" : {
-        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
-        "version" : "1.2.2"
-      }
-    },
-    {
-      "identity" : "swift-docc-plugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-plugin",
-      "state" : {
-        "revision" : "10bc670db657d11bdd561e07de30a9041311b2b1",
-        "version" : "1.1.0"
-      }
-    },
-    {
-      "identity" : "swift-docc-symbolkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-symbolkit",
-      "state" : {
-        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
-        "version" : "1.0.0"
-      }
-    },
-    {
-      "identity" : "swift-secret-keys",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/simorgh3196/swift-secret-keys",
-      "state" : {
-        "revision" : "d156d039bea258466a2bbc0046936867db1a0915",
-        "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "swiftlintplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
-      "state" : {
-        "revision" : "f69b412a765396d44dc9f4788a5b79919c1ca9e3",
-        "version" : "0.2.2"
-      }
-    },
-    {
       "identity" : "swiftpmplugins",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JoeMatt/SwiftPMPlugins.git",
       "state" : {
         "revision" : "2e4833a3ca65d0aaa986138b8ef350b7f549ba28",
         "version" : "1.0.0"
-      }
-    },
-    {
-      "identity" : "swiftshell",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kareman/SwiftShell",
-      "state" : {
-        "revision" : "beebe43c986d89ea5359ac3adcb42dac94e5e08a",
-        "version" : "4.1.2"
       }
     },
     {
@@ -271,30 +145,12 @@
       }
     },
     {
-      "identity" : "xcodeproj",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tuist/xcodeproj.git",
-      "state" : {
-        "revision" : "065f348754b6155b8037dc43876a8f2ee354b95d",
-        "version" : "6.7.0"
-      }
-    },
-    {
       "identity" : "xctestextensions",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elegantchaos/XCTestExtensions.git",
       "state" : {
         "revision" : "39694671be8bea1ab0bbd87114705b2a92567a8e",
         "version" : "1.5.0"
-      }
-    },
-    {
-      "identity" : "yams",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/Yams",
-      "state" : {
-        "revision" : "f47ba4838c30dbd59998a4e4c87ab620ff959e8a",
-        "version" : "5.0.5"
       }
     }
   ],

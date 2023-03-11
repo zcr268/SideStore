@@ -8,6 +8,7 @@
 
 import UIKit
 
+@objc
 final class PatronCollectionViewCell: UICollectionViewCell {
     @IBOutlet var textLabel: UILabel!
 }

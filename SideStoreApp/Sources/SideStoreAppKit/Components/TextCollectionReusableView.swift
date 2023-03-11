@@ -8,7 +8,8 @@
 
 import UIKit
 
-class TextCollectionReusableView: UICollectionReusableView {
+@objc
+public class TextCollectionReusableView: UICollectionReusableView {
     @IBOutlet var textLabel: UILabel!
 
     @IBOutlet var topLayoutConstraint: NSLayoutConstraint!

@@ -20,7 +20,7 @@
                     <stackView verifyAmbiguity="off" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="5gU-g3-Fsy">
                         <rect key="frame" x="16" y="0.0" width="343" height="369"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ziA-mP-AY2" customClass="AppBannerView" customModule="SideStore" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ziA-mP-AY2" customClass="AppBannerView" customModule="SideStoreAppKit">
                                 <rect key="frame" x="0.0" y="0.0" width="343" height="88"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>

@@ -19,25 +19,16 @@ let project = Project(
             ),
 			entitlements: "SideStoreApp/Sources/SideStore/Resources/SideStore.entitlements",
             dependencies: [
-                .package(product: "SideStoreAppKit"),
+                .package(path: "SideStoreApp"),
 				.target(name: "SideWidget"),
+                .sdk(name: "libAppleAcrhive.tbd", status: .required)
             ],
 			settings: .settings(configurations: [
 				.debug(name: "Debug", xcconfig: "SideStoreApp/Configurations/SideStore-Debug.xcconfig"),
 				.release(name: "Release", xcconfig: "SideStoreApp/Configurations/SideStore-Release.xcconfig"),
 			])
         ),
-        // Target(
-        //     name: "SideStoreTests",
-        //     platform: .iOS,
-        //     product: .unitTests,
-        //     bundleId: "com.SideStore.SideStoreTests",
-        //     infoPlist: "Info.plist",
-        //     sources: ["SideStoreApp/Tests/SideStoreAppTests/**"],
-        //     dependencies: [
-        //         .target(name: "SideStore")
-        //     ]
-        // ),
+
           Target(
             name: "SideWidget",
             platform: .iOS,
@@ -61,6 +52,18 @@ let project = Project(
                 .package(product: "AltStoreCore")
             ]
         ),
+
+// Target(
+//     name: "SideStoreTests",
+//     platform: .iOS,
+//     product: .unitTests,
+//     bundleId: "com.SideStore.SideStoreTests",
+//     infoPlist: "Info.plist",
+//     sources: ["SideStoreApp/Tests/SideStoreAppTests/**"],
+//     dependencies: [
+//         .target(name: "SideStore")
+//     ]
+// ),
 //		Target(
 //			name: "SideStore",
 //			platform: .tvOS,
