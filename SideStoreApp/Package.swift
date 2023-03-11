@@ -206,12 +206,16 @@ extension Product {
 
 		// `.app` Executables
 		SideStore_app,
-	]
+	] + cliProducts
 
 	// CLI Executables
+	#if HAVE_MACOS_DAEMON
 	static let cliProducts: [Product] = [
 		SideDaemon
 	]
+	#else
+	static let cliProducts: [Product] = []
+	#endif
 
 	// SideStoreAppKit
 	static let SideStoreAppKit = librarySet("SideStoreAppKit")
@@ -225,8 +229,10 @@ extension Product {
 	// SideStore Executable
 	static let SideStore_app: Product 	= .executable( name: "SideStore", targets: ["SideStore"])
 
+	#if HAVE_MACOS_DAEMON
 	// SideDaemon Executable
 	static let SideDaemon	: Product	= .executable(name: "SideDaemon", targets: ["SideDaemon"])
+	#endif
 
 	#if USE_CARGO_BUILD_PLUGIN
 	// Cargo Plugin (WIP)
@@ -270,10 +276,6 @@ extension Target.SideStore {
 		// SideBackup Executable
 		SideBackup,
 
-		// SideDaemon
-		SideDaemon.target,
-		SideDaemon.testTarget,
-
 		// SidePatcher
 		SidePatcher.target,
 		SidePatcher.testTarget,
@@ -281,6 +283,16 @@ extension Target.SideStore {
 		// App Bundle
 		Apps.SideStore_app,
 	].compactMap{$0}
+
+	#if HAVE_MACOS_DAEMON
+	static let cliTargets: [Target] = [
+		// SideDaemon
+		SideDaemon.target,
+		SideDaemon.testTarget,
+	]
+	#else
+	static let cliTargets: [Target] = []
+	#endif
 
 	/// __PluginTargets__
 	static let pluginTargets: [Target] = {
@@ -338,6 +350,7 @@ extension Target.SideStore {
 			name: "SideStoreCoreTests",
 			dependencies: ["SideStoreCore", "KeychainAccess", "AltSign", "SemanticVersion", "SideKit"]))
 
+#if HAVE_MACOS_DAEMON
 	// MARK: - SideDaemon
 	/// This is mostly leftover from `AltDaemon`
 	/// We don't need or use it, but it felt bad to just delete it at the moment.
@@ -349,11 +362,12 @@ extension Target.SideStore {
 					"SideKit",
 					CoreCrypto,
 					CCoreCrypto,
-					.product(name: "LaunchAtLogin", package: "LaunchAtLogin"),
+					.product(name: "LaunchAtLogin", package: "LaunchAtLogin", condition: .when(platforms: [.macOS])),
 				],
 				plugins: commonPlugins
 	        ),
 	        .testTarget(name: "SideDaemonTests", dependencies: ["SideDaemon"]))
+#endif
 
 	// MARK: - SideBackup
 	static let SideBackup: Target = .executableTarget(
