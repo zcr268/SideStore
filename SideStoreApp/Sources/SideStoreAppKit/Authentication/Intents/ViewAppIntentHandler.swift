@@ -7,7 +7,6 @@
 //
 
 import Intents
-import Shared
 import SideStoreCore
 import os.log
 

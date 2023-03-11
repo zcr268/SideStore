@@ -11,7 +11,7 @@ import Foundation
 import SideStoreCore
 import minimuxer
 import MiniMuxerSwift
-import Shared
+
 import SideKit
 
 @objc(RemoveAppOperation)

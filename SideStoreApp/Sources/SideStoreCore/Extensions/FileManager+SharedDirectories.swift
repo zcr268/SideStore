@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Shared
+
 
 public extension FileManager {
     var altstoreSharedDirectory: URL? {

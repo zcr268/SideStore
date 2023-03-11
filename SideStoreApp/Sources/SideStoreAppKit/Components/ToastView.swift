@@ -7,7 +7,7 @@
 //
 
 import RoxasUIKit
-import Shared
+
 import SideStoreCore
 import SideKit
 import AltSign

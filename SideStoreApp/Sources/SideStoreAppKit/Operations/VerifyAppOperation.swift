@@ -11,7 +11,7 @@ import Foundation
 import AltSign
 import RoxasUIKit
 import SideKit
-import Shared
+
 
 enum VerificationError: LocalizedError {
     case privateEntitlements(ALTApplication, entitlements: [String: Any])

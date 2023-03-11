@@ -21,8 +21,9 @@
 		B34AFC0629B0328D000F318E /* apps-alpha.json in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBEE29B0324C000F318E /* apps-alpha.json */; };
 		B34AFC0729B03291000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBF229B0324C000F318E /* Assets.xcassets */; };
 		B34AFC1429B032DF000F318E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B34AFC0D29B032DF000F318E /* Assets.xcassets */; };
-		B34BA8EE29B3432C0055A710 /* SideStore in Frameworks */ = {isa = PBXBuildFile; productRef = B34BA8ED29B3432C0055A710 /* SideStore */; };
 		B34BA92829B5ED510055A710 /* SideWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B371D45129BC0BF900E157A6 /* SideStoreAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = B371D45029BC0BF900E157A6 /* SideStoreAppKit */; };
+		B371D45329BC0C0B00E157A6 /* SideWidgetKit in Frameworks */ = {isa = PBXBuildFile; productRef = B371D45229BC0C0B00E157A6 /* SideWidgetKit */; };
 		B3C40F5329B06A0000C93D50 /* PatchApp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBD929B0324C000F318E /* PatchApp.storyboard */; };
 		B3C40F5429B06A2B00C93D50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBE629B0324C000F318E /* LaunchScreen.storyboard */; };
 		B3C40F5529B06A3200C93D50 /* Authentication.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B34AFBDA29B0324C000F318E /* Authentication.storyboard */; };
@@ -124,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B371D45329BC0C0B00E157A6 /* SideWidgetKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,8 +133,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B371D45129BC0BF900E157A6 /* SideStoreAppKit in Frameworks */,
 				D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */,
-				B34BA8EE29B3432C0055A710 /* SideStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +323,7 @@
 			);
 			name = SideWidgetExtension;
 			packageProductDependencies = (
+				B371D45229BC0C0B00E157A6 /* SideWidgetKit */,
 			);
 			productName = AltWidgetExtension;
 			productReference = BF989167250AABF3002ACF50 /* SideWidgetExtension.appex */;
@@ -343,7 +346,7 @@
 			);
 			name = SideStore;
 			packageProductDependencies = (
-				B34BA8ED29B3432C0055A710 /* SideStore */,
+				B371D45029BC0BF900E157A6 /* SideStoreAppKit */,
 			);
 			productName = AltStore;
 			productReference = BFD2476A2284B9A500981D42 /* SideStore.app */;
@@ -762,9 +765,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B34BA8ED29B3432C0055A710 /* SideStore */ = {
+		B371D45029BC0BF900E157A6 /* SideStoreAppKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SideStore;
+			productName = SideStoreAppKit;
+		};
+		B371D45229BC0C0B00E157A6 /* SideWidgetKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SideWidgetKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

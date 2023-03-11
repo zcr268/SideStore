@@ -8,6 +8,7 @@
 
 import Foundation
 import Security
+import SideStoreCore
 
 class XPCConnectionHandler: NSObject, ConnectionHandler {
     var connectionHandler: ((Connection) -> Void)?

@@ -13,7 +13,7 @@ import MobileCoreServices
 import UIKit
 import UserNotifications
 import WidgetKit
-import Shared
+
 
 import AltSign
 import SideKit

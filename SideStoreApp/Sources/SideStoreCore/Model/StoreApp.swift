@@ -8,8 +8,6 @@
 
 import CoreData
 import Foundation
-
-import AltSign
 import Roxas
 
 public extension StoreApp {

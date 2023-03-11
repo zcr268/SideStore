@@ -9,7 +9,7 @@ import Foundation
 import Network
 
 import SideStoreCore
-import Shared
+
 import SideKit
 import MiniMuxerSwift
 

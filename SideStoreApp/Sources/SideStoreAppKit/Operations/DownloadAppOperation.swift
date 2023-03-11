@@ -12,7 +12,7 @@ import RoxasUIKit
 import AltSign
 import SideKit
 import SideStoreCore
-import Shared
+
 import os.log
 
 private extension DownloadAppOperation {

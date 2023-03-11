@@ -7,6 +7,7 @@
 //
 
 import AltSign
+import SideStoreCore
 
 extension ALTApplication {
     static let altstoreBundleID = Bundle.Info.appbundleIdentifier

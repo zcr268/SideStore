@@ -15,13 +15,9 @@ let USE_CXX_MODULES           = envBool(("USE_CXX_MODULES", false))
 let INHIBIT_UPSTREAM_WARNINGS = envBool(("INHIBIT_UPSTREAM_WARNINGS", true))
 let STATIC_LIBRARY            = envBool(("STATIC_LIBRARY", false))
 
-let unsafe_flags : [String]   = INHIBIT_UPSTREAM_WARNINGS ?
-["-w"] :
-[String]()
+let unsafe_flags: [String]    = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : [String]()
 
-let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ?
-["-w", "-Wno-module-import-in-extern-c"] :
-["-Wno-module-import-in-extern-c"]
+let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
 
 extension Package.Dependency {
 	/// The combination of all the dependencies for the Package.
@@ -58,7 +54,7 @@ extension Package.Dependency {
 		.github("JoeMatt/SwiftPMPlugins", from: "1.0.0"),
 
 		 /// Generate swift files with git head info
-		 .github("elegantchaos/Versionator", from: "1.0.3"),
+		.github("elegantchaos/Versionator", from: "1.0.3").disable,
 
 		 /// plists from .json, including Info.plist
 		.github("elegantchaos/InfomaticPlugin", branch: "main").disable
@@ -76,7 +72,7 @@ extension Package.Dependency {
 		/// ```sh
 		/// mint run secret-keys generate
 		/// ```
-			.github("simorgh3196/swift-secret-keys", from: "0.0.1").disable,
+		.github("simorgh3196/swift-secret-keys", from: "0.0.1").disable,
 
 		/// #__ Swift docc generator __
 		/// `swift package generate-documentation`
@@ -91,7 +87,7 @@ extension Package.Dependency {
 		/// ## Preview:
 		/// `swift package --disable-sandbox preview-documentation --target MyFramework`
 		/// [Hosting](https://apple.github.io/swift-docc-plugin/documentation/swiftdoccplugin/)
-			.github("apple/swift-docc-plugin", from: "1.1.0").disable,
+		.github("apple/swift-docc-plugin", from: "1.1.0").disable,
 	]-?
 
 	#if USE_RESULT_BUILDER
@@ -288,11 +284,7 @@ extension Target.SideStore {
 
 	/// __PluginTargets__
 	static let pluginTargets: [Target] = {
-		#if USE_CARGO_BUILD_PLUGIN
 		Cargo.Plugins
-		#else
-		[]
-		#endif
 	}()
 
 	// MARK: - SideStoreAppKit
@@ -300,6 +292,8 @@ extension Target.SideStore {
 		.target(
 			name: "SideStoreAppKit",
 			dependencies: [
+				AppCenterAnalytics,
+				AppCenterCrashes,
 				"AltSign",
 				"Down",
 				"EmotionalDamage",
@@ -345,6 +339,8 @@ extension Target.SideStore {
 			dependencies: ["SideStoreCore", "KeychainAccess", "AltSign", "SemanticVersion", "SideKit"]))
 
 	// MARK: - SideDaemon
+	/// This is mostly leftover from `AltDaemon`
+	/// We don't need or use it, but it felt bad to just delete it at the moment.
 	static let SideDaemon: TargetPair = (
 	        .executableTarget(
 	            name: "SideDaemon",
@@ -360,12 +356,21 @@ extension Target.SideStore {
 	        .testTarget(name: "SideDaemonTests", dependencies: ["SideDaemon"]))
 
 	// MARK: - SideBackup
-	static let SideBackup: Target =
-		.executableTarget(name: "SideBackup", plugins: commonPlugins)
+	static let SideBackup: Target = .executableTarget(
+		name: "SideBackup",
+		exclude: [
+			"Info.plist",
+			"AltBackup.entitlements"]
+			.map{ "Resources/\($0)" },
+		resources: [
+			.process("Resources/")
+		],
+		plugins: commonPlugins)
 
 	// MARK: - SidePatcher
+	/// Note: This is Objective-C so Swift generator's will fail if you try to apply them here - @JoeMatt
 	static let SidePatcher: TargetPair = (
-		.target(name: "SidePatcher", dependencies: [ RoxasUI ], plugins: commonPlugins),
+		.target(name: "SidePatcher", dependencies: [ RoxasUI ], plugins: []),
 		.testTarget(name: "SidePatcherTests", dependencies: ["SidePatcher"]))
 }
 
@@ -571,6 +576,10 @@ enum Cargo: Encodable {
 				dependencies: ["Cargo"]
 			)].map{._plugin($0)}
 }
+#else
+enum Cargo {
+	static let Plugins: [Target] = []
+}
 #endif
 
 
@@ -594,6 +603,14 @@ extension PackageDescription.Package.Dependency {
 		.package(url: "https://github.com/\(repo).git", revision: revision)}
 }
 
+/// `-?` Operator added as a quick way to `.compactMap{$0}` an
+/// array that has optionals. In combination with adding `.disable` which returns `Self?`
+/// as an easy way to disable packages from `Package.swift` since there are some limitions
+/// 1. #if's can't be used in static array initiliziers, unless using ugly inline functions, and that kills
+/// the Swift processor a lot.
+/// The other option was to use a `@resultBuilder`, which I started below, to add some
+/// synataic suger but probablly overkill honeslty.
+/// - Author: @JoeMatt
 postfix operator -?
 extension Array where Element == Package.Dependency? {
 	func removeNils() -> [Package.Dependency] { self.compactMap{$0} }
@@ -603,10 +620,10 @@ extension Array where Element == Package.Dependency? {
 
 extension Array where Element == Target? {
 	func removeNils() -> [Target] { self.compactMap{$0} }
-
 	static postfix func -? (array: Self) -> [Target] { array.removeNils() }
 }
 
+/// I'm a WIP as a less verbose way of merging array's of various`Target`s and `Dependency` lists
 @resultBuilder
 struct DependencyBuilder {
 	typealias Component = [Package.Dependency]
