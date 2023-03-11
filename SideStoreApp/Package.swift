@@ -9,11 +9,11 @@ import PackageDescription
 typealias EnviromentBool = (var: String, default: Bool)
 
 // Possible keys for `env` and their default value
-let USE_CARGO 		          = envBool(("USE_CARGO", false))
-let USE_CXX_INTEROP           = envBool(("USE_CXX_INTEROP", false))
-let USE_CXX_MODULES           = envBool(("USE_CXX_MODULES", false))
-let INHIBIT_UPSTREAM_WARNINGS = envBool(("INHIBIT_UPSTREAM_WARNINGS", true))
-let STATIC_LIBRARY            = envBool(("STATIC_LIBRARY", false))
+let USE_CARGO 		          = envBool(("USE_CARGO", 					false))
+let USE_CXX_INTEROP           = envBool(("USE_CXX_INTEROP", 			false))
+let USE_CXX_MODULES           = envBool(("USE_CXX_MODULES", 			false))
+let INHIBIT_UPSTREAM_WARNINGS = envBool(("INHIBIT_UPSTREAM_WARNINGS", 	true))
+let STATIC_LIBRARY            = envBool(("STATIC_LIBRARY", 				false))
 
 let unsafe_flags: [String]    = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : [String]()
 
@@ -34,7 +34,7 @@ extension Package.Dependency {
 		.github("SideStore/AltSign", from: "1.0.3"),
 		.github("SideStore/iMobileDevice.swift", from: "1.0.5"),
 		.github("SideStore/SideKit", from: "0.1.0"),
-		/// @JoeMatt updated fork for Riley's Roxas
+		/// @JoeMatt updated fork for Riley's `Roxas`
 		.github("JoeMatt/Roxas", from: "1.2.2"),
 	]
 
@@ -358,6 +358,12 @@ extension Target.SideStore {
 	// MARK: - SideBackup
 	static let SideBackup: Target = .executableTarget(
 		name: "SideBackup",
+		dependencies: [
+			"AltSign",
+			"Roxas",
+			"SideStoreCore",
+			"SideKit"
+		],
 		exclude: [
 			"Info.plist",
 			"AltBackup.entitlements"]

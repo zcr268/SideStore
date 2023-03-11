@@ -7,8 +7,11 @@
 //
 
 import Foundation
-import AltSign
 import os.log
+
+import AltSign
+import Roxas
+import protocol SideStoreCore.ALTLocalizedError
 
 extension ErrorUserInfoKey {
     static let sourceFile: String = "alt_sourceFile"
@@ -146,7 +149,7 @@ class BackupController: NSObject {
                     // Replace previous backup with new backup.
                     _ = try FileManager.default.replaceItemAt(appBackupDirectory, withItemAt: temporaryAppBackupDirectory)
 
-                    os_log("Replaced previous backup with new backup: %@", type: .info , temporaryAppBackupDirectory)
+					os_log("Replaced previous backup with new backup: %@", type: .info, temporaryAppBackupDirectory.absoluteString)
 
                     completionHandler(.success(()))
                 } catch {
