@@ -35,10 +35,12 @@ xcuserdata
 ## AppCode specific
 .idea/
 
-Payload
-*.ipa
-*.zip.ipa
-*.ipa.zip
-xcodebuild.log
+Payload/
+SideStore.ipa
+*.dSYM
 
-build.sh
+Dependencies/.*-prebuilt-fetch-*
+Dependencies/minimuxer/*
+Dependencies/em_proxy/*
+!Dependencies/**/.gitkeep
+.nightly-build-num

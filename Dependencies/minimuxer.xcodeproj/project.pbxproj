@@ -7,15 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CA6038F2DF2FA560B9642892 /* Cargo.toml in Sources */ = {isa = PBXBuildFile; fileRef = CA6012A875F93EF4668187A5 /* Cargo.toml */; settings = {COMPILER_FLAGS = "--lib"; }; };
+		9987603329A454B500818586 /* minimuxer.h in Sources */ = {isa = PBXBuildFile; fileRef = 9987603229A454B500818586 /* minimuxer.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
 		CA6012A875F9AC6C1400ACA8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
-			dependencyFile = "$(DERIVED_FILE_DIR)/$(CARGO_XCODE_TARGET_ARCH)-$(EXECUTABLE_NAME).d";
-			filePatterns = "*/Cargo.toml";
+			filePatterns = "*/minimuxer.h";
 			fileType = pattern.proxy;
 			inputFiles = (
 			);
@@ -24,13 +23,13 @@
 			outputFiles = (
 				"$(OBJECT_FILE_DIR)/$(CARGO_XCODE_TARGET_ARCH)-$(EXECUTABLE_NAME)",
 			);
-			script = "# generated with cargo-xcode 1.5.0\n\nset -eu; export PATH=\"$PATH:$HOME/.cargo/bin:/usr/local/bin\";\nif [ \"${IS_MACCATALYST-NO}\" = YES ]; then\n    CARGO_XCODE_TARGET_TRIPLE=\"${CARGO_XCODE_TARGET_ARCH}-apple-ios-macabi\"\nelse\n    CARGO_XCODE_TARGET_TRIPLE=\"${CARGO_XCODE_TARGET_ARCH}-apple-${CARGO_XCODE_TARGET_OS}\"\nfi\nif [ \"$CARGO_XCODE_TARGET_OS\" != \"darwin\" ]; then\n    PATH=\"${PATH/\\/Contents\\/Developer\\/Toolchains\\/XcodeDefault.xctoolchain\\/usr\\/bin:/xcode-provided-ld-cant-link-lSystem-for-the-host-build-script:}\"\nfi\nPATH=\"$PATH:/opt/homebrew/bin\" # Rust projects often depend on extra tools like nasm, which Xcode lacks\nif [ \"$CARGO_XCODE_BUILD_MODE\" == release ]; then\n    OTHER_INPUT_FILE_FLAGS=\"${OTHER_INPUT_FILE_FLAGS} --release\"\nfi\nif command -v rustup &> /dev/null; then\n    if ! rustup target list --installed | egrep -q \"${CARGO_XCODE_TARGET_TRIPLE}\"; then\n        echo \"warning: this build requires rustup toolchain for $CARGO_XCODE_TARGET_TRIPLE, but it isn't installed\"\n        rustup target add \"${CARGO_XCODE_TARGET_TRIPLE}\" || echo >&2 \"warning: can't install $CARGO_XCODE_TARGET_TRIPLE\"\n    fi\nfi\nif [ \"$ACTION\" = clean ]; then\n #( set -x; cargo clean --manifest-path=\"$SCRIPT_INPUT_FILE\" ${OTHER_INPUT_FILE_FLAGS} --target=\"${CARGO_XCODE_TARGET_TRIPLE}\"; );\n (set -x; echo \"yay\";);\nelse\nexport XCOUTDIR=\"${CARGO_TARGET_DIR}/${CARGO_XCODE_TARGET_TRIPLE}/${CARGO_XCODE_BUILD_MODE}\"\necho \"pwd is $PWD, xcoutdir is $XCOUTDIR\"\n ( set -x; cargo build --manifest-path=\"$SCRIPT_INPUT_FILE\" --features=\"${CARGO_XCODE_FEATURES:-}\" ${OTHER_INPUT_FILE_FLAGS} --target=\"${CARGO_XCODE_TARGET_TRIPLE}\" --target-dir=\"/Users/vrishank/Desktop/master-mdc/Dependencies/minimuxer/target\" --out-dir=\"$XCOUTDIR\" -Z unstable-options; );\nfi\n# it's too hard to explain Cargo's actual exe path to Xcode build graph, so hardlink to a known-good path instead\nBUILT_SRC=\"${CARGO_TARGET_DIR}/${CARGO_XCODE_TARGET_TRIPLE}/${CARGO_XCODE_BUILD_MODE}/${CARGO_XCODE_CARGO_FILE_NAME}\"\nln -f -- \"$BUILT_SRC\" \"$SCRIPT_OUTPUT_FILE_0\"\n\n# xcode generates dep file, but for its own path, so append our rename to it\n#DEP_FILE_SRC=\"${CARGO_TARGET_DIR}/${CARGO_XCODE_TARGET_TRIPLE}/${CARGO_XCODE_BUILD_MODE}/${CARGO_XCODE_CARGO_DEP_FILE_NAME}\"\n\nDEP_FILE_SRC=\"/Users/vrishank/Desktop/master-mdc/Dependencies/minimuxer/target/aarch64-apple-ios/release/libminimuxer.d\"\necho \"depfilesrc $DEP_FILE_SRC\"\nif [ -f \"$DEP_FILE_SRC\" ]; then\n    DEP_FILE_DST=\"${DERIVED_FILE_DIR}/${CARGO_XCODE_TARGET_ARCH}-${EXECUTABLE_NAME}.d\"\n    cp -f \"$DEP_FILE_SRC\" \"$DEP_FILE_DST\"\n    echo >> \"$DEP_FILE_DST\" \"$SCRIPT_OUTPUT_FILE_0: $BUILT_SRC\"\nfi\n\n# lipo script needs to know all the platform-specific files that have been built\n# archs is in the file name, so that paths don't stay around after archs change\n# must match input for LipoScript\nFILE_LIST=\"${DERIVED_FILE_DIR}/${ARCHS}-${EXECUTABLE_NAME}.xcfilelist\"\ntouch \"$FILE_LIST\"\nif ! egrep -q \"$SCRIPT_OUTPUT_FILE_0\" \"$FILE_LIST\" ; then\n    echo >> \"$FILE_LIST\" \"$SCRIPT_OUTPUT_FILE_0\"\nfi\n";
+			script = "# generated with cargo-xcode 1.5.0\n# modified to use prebuilt binaries\n\nset -eu;\n\nBUILT_SRC=\"./minimuxer/$LIB_FILE_NAME.a\"\nln -f -- \"$BUILT_SRC\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\" || cp \"$BUILT_SRC\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\necho \"$BUILT_SRC -> $TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n\n# xcode generates dep file, but for its own path, so append our rename to it\n#DEP_FILE_SRC=\"minimuxer/target/${CARGO_XCODE_TARGET_TRIPLE}/release/${CARGO_XCODE_CARGO_DEP_FILE_NAME}\"\n#if [ -f \"$DEP_FILE_SRC\" ]; then\n#    DEP_FILE_DST=\"${DERIVED_FILE_DIR}/${CARGO_XCODE_TARGET_ARCH}-${EXECUTABLE_NAME}.d\"\n#    cp -f \"$DEP_FILE_SRC\" \"$DEP_FILE_DST\"\n#    echo >> \"$DEP_FILE_DST\" \"$SCRIPT_OUTPUT_FILE_0: $BUILT_SRC\"\n#fi\n\n# lipo script needs to know all the platform-specific files that have been built\n# archs is in the file name, so that paths don't stay around after archs change\n# must match input for LipoScript\n#FILE_LIST=\"${DERIVED_FILE_DIR}/${ARCHS}-${EXECUTABLE_NAME}.xcfilelist\"\n#touch \"$FILE_LIST\"\n#if ! egrep -q \"$SCRIPT_OUTPUT_FILE_0\" \"$FILE_LIST\" ; then\n#    echo >> \"$FILE_LIST\" \"$SCRIPT_OUTPUT_FILE_0\"\n#fi\n";
 		};
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		9987603229A454B500818586 /* minimuxer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = minimuxer.h; path = minimuxer/minimuxer.h; sourceTree = "<group>"; };
 		ADDEDBA66A6E1 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		CA6012A875F93EF4668187A5 /* Cargo.toml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cargo.toml; path = minimuxer/Cargo.toml; sourceTree = "<group>"; };
 		CA609C732349C7AAD9FA67C4 /* libminimuxer_static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libminimuxer_static.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -62,7 +61,7 @@
 		CA6012A875F9D65BC3C892A8 = {
 			isa = PBXGroup;
 			children = (
-				CA6012A875F93EF4668187A5 /* Cargo.toml */,
+				9987603229A454B500818586 /* minimuxer.h */,
 				CA6012A875F922869D176AE5 /* Products */,
 				CA6012A875F998AF0B5890DB /* Frameworks */,
 			);
@@ -75,6 +74,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA600589A243A560B9642892 /* Build configuration list for PBXNativeTarget "minimuxer-staticlib" */;
 			buildPhases = (
+				9987603629A4611D00818586 /* ShellScript */,
 				CA600F638141A560B9642892 /* Sources */,
 				CA6012A875F9AF6EBB7F357C /* Universal Binary lipo */,
 			);
@@ -121,6 +121,24 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9987603629A4611D00818586 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				./minimuxer/minimuxer.h,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash ./fetch-prebuilt.sh minimuxer\n";
+		};
 		CA6012A875F9AF6EBB7F357C /* Universal Binary lipo */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -139,7 +157,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# generated with cargo-xcode 1.5.0\n\n            set -eux; cat \"$DERIVED_FILE_DIR/$ARCHS-$EXECUTABLE_NAME.xcfilelist\" | tr '\\n' '\\0' | xargs -0 lipo -create -output \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n            if [ ${LD_DYLIB_INSTALL_NAME:+1} ]; then\n                install_name_tool -id \"$LD_DYLIB_INSTALL_NAME\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n            fi\n        ";
+			shellScript = "# generated with cargo-xcode 1.5.0\n\n#set -eux; cat \"$DERIVED_FILE_DIR/$ARCHS-$EXECUTABLE_NAME.xcfilelist\" | tr '\\n' '\\0' | xargs -0 lipo -create -output \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n#if [ ${LD_DYLIB_INSTALL_NAME:+1} ]; then\n#    install_name_tool -id \"$LD_DYLIB_INSTALL_NAME\" \"$TARGET_BUILD_DIR/$EXECUTABLE_PATH\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -148,7 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA6038F2DF2FA560B9642892 /* Cargo.toml in Sources */,
+				9987603329A454B500818586 /* minimuxer.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +181,9 @@
 				INSTALL_GROUP = "";
 				INSTALL_MODE_FLAG = "";
 				INSTALL_OWNER = "";
+				LIB_FILE_NAME = "";
+				"LIB_FILE_NAME[sdk=iphoneos*]" = libminimuxer;
+				"LIB_FILE_NAME[sdk=iphonesimulator*]" = "libminimuxer-sim";
 				PRODUCT_NAME = minimuxer_static;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos appletvsimulator appletvos";
@@ -177,6 +198,9 @@
 				INSTALL_GROUP = "";
 				INSTALL_MODE_FLAG = "";
 				INSTALL_OWNER = "";
+				LIB_FILE_NAME = "";
+				"LIB_FILE_NAME[sdk=iphoneos*]" = libminimuxer;
+				"LIB_FILE_NAME[sdk=iphonesimulator*]" = "libminimuxer-sim";
 				PRODUCT_NAME = minimuxer_static;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos appletvsimulator appletvos";
