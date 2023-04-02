@@ -6,7 +6,8 @@
 //  Copyright © 2019 Riley Testut. All rights reserved.
 //
 
-import UIKit
+#if canImport(UIKit)
+import UIKit.UIColor
 
 public extension UIColor {
     // Borrowed from https://stackoverflow.com/a/26341062
@@ -69,3 +70,4 @@ public extension UIColor {
         )
     }
 }
+#endif

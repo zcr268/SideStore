@@ -7,7 +7,10 @@
 //
 
 import UIKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 extension AppDelegate {
     static let startBackupNotification = Notification.Name("io.altstore.StartBackup")

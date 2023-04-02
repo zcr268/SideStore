@@ -2,7 +2,6 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
-import os.log
 import PackageDescription
 
 // Process enviroment variables.
@@ -10,6 +9,8 @@ typealias EnviromentBool = (var: String, default: Bool)
 
 // Possible keys for `env` and their default value
 let USE_CARGO 		          = envBool(("USE_CARGO", 					false))
+let USE_LOCAL_MINIMUXER       = envBool(("USE_LOCAL_MINIMUXER",         true))
+let USE_LOCAL_EM_PROXY        = envBool(("USE_LOCAL_EM_PROXY",         true))
 let USE_CXX_INTEROP           = envBool(("USE_CXX_INTEROP", 			false))
 let USE_CXX_MODULES           = envBool(("USE_CXX_MODULES", 			false))
 let INHIBIT_UPSTREAM_WARNINGS = envBool(("INHIBIT_UPSTREAM_WARNINGS", 	true))
@@ -18,6 +19,11 @@ let STATIC_LIBRARY            = envBool(("STATIC_LIBRARY", 				false))
 let unsafe_flags: [String]    = INHIBIT_UPSTREAM_WARNINGS ? ["-w"] : [String]()
 
 let unsafe_flags_cxx: [String] = INHIBIT_UPSTREAM_WARNINGS ? ["-w", "-Wno-module-import-in-extern-c"] : ["-Wno-module-import-in-extern-c"]
+
+enum Consts {
+    static let minimuxer_checksum: String = "57b5126605ad127f209a57a2f8e6fe7230ce9acabc499f2b7510983ddec954bb"
+    static let em_proxy_checksum: String = "79f90075b8ff2f47540a5bccf5fb7740905cda63463f833e2505256237df3c1b"
+}
 
 extension Package.Dependency {
 	/// The combination of all the dependencies for the Package.
@@ -32,21 +38,34 @@ extension Package.Dependency {
 	/// Side Store Team Packages
 	static let Packages_SideStoreTeam: [Package.Dependency] = [
 		.github("SideStore/AltSign", from: "1.0.3"),
-		.github("SideStore/iMobileDevice.swift", from: "1.0.5"),
+        .package(name: "iMobileDevice.swift", path: "../../iMobileDevice.swift"),
+//		.github("SideStore/iMobileDevice.swift", from: "1.0.5"),
 		.github("SideStore/SideKit", from: "0.1.0"),
 		/// @JoeMatt updated fork for Riley's `Roxas`
 		.github("JoeMatt/Roxas", from: "1.2.2"),
 	]
 
+    #if HAVE_MACOS_DAEMON
+    static let Packages_macOS_Daemon: [Package.Dependency] = [
+        .github("sindresorhus/LaunchAtLogin", from: "5.0.0")
+    ]
+    #else
+    static let Packages_macOS_Daemon: [Package.Dependency] = []
+    #endif
+
 	/// 3rd party Packages
 	static let Packages_3rdParty: [Package.Dependency] = [
-		.github("SwiftPackageIndex/SemanticVersion", from: "0.3.5"),
+        // Logging
+        .github("apple/swift-log", from: "1.5.2"),
+            // XCode console output
+        .github("ShivaHuang/swift-log-SwiftyBeaver", from: "0.1.0"),
+
 		.github("johnxnguyen/Down", branch: "master"),
 		.github("kean/Nuke", from: "7.0.0"),
 		.github("kishikawakatsumi/KeychainAccess", from: "4.2.0"),
 		.github("microsoft/appcenter-sdk-apple", from: "4.2.0"),
-		.github("sindresorhus/LaunchAtLogin", from: "5.0.0"),
-	]
+        .github("SwiftPackageIndex/SemanticVersion", from: "0.3.5")
+	] + Packages_macOS_Daemon
 
 	static let Plugins_BuildTools: [Package.Dependency] = [
 		// Plugins
@@ -141,8 +160,11 @@ let AppCenterCrashes  : Target.Dependency = .product(name: "AppCenterCrashes", p
 let CoreCrypto		: Target.Dependency = .product(name: "CoreCrypto", package: "AltSign")
 let CCoreCrypto		: Target.Dependency = .product(name: "CCoreCrypto", package: "AltSign")
 let libimobiledevice: Target.Dependency = .product(name: "libimobiledevice", package: "iMobileDevice.swift")
+let iMobileDevice   : Target.Dependency = .product(name: "iMobileDevice", package: "iMobileDevice.swift")
 let Roxas			: Target.Dependency = .product(name: "Roxas", package: "Roxas")
 let RoxasUI			: Target.Dependency = .product(name: "RoxasUI", package: "Roxas")
+let Logging         : Target.Dependency = .product(name: "Logging", package: "swift-log")
+let LoggingSwiftyBeaver : Target.Dependency = .product(name: "LoggingSwiftyBeaver", package: "swift-log-SwiftyBeaver")
 
 // MARK: - Linking
 let frameworksCommon: [LinkerSetting] = [ "Avfoundation",
@@ -177,6 +199,7 @@ let package = Package(
 		.tvOS(.v14),
 		.macCatalyst(.v14),
 		.macOS(.v12),
+        .driverKit("99")
 	],
 	products: Product.products,
 	dependencies: Package.Dependency.SideStore.dependencies,
@@ -192,9 +215,9 @@ let package = Package(
 extension Product {
 	static let products: [Product] = [
 		// Modules
-		SideStoreAppKit.0,
-		SideStoreAppKit.static,
-		SideStoreAppKit.dynamic,
+		SideStoreUIKit.0,
+		SideStoreUIKit.static,
+		SideStoreUIKit.dynamic,
 
 		SideStoreCore.0,
 		SideStoreCore.static,
@@ -217,8 +240,8 @@ extension Product {
 	static let cliProducts: [Product] = []
 	#endif
 
-	// SideStoreAppKit
-	static let SideStoreAppKit = librarySet("SideStoreAppKit")
+	// SideStoreUIKit
+	static let SideStoreUIKit = librarySet("SideStoreUIKit")
 
 	// SideStoreCore
 	static let SideStoreCore = librarySet("SideStoreCore")
@@ -255,7 +278,7 @@ extension Target {
 }
 typealias TargetPair = (target: PackageDescription.Target, testTarget: PackageDescription.Target?)
 
-// MARK: - SideStoreAppKit
+// MARK: - SideStoreUIKit
 extension Target.SideStore {
 
 	/// All the targets fo be added to `Package(targets:)`
@@ -263,8 +286,11 @@ extension Target.SideStore {
 
 	/// __Public Targets__
 	static let publicTargets: [Target] = [
-		// SideStoreAppKit
-		SideStoreAppKit,
+		// SideStoreUIKit
+		SideStoreUIKit,
+
+        // SideUIShared
+        SideUIShared,
 
 		// iOS Widget
 		SideWidgetKit,
@@ -299,10 +325,10 @@ extension Target.SideStore {
 		Cargo.Plugins
 	}()
 
-	// MARK: - SideStoreAppKit
-	static let SideStoreAppKit: Target =
+	// MARK: - SideStoreUIKit
+	static let SideStoreUIKit: Target =
 		.target(
-			name: "SideStoreAppKit",
+			name: "SideStoreUIKit",
 			dependencies: [
 				AppCenterAnalytics,
 				AppCenterCrashes,
@@ -324,13 +350,40 @@ extension Target.SideStore {
 			plugins: [LoggerPlugin, IntentBuilderPlugin]
 		)
 
+    // MARK: - SideUIShared
+    static let SideUIShared: Target =
+        .target(
+            name: "SideUIShared",
+            dependencies: [
+                AppCenterAnalytics,
+                AppCenterCrashes,
+                "AltSign",
+                "Down",
+                "EmotionalDamage",
+                "KeychainAccess",
+                libimobiledevice,
+                iMobileDevice,
+                "MiniMuxer",
+                Roxas,
+                RoxasUI,
+                "SideKit",
+                "SidePatcher",
+                "SideStoreCore",
+            ],
+            resources: [],
+            linkerSettings: linkerSettings,
+            plugins: [LoggerPlugin, IntentBuilderPlugin]
+        )
+
 	// MARK: - SideWidgetKit
 	static let SideWidgetKit: Target =
 		.target(
 			name: "SideWidgetKit",
 			dependencies: [
+                Roxas,
+                RoxasUI,
 				"SideKit",
-				"SideStoreAppKit",
+				"SideUIShared",
 				"SideStoreCore"
 			],
 			plugins: commonPlugins
@@ -344,7 +397,11 @@ extension Target.SideStore {
 				"AltSign",
 				"KeychainAccess",
 				Roxas,
-				"SemanticVersion"],
+				"SemanticVersion",
+                Logging,
+                LoggingSwiftyBeaver,
+                "SideKit"
+            ],
 			plugins: commonPlugins),
 		.testTarget(
 			name: "SideStoreCoreTests",
@@ -408,9 +465,8 @@ extension Target.SideStore {
 
 		static let SideStore_app: Target = .executableTarget(
 			name: "SideStore",
-			dependencies: [ "SideStoreAppKit" ],
+			dependencies: [ "SideStoreUIKit" ],
 			exclude: [
-				"Resources/AltBackup.ipa",
 				"Resources/Info.info",
 				"Resources/Info.plist",
 				"Resources/SideStore.entitlements",
@@ -493,10 +549,13 @@ extension Target.SideStore {
 		].compactMap{$0}
 
 		// MARK: em_proxy
-		private static let em_proxy_target: Target = .binaryTarget(
-				name: "em_proxy",
-				url: "https://github.com/SideStore/em_proxy/releases/download/build/em_proxy.xcframework.zip",
-				checksum: "79f90075b8ff2f47540a5bccf5fb7740905cda63463f833e2505256237df3c1b")
+        private static let em_proxy_target: Target = USE_LOCAL_EM_PROXY ?
+            .binaryTarget(name: "em_proxy",
+                          path: "Dependencies/em_proxy/em_proxy.xcframework") :
+            .binaryTarget(
+                name: "em_proxy",
+                url: "https://github.com/SideStore/em_proxy/releases/download/build/em_proxy.xcframework.zip",
+                checksum: Consts.em_proxy_checksum)
 
 		// MARK: - EmotionalDamage (Swift)
 		private static let emotionalDamageTarget: TargetPair = (
@@ -504,10 +563,12 @@ extension Target.SideStore {
 				.testTarget(name: "EmotionalDamageTests", dependencies: ["EmotionalDamage"]))
 
 		// MARK: minimuxer
-		private static let minimuxer_target: Target =
+		private static let minimuxer_target: Target = USE_LOCAL_MINIMUXER ?
+            .binaryTarget(name: "minimuxer",
+                          path: "Dependencies/minimuxer/minimuxer.xcframework") :
 			.binaryTarget(name: "minimuxer",
 						  url: "https://github.com/SideStore/minimuxer/releases/download/build/minimuxer.xcframework.zip",
-						  checksum: "aa47182547b60f4f7560bdc0f25ea797c69419765003d16d5039c13b87930ed1")
+                          checksum: Consts.minimuxer_checksum)
 
 		// MARK: MiniMuxer.Swift
 		private static let miniMuxerSwiftTarget: TargetPair = (

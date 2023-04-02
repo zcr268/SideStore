@@ -7,7 +7,15 @@
 //
 
 import CoreData
-import UIKit
+
+#if canImport(UIKit)
+import class UIKit.UIColor
+#elseif canImport(AppKit)
+import class AppKit.NSColor
+fileprivate typealias UIColor = NSColor
+#else
+#error ("Unsupported platform. Need to refactor UIColor/NSColor to extend support.")
+#endif
 
 @objc(NewsItem)
 public class NewsItem: NSManagedObject, Decodable, Fetchable {

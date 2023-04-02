@@ -6,7 +6,10 @@
 //
 
 import Foundation
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 @_exported import minimuxer
 
 public enum Uhoh: Error {
@@ -19,6 +22,7 @@ public func start_minimuxer(pairing_file: String) -> Int32 {
     let pf_pointer = UnsafeMutablePointer<CChar>(mutating: pf.utf8String)
     let u = NSString(string: getDocumentsDirectory().absoluteString)
     let u_ptr = UnsafeMutablePointer<CChar>(mutating: u.utf8String)
+
     return minimuxer_c_start(pf_pointer, u_ptr)
 }
 

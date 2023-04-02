@@ -9,7 +9,10 @@
 import CoreData
 
 import Roxas
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 open class MergePolicy: RSTRelationshipPreservingMergePolicy {
     override open func resolve(constraintConflicts conflicts: [NSConstraintConflict]) throws {

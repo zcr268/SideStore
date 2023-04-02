@@ -9,7 +9,10 @@
 import Foundation
 import Network
 import SideKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 public protocol RequestHandler {
     func handleAnisetteDataRequest(_ request: AnisetteDataRequest, for connection: Connection, completionHandler: @escaping (Result<AnisetteDataResponse, Error>) -> Void)

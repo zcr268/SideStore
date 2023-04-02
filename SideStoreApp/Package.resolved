@@ -3,7 +3,7 @@
     {
       "identity" : "altsign",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SideStore/AltSign",
+      "location" : "https://github.com/SideStore/AltSign.git",
       "state" : {
         "revision" : "eb4c74dcf6be2fb00a3edc0381aae59fbbdb4cf3",
         "version" : "1.0.3"
@@ -12,7 +12,7 @@
     {
       "identity" : "appcenter-sdk-apple",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/appcenter-sdk-apple",
+      "location" : "https://github.com/microsoft/appcenter-sdk-apple.git",
       "state" : {
         "revision" : "b2dc99cfedead0bad4e6573d86c5228c89cff332",
         "version" : "4.4.3"
@@ -28,36 +28,18 @@
       }
     },
     {
-      "identity" : "imobiledevice.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SideStore/iMobileDevice.swift",
-      "state" : {
-        "revision" : "74e481106dd155c0cd21bca6795fd9fe5f751654",
-        "version" : "1.0.5"
-      }
-    },
-    {
       "identity" : "keychainaccess",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
       "state" : {
         "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
         "version" : "4.2.2"
       }
     },
     {
-      "identity" : "launchatlogin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sindresorhus/LaunchAtLogin.git",
-      "state" : {
-        "revision" : "7ad6331f9c38953eb1ce8737758e18f7607e984a",
-        "version" : "5.0.0"
-      }
-    },
-    {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke",
+      "location" : "https://github.com/kean/Nuke.git",
       "state" : {
         "revision" : "9318d02a8a6d20af56505c9673261c1fd3b3aebe",
         "version" : "7.6.3"
@@ -84,7 +66,7 @@
     {
       "identity" : "roxas",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JoeMatt/Roxas",
+      "location" : "https://github.com/JoeMatt/Roxas.git",
       "state" : {
         "revision" : "17338c09ec0ffeea4c68135f17c1f801a3d6d10d",
         "version" : "1.2.2"
@@ -93,7 +75,7 @@
     {
       "identity" : "semanticversion",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SwiftPackageIndex/SemanticVersion",
+      "location" : "https://github.com/SwiftPackageIndex/SemanticVersion.git",
       "state" : {
         "revision" : "fc670910dc0903cc269b3d0b776cda5703979c4e",
         "version" : "0.3.5"
@@ -102,9 +84,27 @@
     {
       "identity" : "sidekit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SideStore/SideKit",
+      "location" : "https://github.com/SideStore/SideKit.git",
       "state" : {
         "revision" : "7ea34a09b52c104077dea8e0b90f8dc55d43b36b",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "32e8d724467f8fe623624570367e3d50c5638e46",
+        "version" : "1.5.2"
+      }
+    },
+    {
+      "identity" : "swift-log-swiftybeaver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ShivaHuang/swift-log-SwiftyBeaver.git",
+      "state" : {
+        "revision" : "7b6f329f47530583546be82bb14060aba888cd43",
         "version" : "0.1.0"
       }
     },
@@ -115,6 +115,15 @@
       "state" : {
         "revision" : "2e4833a3ca65d0aaa986138b8ef350b7f549ba28",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swiftybeaver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
+      "state" : {
+        "revision" : "12b5acf96d98f91d50de447369bd18df74600f1a",
+        "version" : "1.9.6"
       }
     }
   ],

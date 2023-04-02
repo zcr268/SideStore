@@ -10,7 +10,10 @@ import SideStoreCore
 import EmotionalDamage
 import SideStoreAppKit
 import UIKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 @available(iOS 13, *)
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {

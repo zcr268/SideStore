@@ -8,8 +8,15 @@
 
 import CoreData
 import Foundation
-import class UIKit.UIColor
 
+#if canImport(UIKit)
+import class UIKit.UIColor
+#elseif canImport(AppKit)
+import class AppKit.NSColor
+fileprivate typealias UIColor = NSColor
+#else
+#error ("Unsupported platform. Need to refactor UIColor/NSColor to extend support.")
+#endif
 import Roxas
 
 public extension StoreApp {

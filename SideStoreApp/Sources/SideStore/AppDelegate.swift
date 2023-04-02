@@ -10,7 +10,10 @@ import AVFoundation
 import Intents
 import UIKit
 import UserNotifications
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 import AltSign
 import SideStoreCore

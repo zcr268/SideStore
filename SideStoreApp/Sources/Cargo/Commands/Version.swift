@@ -1,6 +1,9 @@
 import ArgumentParser
 import SwiftLintFramework
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 extension Cargo {
     struct Version: ParsableCommand {

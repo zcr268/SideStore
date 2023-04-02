@@ -8,7 +8,10 @@
 
 import Foundation
 import SideKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 @objc private protocol XPCConnectionProxy {
     func ping(completionHandler: @escaping () -> Void)

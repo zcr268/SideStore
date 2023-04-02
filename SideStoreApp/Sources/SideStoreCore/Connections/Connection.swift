@@ -9,7 +9,10 @@
 import Foundation
 import Network
 import SideKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 public protocol SideConnection: Connection {
     func __send(_ data: Data, completionHandler: @escaping (Bool, Error?) -> Void)

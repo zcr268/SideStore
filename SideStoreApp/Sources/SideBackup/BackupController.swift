@@ -7,7 +7,10 @@
 //
 
 import Foundation
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 import AltSign
 import Roxas

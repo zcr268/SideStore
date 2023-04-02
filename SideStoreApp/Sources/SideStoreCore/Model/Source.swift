@@ -7,7 +7,7 @@
 //
 
 import CoreData
-import UIKit
+import Foundation
 
 public extension Source {
     #if ALPHA

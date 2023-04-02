@@ -9,7 +9,10 @@
 import Foundation
 
 import SideKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 typealias DaemonConnectionManager = ConnectionManager<DaemonRequestHandler>
 

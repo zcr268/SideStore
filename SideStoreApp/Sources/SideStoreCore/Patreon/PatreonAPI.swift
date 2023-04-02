@@ -9,7 +9,10 @@
 import AuthenticationServices
 import CoreData
 import Foundation
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 private let clientID = "ZMx0EGUWe4TVWYXNZZwK_fbIK5jHFVWoUf1Qb-sqNXmT-YzAGwDPxxq7ak3_W5Q2"
 private let clientSecret = "1hktsZB89QyN69cB4R0tu55R4TCPQGXxvebYUUh7Y-5TLSnRswuxs6OUjdJ74IJt"
@@ -115,8 +118,9 @@ public extension PatreonAPI {
             }
         }
 
-        if #available(iOS 13.0, *) {
-            self.authenticationSession?.presentationContextProvider = self
+        if let provider = self as? ASWebAuthenticationPresentationContextProviding,
+           let authenticationSession = self.authenticationSession {
+            authenticationSession.presentationContextProvider = provider
         }
 
         authenticationSession?.start()
@@ -357,12 +361,5 @@ private extension PatreonAPI {
 
         let installedApps = InstalledApp.all(satisfying: predicate, in: context)
         installedApps.forEach { $0.isActive = false }
-    }
-}
-
-@available(iOS 13.0, *)
-extension PatreonAPI: ASWebAuthenticationPresentationContextProviding {
-    public func presentationAnchor(for _: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        UIApplication.alt_shared?.keyWindow ?? UIWindow()
     }
 }

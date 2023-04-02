@@ -10,7 +10,10 @@ import CoreData
 
 import AltSign
 import Roxas
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 private extension CFNotificationName {
     static let willAccessDatabase = CFNotificationName("com.rileytestut.AltStore.WillAccessDatabase" as CFString)

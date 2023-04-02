@@ -15,7 +15,10 @@ import AltSign
 import SideStoreCore
 import Roxas
 import RoxasUIKit
-import os.log
+import OSLog
+#if canImport(Logging)
+import Logging
+#endif
 
 import class SideStoreAppKit.ViewAppIntent
 
