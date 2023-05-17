@@ -165,11 +165,12 @@ build:
 				AD_HOC_CODE_SIGNING_ALLOWED=YES \
 				CODE_SIGNING_ALLOWED=NO \
 				DEVELOPMENT_TEAM=XYZ0123456 \
-				ORG_IDENTIFIER=com.SideStore
+				ORG_IDENTIFIER=com.SideStore \
+				DWARF_DSYM_FOLDER_PATH="."
 
 fakesign:
 	rm -rf archive.xcarchive/Products/Applications/SideStore.app/Frameworks/AltStoreCore.framework/Frameworks/
-	ldid -SAltStore/Resources/tempEnt.plist archive.xcarchive/Products/Applications/SideStore.app/SideStore
+	ldid -SAltStore/Resources/ReleaseEntitlements.plist archive.xcarchive/Products/Applications/SideStore.app/SideStore
 
 ipa:
 	mkdir Payload
