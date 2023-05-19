@@ -54,14 +54,28 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         #if !targetEnvironment(simulator)
+        if !UserDefaults.standard.onboardingComplete {
+            self.showOnboarding()
+            return
+        }
+
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
         
         guard let pf = fetchPairingFile() else {
-            displayError("Device pairing file not found.")
+            self.showOnboarding(step: .pairing)
             return
         }
         start_minimuxer_threads(pf)
         #endif
+    }
+
+    func showOnboarding(step: OnboardingView.OnboardingStep = .welcome) {
+        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, currentStep: step)
+            .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
+        let navigationController = UINavigationController(rootViewController: UIHostingController(rootView: onboardingView))
+        navigationController.isNavigationBarHidden = true
+        navigationController.isModalInPresentation = true
+        self.present(navigationController, animated: true)
     }
     
     func fetchPairingFile() -> String? {

@@ -63,6 +63,10 @@
 		1F943C6F2927F90400ABE095 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFC5B82927E0EE00B8D837 /* NewsView.swift */; };
 		1F943C702927F90400ABE095 /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFC5BA2927E0F800B8D837 /* BrowseView.swift */; };
 		1F943C712927F90400ABE095 /* MyAppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFC5BD2927E10D00B8D837 /* MyAppsView.swift */; };
+		1F981B1129AA0FAE0014950E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F981B1029AA0FAE0014950E /* OnboardingView.swift */; };
+		1F981B1329AA101F0014950E /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F981B1229AA101F0014950E /* OnboardingStepView.swift */; };
+		1F981B1529AA1E070014950E /* AppIconsShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F981B1429AA1E070014950E /* AppIconsShowcase.swift */; };
+		1F981B1729AA34A70014950E /* AppStoreProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F981B1629AA34A70014950E /* AppStoreProductView.swift */; };
 		1FA1C8CA294906890083119D /* MyAppsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA1C8C9294906890083119D /* MyAppsViewModel.swift */; };
 		1FA5A6CA298E8B2F007BA946 /* RefreshAttemptsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5A6C9298E8B2F007BA946 /* RefreshAttemptsView.swift */; };
 		1FA5A6CC298E8FE4007BA946 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5A6CB298E8FE4007BA946 /* MailComposeView.swift */; };
@@ -76,6 +80,8 @@
 		1FB96FCF292BBBCA007E68D1 /* SiriShortcutSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB96FCE292BBBC9007E68D1 /* SiriShortcutSetupView.swift */; };
 		1FB96FEC292C171D007E68D1 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB96FEB292C171D007E68D1 /* NotificationManager.swift */; };
 		1FB96FF3292D0539007E68D1 /* PillButtonProgressViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB96FF2292D0539007E68D1 /* PillButtonProgressViewStyle.swift */; };
+		1FF8C6182A1780C60041352C /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF8C6172A1780C60041352C /* ActivityView.swift */; };
+		1FF8C61B2A1782F10041352C /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 1FF8C61A2A1782F10041352C /* Reachability */; };
 		1FFA56C2299994390011B6F5 /* OutputCapturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA56C1299994390011B6F5 /* OutputCapturer.swift */; };
 		1FFA56C52999978C0011B6F5 /* LocalConsole in Frameworks */ = {isa = PBXBuildFile; productRef = 1FFA56C42999978C0011B6F5 /* LocalConsole */; };
 		1FFEF104298552DB0098374C /* AppVersionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFEF103298552DB0098374C /* AppVersionHistoryView.swift */; };
@@ -609,6 +615,10 @@
 		1F943C632927EF4200ABE095 /* NewsItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsItemView.swift; sourceTree = "<group>"; };
 		1F943C652927F36600ABE095 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		1F943C672927F39400ABE095 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		1F981B1029AA0FAE0014950E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		1F981B1229AA101F0014950E /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
+		1F981B1429AA1E070014950E /* AppIconsShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconsShowcase.swift; sourceTree = "<group>"; };
+		1F981B1629AA34A70014950E /* AppStoreProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreProductView.swift; sourceTree = "<group>"; };
 		1FA1C8C9294906890083119D /* MyAppsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAppsViewModel.swift; sourceTree = "<group>"; };
 		1FA5A6C9298E8B2F007BA946 /* RefreshAttemptsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAttemptsView.swift; sourceTree = "<group>"; };
 		1FA5A6CB298E8FE4007BA946 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
@@ -629,6 +639,7 @@
 		1FB96FCE292BBBC9007E68D1 /* SiriShortcutSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutSetupView.swift; sourceTree = "<group>"; };
 		1FB96FEB292C171D007E68D1 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1FB96FF2292D0539007E68D1 /* PillButtonProgressViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillButtonProgressViewStyle.swift; sourceTree = "<group>"; };
+		1FF8C6172A1780C60041352C /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		1FFA56C1299994390011B6F5 /* OutputCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputCapturer.swift; sourceTree = "<group>"; };
 		1FFEF103298552DB0098374C /* AppVersionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHistoryView.swift; sourceTree = "<group>"; };
 		9961EC2D29BE9F2E00AF2C6F /* minimuxer-helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "minimuxer-helpers.swift"; path = "Dependencies/minimuxer/minimuxer-helpers.swift"; sourceTree = SOURCE_ROOT; };
@@ -1046,6 +1057,7 @@
 				D533E8B72727841800A9B5DD /* libAppleArchive.tbd in Frameworks */,
 				B3C395F9284F362400DA9E2F /* AppCenterCrashes in Frameworks */,
 				9922FFEC29B501C50020F868 /* Starscream in Frameworks */,
+				1FF8C61B2A1782F10041352C /* Reachability in Frameworks */,
 				D533E8BE2727BBF800A9B5DD /* libcurl.a in Frameworks */,
 				4879A9622861049C00FC1BBD /* OpenSSL in Frameworks */,
 				B3C395F4284F35DD00DA9E2F /* Nuke in Frameworks */,
@@ -1126,8 +1138,20 @@
 				1F6284D6295218980060AAD8 /* DocumentPicker.swift */,
 				1F545E84298D84CF00589F68 /* FilePreviewView.swift */,
 				1FA5A6CB298E8FE4007BA946 /* MailComposeView.swift */,
+				1F981B1629AA34A70014950E /* AppStoreProductView.swift */,
+				1FF8C6172A1780C60041352C /* ActivityView.swift */,
 			);
 			path = "UIView Representables";
+			sourceTree = "<group>";
+		};
+		1F981B0F29AA0F9B0014950E /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				1F981B1029AA0FAE0014950E /* OnboardingView.swift */,
+				1F981B1229AA101F0014950E /* OnboardingStepView.swift */,
+				1F981B1429AA1E070014950E /* AppIconsShowcase.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		1FAFC5B02927E01400B8D837 /* Views */ = {
@@ -1135,6 +1159,7 @@
 			children = (
 				1FAFC5B52927E06300B8D837 /* RootView.swift */,
 				1FAFC5B12927E02E00B8D837 /* Authentication */,
+				1F981B0F29AA0F9B0014950E /* Onboarding */,
 				1FAFC5B22927E03300B8D837 /* News */,
 				1FAFC5B32927E03D00B8D837 /* Browse */,
 				1FAFC5BC2927E0FD00B8D837 /* My Apps */,
@@ -2312,6 +2337,7 @@
 				1F07F5662955D16A00F7BE95 /* SFSafeSymbols */,
 				1F1295802989B51F0048FCB9 /* ExpandableText */,
 				1FFA56C42999978C0011B6F5 /* LocalConsole */,
+				1FF8C61A2A1782F10041352C /* Reachability */,
 			);
 			productName = AltStore;
 			productReference = BFD2476A2284B9A500981D42 /* SideStore.app */;
@@ -2389,6 +2415,7 @@
 				1F07F5652955D16A00F7BE95 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				1F12957F2989B51F0048FCB9 /* XCRemoteSwiftPackageReference "ExpandableText" */,
 				1FFA56C32999978C0011B6F5 /* XCRemoteSwiftPackageReference "LocalConsole" */,
+				1FF8C6192A1782F10041352C /* XCRemoteSwiftPackageReference "Reachability" */,
 			);
 			productRefGroup = BFD2476B2284B9A500981D42 /* Products */;
 			projectDirPath = "";
@@ -2814,6 +2841,7 @@
 				BFC57A652416C72400EB891E /* DeactivateAppOperation.swift in Sources */,
 				1F943C712927F90400ABE095 /* MyAppsView.swift in Sources */,
 				1FA1C8CA294906890083119D /* MyAppsViewModel.swift in Sources */,
+				1F981B1529AA1E070014950E /* AppIconsShowcase.swift in Sources */,
 				BF3BEFC124086A1E00DE7D55 /* RefreshAppOperation.swift in Sources */,
 				1FFEF104298552DB0098374C /* AppVersionHistoryView.swift in Sources */,
 				BFE60740231AFD2A002B0E8E /* InsetGroupTableViewCell.swift in Sources */,
@@ -2841,10 +2869,13 @@
 				1FB96FEC292C171D007E68D1 /* NotificationManager.swift in Sources */,
 				BF770E6722BD57C4002A40FE /* BackgroundTaskManager.swift in Sources */,
 				1F07F56B2955F11500F7BE95 /* AppScreenshotsPreview.swift in Sources */,
+				1F981B1329AA101F0014950E /* OnboardingStepView.swift in Sources */,
 				BF44EEFC246B4550002A52F2 /* RemoveAppOperation.swift in Sources */,
 				BF3D64B022E8D4B800E9056B /* AppContentViewControllerCells.swift in Sources */,
+				1F981B1729AA34A70014950E /* AppStoreProductView.swift in Sources */,
 				BFC57A6E2416FC5D00EB891E /* InstalledAppsCollectionHeaderView.swift in Sources */,
 				B3EE16B62925E27D00B3B1F5 /* AnisetteManager.swift in Sources */,
+				1FF8C6182A1780C60041352C /* ActivityView.swift in Sources */,
 				1F943C6E2927F90400ABE095 /* NewsItemView.swift in Sources */,
 				BF88F97224F8727D00BB75DF /* AppManagerErrors.swift in Sources */,
 				B39F16152918D7DA002E9404 /* Consts+Proxy.swift in Sources */,
@@ -2917,6 +2948,7 @@
 				BF6C8FB02429599900125131 /* TextCollectionReusableView.swift in Sources */,
 				BF663C4F2433ED8200DAA738 /* FileManager+DirectorySize.swift in Sources */,
 				1F943C702927F90400ABE095 /* BrowseView.swift in Sources */,
+				1F981B1129AA0FAE0014950E /* OnboardingView.swift in Sources */,
 				1F943C692927F8F200ABE095 /* RootView.swift in Sources */,
 				1FB84BA62928DE08006A5CF4 /* AppDetailView.swift in Sources */,
 				D57DF63F271E51E400677701 /* ALTAppPatcher.m in Sources */,
@@ -3772,6 +3804,14 @@
 				kind = branch;
 			};
 		};
+		1FF8C6192A1782F10041352C /* XCRemoteSwiftPackageReference "Reachability" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		1FFA56C32999978C0011B6F5 /* XCRemoteSwiftPackageReference "LocalConsole" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/duraidabdul/LocalConsole.git";
@@ -3892,6 +3932,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1F74FF1C295263510047C051 /* XCRemoteSwiftPackageReference "AsyncImage" */;
 			productName = AsyncImage;
+		};
+		1FF8C61A2A1782F10041352C /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1FF8C6192A1782F10041352C /* XCRemoteSwiftPackageReference "Reachability" */;
+			productName = Reachability;
 		};
 		1FFA56C42999978C0011B6F5 /* LocalConsole */ = {
 			isa = XCSwiftPackageProductDependency;

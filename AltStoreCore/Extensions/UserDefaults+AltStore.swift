@@ -20,6 +20,7 @@ public extension UserDefaults
     }()
     
     @NSManaged var firstLaunch: Date?
+    @NSManaged var onboardingComplete: Bool
     @NSManaged var requiresAppGroupMigration: Bool
     @NSManaged var textServer: Bool
     @NSManaged var textInputAnisetteURL: String?
@@ -71,6 +72,7 @@ public extension UserDefaults
         let localServerSupportsRefreshing = !ProcessInfo.processInfo.isOperatingSystemAtLeast(ios14)
         
         let defaults = [
+            #keyPath(UserDefaults.onboardingComplete): false,
             #keyPath(UserDefaults.isBackgroundRefreshEnabled): true,
             #keyPath(UserDefaults.isLegacyDeactivationSupported): isLegacyDeactivationSupported,
             #keyPath(UserDefaults.activeAppLimitIncludesExtensions): activeAppLimitIncludesExtensions,
