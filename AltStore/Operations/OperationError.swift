@@ -163,4 +163,5 @@ extension MinimuxerError: LocalizedError {
     fileprivate func setArgument(name: String) -> String {
         return String(format: NSLocalizedString("Cannot set %@ on the device.", comment: ""), name)
     }
+    return error as! OperationError
 }

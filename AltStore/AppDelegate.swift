@@ -10,6 +10,7 @@ import UIKit
 import UserNotifications
 import AVFoundation
 import Intents
+import LocalConsole
 
 import AltStoreCore
 import AltSign
@@ -58,10 +59,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
     {
+        // Copy STDOUT and STDERR to the logging console
+        _ = OutputCapturer.shared
+
         // Register default settings before doing anything else.
         UserDefaults.registerDefaults()
         
         UnstableFeatures.load()
+        
+        LCManager.shared.isVisible = UserDefaults.standard.isConsoleEnabled
+        LCManager.shared.isCharacterLimitDisabled = true // we want all logs exported
         
         DatabaseManager.shared.start { (error) in
             if let error = error

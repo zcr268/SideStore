@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import Roxas
 import EmotionalDamage
 import minimuxer
@@ -42,7 +43,10 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     {
         defer {
             // Create destinationViewController now so view controllers can register for receiving Notifications.
-            self.destinationViewController = self.storyboard!.instantiateViewController(withIdentifier: "tabBarController") as! TabBarController
+//            self.destinationViewController = self.storyboard!.instantiateViewController(withIdentifier: "tabBarController") as! TabBarController
+            let rootView = RootView()
+                .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
+            self.destinationViewController = UIHostingController(rootView: rootView)
         }
         super.viewDidLoad()
     }
@@ -50,14 +54,28 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         #if !targetEnvironment(simulator)
+        if !UserDefaults.standard.onboardingComplete {
+            self.showOnboarding()
+            return
+        }
+
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
         
         guard let pf = fetchPairingFile() else {
-            displayError("Device pairing file not found.")
+            self.showOnboarding(step: .pairing)
             return
         }
         start_minimuxer_threads(pf)
         #endif
+    }
+
+    func showOnboarding(step: OnboardingView.OnboardingStep = .welcome) {
+        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, currentStep: step)
+            .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
+        let navigationController = UINavigationController(rootViewController: UIHostingController(rootView: onboardingView))
+        navigationController.isNavigationBarHidden = true
+        navigationController.isModalInPresentation = true
+        self.present(navigationController, animated: true)
     }
     
     func fetchPairingFile() -> String? {
@@ -155,6 +173,7 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
             try! FileManager.default.removeItem(at: FileManager.default.documentsDirectory.appendingPathComponent("\(pairingFileName)"))
             displayError("minimuxer failed to start, please restart SideStore. \((error as? LocalizedError)?.failureReason ?? "UNKNOWN ERROR!!!!!! REPORT TO GITHUB ISSUES!")")
         }
+        set_debug(UserDefaults.shared.isDebugLoggingEnabled)
         start_auto_mounter(documentsDirectory)
     }
 }
