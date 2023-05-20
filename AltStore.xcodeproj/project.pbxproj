@@ -19,6 +19,7 @@
 		19B9B7452845E6DF0076EF69 /* SelectTeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B9B7442845E6DF0076EF69 /* SelectTeamViewController.swift */; };
 		4879A95F2861046500FC1BBD /* AltSign in Frameworks */ = {isa = PBXBuildFile; productRef = 4879A95E2861046500FC1BBD /* AltSign */; };
 		4879A9622861049C00FC1BBD /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = 4879A9612861049C00FC1BBD /* OpenSSL */; };
+		990D2AE22A1910CD0055D93C /* UnstableFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */; };
 		9922FFEC29B501C50020F868 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9922FFEB29B501C50020F868 /* Starscream */; };
 		99C4EF4D2979132100CB538D /* SemanticVersion in Frameworks */ = {isa = PBXBuildFile; productRef = 99C4EF4C2979132100CB538D /* SemanticVersion */; };
 		99F87D0529D8B4E200B40039 /* minimuxer-helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9961EC2D29BE9F2E00AF2C6F /* minimuxer-helpers.swift */; };
@@ -511,6 +512,7 @@
 		191E5FD1290A651D001A3B7C /* jsmn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jsmn.h; path = Dependencies/libplist/src/jsmn.h; sourceTree = SOURCE_ROOT; };
 		1920B04E2924AC8300744F60 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		19B9B7442845E6DF0076EF69 /* SelectTeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTeamViewController.swift; sourceTree = "<group>"; };
+		990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnstableFeatures.swift; sourceTree = "<group>"; };
 		9961EC2D29BE9F2E00AF2C6F /* minimuxer-helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "minimuxer-helpers.swift"; path = "Dependencies/minimuxer/minimuxer-helpers.swift"; sourceTree = SOURCE_ROOT; };
 		99F87D1629D8E4C900B40039 /* SwiftBridgeCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftBridgeCore.swift; path = Dependencies/minimuxer/SwiftBridgeCore.swift; sourceTree = SOURCE_ROOT; };
 		99F87D1729D8E4C900B40039 /* minimuxer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = minimuxer.swift; path = Dependencies/minimuxer/minimuxer.swift; sourceTree = SOURCE_ROOT; };
@@ -969,6 +971,14 @@
 			);
 			name = "libimobiledevice-glue";
 			path = "libimobiledevice-glue/src";
+			sourceTree = "<group>";
+		};
+		990D2AE02A1910920055D93C /* Unstable Features */ = {
+			isa = PBXGroup;
+			children = (
+				990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */,
+			);
+			path = "Unstable Features";
 			sourceTree = "<group>";
 		};
 		99F87D1429D8E3F100B40039 /* Generated */ = {
@@ -1545,6 +1555,7 @@
 		BFD2476C2284B9A500981D42 /* AltStore */ = {
 			isa = PBXGroup;
 			children = (
+				990D2AE02A1910920055D93C /* Unstable Features */,
 				B39F16112918D7B5002E9404 /* Consts */,
 				BF219A7E22CAC431007676A6 /* AltStore.entitlements */,
 				BFD2476D2284B9A500981D42 /* AppDelegate.swift */,
@@ -2462,6 +2473,7 @@
 				D57F2C9426E01BC700B9FA39 /* UIDevice+Vibration.swift in Sources */,
 				BFD2478F2284C8F900981D42 /* Button.swift in Sources */,
 				BF56D2AC23DF8E170006506D /* FetchAppIDsOperation.swift in Sources */,
+				990D2AE22A1910CD0055D93C /* UnstableFeatures.swift in Sources */,
 				BFC1F38D22AEE3A4003AC21A /* DownloadAppOperation.swift in Sources */,
 				BFE6073A231ADF82002B0E8E /* SettingsViewController.swift in Sources */,
 				D57F2C9126E0070200B9FA39 /* EnableJITOperation.swift in Sources */,

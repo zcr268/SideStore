@@ -44,6 +44,8 @@ public extension UserDefaults
     @NSManaged var trustedSourceIDs: [String]?
     @NSManaged var trustedServerURL: String?
     
+    @NSManaged var unstableFeatures: Data?
+    
     var activeAppsLimit: Int? {
         get {
             return self._activeAppsLimit?.intValue
