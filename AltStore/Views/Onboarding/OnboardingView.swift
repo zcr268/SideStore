@@ -14,17 +14,19 @@ import Reachability
 import UniformTypeIdentifiers
 
 
+enum OnboardingStep: Int, CaseIterable {
+    case welcome, pairing, wireguard, wireguardConfig, addSources, finish
+}
+
 struct OnboardingView: View {
-    enum OnboardingStep: Int, CaseIterable {
-        case welcome, pairing, wireguard, wireguardConfig, addSources, finish
-    }
 
     @Environment(\.dismiss) var dismiss
 
     // Temporary workaround for UIKit compatibility
     var onDismiss: (() -> Void)? = nil
 
-    @State var currentStep: OnboardingStep = .wireguard //.welcome
+    var enabledSteps = OnboardingStep.allCases
+    @State private var currentStep: OnboardingStep = .welcome
     @State private var pairingFileURL: URL? = nil
     @State private var isWireGuardAppStorePageVisible: Bool = false
     @State private var isDownloadingWireGuardProfile: Bool = false
@@ -38,34 +40,25 @@ struct OnboardingView: View {
 
     var body: some View {
         TabView(selection: self.$currentStep) {
-            welcomeStep
-                .tag(OnboardingStep.welcome)
-                .highPriorityGesture(DragGesture())
-
-            pairingView
-                .tag(OnboardingStep.pairing)
-                .highPriorityGesture(DragGesture())
-
-            wireguardView
-                .tag(OnboardingStep.wireguard)
-                .highPriorityGesture(DragGesture())
-
-            wireguardConfigView
-                .tag(OnboardingStep.wireguardConfig)
-                .highPriorityGesture(DragGesture())
-
-            addSourcesView
-                .tag(OnboardingStep.addSources)
-                .highPriorityGesture(DragGesture())
-
-            finishView
-                .tag(OnboardingStep.finish)
-                .highPriorityGesture(DragGesture())
-
+            ForEach(self.enabledSteps, id: \.self) { step in
+                self.viewForStep(step)
+                    .tag(step)
+                    // Hack to disable horizontal scrolling in onboarding screens
+                    .background(
+                        Color.black
+                            .opacity(0.001)
+                            .edgesIgnoringSafeArea(.all)
+                    )
+                    .highPriorityGesture(DragGesture())
+            }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .edgesIgnoringSafeArea(.bottom)
-        .background(Color.accentColor.opacity(0.1).edgesIgnoringSafeArea(.all))
+        .background(
+            Color.accentColor
+                .opacity(0.1)
+                .edgesIgnoringSafeArea(.all)
+        )
         .onChange(of: self.currentStep) { step in
             switch step {
             case .wireguardConfig:
@@ -73,12 +66,6 @@ struct OnboardingView: View {
             default:
                 self.stopPingingWireGuardTunnel()
             }
-        }
-    }
-
-    func showNextStep() {
-        withAnimation {
-            self.currentStep = OnboardingStep(rawValue: self.currentStep.rawValue + 1) ?? self.currentStep
         }
     }
 
@@ -118,7 +105,7 @@ struct OnboardingView: View {
                 .shadow(color: .accentColor.opacity(0.8), radius: 12)
         }, content: {
             VStack(alignment: .leading, spacing: 16) {
-                Text("SideStore supports sideloading even on non-jailbroken devices.")
+                Text("SideStore supports on-device sideloading even on non-jailbroken devices.")
                 Text("For it to work, you have to generate a pairing file as described [here in our documentation](https://wiki.sidestore.io/guides/install#pairing-process).")
                 Text("Once you have the `<UUID>.mobiledevicepairing`, import it using the button below.")
             }
@@ -251,7 +238,7 @@ struct OnboardingView: View {
         }, content: {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Congratulations, you did it! 🎉")
-                Text("You can start your sideloading journey.")
+                Text("You can now start your sideloading journey.")
             }
         }, action: {
             SwiftUI.Button("Let's Go") {
@@ -259,6 +246,31 @@ struct OnboardingView: View {
             }
             .buttonStyle(FilledButtonStyle())
         })
+    }
+
+    @ViewBuilder
+    func viewForStep(_ step: OnboardingStep) -> some View {
+        switch step {
+            case .welcome: self.welcomeStep
+            case .pairing: self.pairingView
+            case .wireguard: self.wireguardView
+            case .wireguardConfig: self.wireguardConfigView
+            case .addSources: self.addSourcesView
+            case .finish: self.finishView
+        }
+    }
+}
+
+extension OnboardingView {
+    func showNextStep() {
+        guard self.currentStep != self.enabledSteps.last,
+              let index = self.enabledSteps.firstIndex(of: self.currentStep) else {
+            return self.finishOnboarding()
+        }
+
+        withAnimation {
+            self.currentStep = self.enabledSteps[index + 1]
+        }
     }
 }
 
@@ -287,7 +299,6 @@ extension OnboardingView {
 
             // Show the next onboarding step
             self.showNextStep()
-
         } catch {
             NotificationManager.shared.reportError(error: error)
         }
@@ -432,11 +443,11 @@ extension OnboardingView {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(OnboardingView.OnboardingStep.allCases, id: \.self) { step in
+        ForEach(OnboardingStep.allCases, id: \.self) { step in
             Color.red
                 .ignoresSafeArea()
                 .sheet(isPresented: .constant(true)) {
-                    OnboardingView(currentStep: step)
+                    OnboardingView(enabledSteps: [step])
                 }
         }
     }

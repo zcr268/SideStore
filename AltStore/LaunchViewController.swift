@@ -53,6 +53,7 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+
         #if !targetEnvironment(simulator)
         if !UserDefaults.standard.onboardingComplete {
             self.showOnboarding()
@@ -62,15 +63,15 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
         
         guard let pf = fetchPairingFile() else {
-            self.showOnboarding(step: .pairing)
+            self.showOnboarding(enabledSteps: [.pairing])
             return
         }
         start_minimuxer_threads(pf)
         #endif
     }
 
-    func showOnboarding(step: OnboardingView.OnboardingStep = .welcome) {
-        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, currentStep: step)
+    func showOnboarding(enabledSteps: [OnboardingStep] = OnboardingStep.allCases) {
+        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, enabledSteps: enabledSteps)
             .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
         let navigationController = UINavigationController(rootViewController: UIHostingController(rootView: onboardingView))
         navigationController.isNavigationBarHidden = true
