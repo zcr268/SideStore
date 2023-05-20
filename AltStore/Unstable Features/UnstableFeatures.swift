@@ -40,7 +40,7 @@ class UnstableFeatures {
         if features.count > 0 { return print("It seems unstable features have already been loaded, skipping") }
         
         if let rawFeatures = UserDefaults.shared.unstableFeatures,
-           var rawFeatures = try? JSONDecoder().decode([String: Bool].self, from: rawFeatures) {
+           let rawFeatures = try? JSONDecoder().decode([String: Bool].self, from: rawFeatures) {
             for rawFeature in rawFeatures {
                 if let feature = AvailableUnstableFeature.allCases.first(where: { feature in String(describing: feature) == rawFeature.key }) {
                     features[feature] = rawFeature.value
