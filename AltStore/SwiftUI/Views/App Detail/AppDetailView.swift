@@ -155,9 +155,11 @@ struct AppDetailView: View {
 
                 currentVersionView
 
-                Divider()
-
-                ratingsView
+                if false {
+                    Divider()
+                    
+                    ratingsView
+                }
 
                 Divider()
 
