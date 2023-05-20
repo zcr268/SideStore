@@ -9,22 +9,6 @@
 import SwiftUI
 
 
-struct OnboardingStep<Title: View, Hero: View, Content: View, Action: View> {
-
-    @ViewBuilder
-    var title: Title
-
-    @ViewBuilder
-    var hero: Hero
-
-    @ViewBuilder
-    var content: Content
-
-    @ViewBuilder
-    var action: Action
-}
-
-
 struct OnboardingStepView<Title: View, Hero: View, Content: View, Action: View>: View {
 
     @ViewBuilder
@@ -49,6 +33,7 @@ struct OnboardingStepView<Title: View, Hero: View, Content: View, Action: View>:
                 .frame(height: 150)
 
             self.content
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Spacer()
 
