@@ -79,7 +79,7 @@ class UnstableFeatures: ObservableObject {
     }
     #endif
     
-    @inline(__always) // hopefully this will help the compiler realize that if statements that use this function should be removed on non-unstable builds
+    @inline(__always) // hopefully this will help the compiler realize that if statements that use this function should be removed on non-unstable builds
     static func enabled(_ feature: AvailableUnstableFeature) -> Bool {
         #if UNSTABLE
         shared.features[feature] ?? false
