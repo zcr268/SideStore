@@ -298,24 +298,17 @@ extension OnboardingView {
     }
 
     func start_minimuxer_threads(_ pairing_file: String) {
-        set_usbmuxd_socket()
-        #if false // Retries
-        var res = start_minimuxer(pairing_file: pairing_file)
-        var attempts = 10
-        while (attempts != 0 && res != 0) {
-            print("start_minimuxer `res` != 0, retry #\(attempts)")
-            res = start_minimuxer(pairing_file: pairing_file)
-            attempts -= 1
+        target_minimuxer_address()
+        let documentsDirectory = FileManager.default.documentsDirectory.absoluteString
+        do {
+            try start(pairing_file, documentsDirectory)
+        } catch {
+            try! FileManager.default.removeItem(at: FileManager.default.documentsDirectory.appendingPathComponent("\(pairingFileName)"))
+            NotificationManager.shared.reportError(error: error)
+            debugPrint("minimuxer failed to start, please restart SideStore.", error)
+//            displayError("minimuxer failed to start, please restart SideStore. \((error as? LocalizedError)?.failureReason ?? "UNKNOWN ERROR!!!!!! REPORT TO GITHUB ISSUES!")")
         }
-        #else
-        let res = start_minimuxer(pairing_file: pairing_file)
-        #endif
-        if res != 0 {
-            // TODO: Show error message
-            debugPrint("minimuxer failed to start. Incorrect arguments were passed.")
-            // displayError("minimuxer failed to start. Incorrect arguments were passed.")
-        }
-        auto_mount_dev_image()
+        start_auto_mounter(documentsDirectory)
     }
 }
 

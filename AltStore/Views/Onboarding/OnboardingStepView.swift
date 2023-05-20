@@ -60,9 +60,6 @@ struct OnboardingStepView<Title: View, Hero: View, Content: View, Action: View>:
 }
 
 struct OnboardingStepView_Previews: PreviewProvider {
-    @State
-    static var isWireGuardAppStorePageVisible = false
-
     static var previews: some View {
         OnboardingStepView(title: {
             VStack(alignment: .leading) {
