@@ -72,6 +72,9 @@ class UnstableFeatures {
         UserDefaults.shared.unstableFeatures = try! JSONEncoder().encode(rawFeatures)
         print("\(load ? "Loaded" : "Saved") unstable features: \(String(describing: rawFeatures))")
         
+        #else
+        // we want this to crash, this function should never be triggered on non-unstable builds
+        fatalError("Tried to save unstable features on non-unstable build!")
         #endif
     }
     
