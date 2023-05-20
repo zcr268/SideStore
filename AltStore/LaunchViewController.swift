@@ -62,15 +62,15 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
         start_em_proxy(bind_addr: Consts.Proxy.serverURL)
         
         guard let pf = fetchPairingFile() else {
-            self.showOnboarding(step: .pairing)
+            self.showOnboarding(step: .pairing, closeAfterPairing: true)
             return
         }
         start_minimuxer_threads(pf)
         #endif
     }
 
-    func showOnboarding(step: OnboardingView.OnboardingStep = .welcome) {
-        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, currentStep: step)
+    func showOnboarding(step: OnboardingView.OnboardingStep = .welcome, closeAfterPairing: Bool = false) {
+        let onboardingView = OnboardingView(onDismiss: { self.dismiss(animated: true) }, closeAfterPairing: closeAfterPairing, currentStep: step)
             .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
         let navigationController = UINavigationController(rootViewController: UIHostingController(rootView: onboardingView))
         navigationController.isNavigationBarHidden = true
@@ -96,31 +96,8 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
         } else if let plistString = Bundle.main.object(forInfoDictionaryKey: "ALTPairingFile") as? String, !plistString.isEmpty, !plistString.contains("insert pairing file here"){
             print("Loaded ALTPairingFile from Info.plist")
             return plistString
-        } else {
-            // Show an alert explaining the pairing file
-            // Create new Alert
-            let dialogMessage = UIAlertController(title: "Pairing File", message: "Select the pairing file for your device. For more information, go to https://wiki.sidestore.io/guides/install#pairing-process", preferredStyle: .alert)
-            
-            // Create OK button with action handler
-            let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
-                // Try to load it from a file picker
-                var types = UTType.types(tag: "plist", tagClass: UTTagClass.filenameExtension, conformingTo: nil)
-                types.append(contentsOf: UTType.types(tag: "mobiledevicepairing", tagClass: UTTagClass.filenameExtension, conformingTo: UTType.data))
-                types.append(.xml)
-                let documentPickerController = UIDocumentPickerViewController(forOpeningContentTypes: types)
-                documentPickerController.shouldShowFileExtensions = true
-                documentPickerController.delegate = self
-                self.present(documentPickerController, animated: true, completion: nil)
-             })
-            
-            //Add OK button to a dialog message
-            dialogMessage.addAction(ok)
-
-            // Present Alert to
-            self.present(dialogMessage, animated: true, completion: nil)
-
-            return nil
         }
+        return nil
     }
 
     func displayError(_ msg: String) {

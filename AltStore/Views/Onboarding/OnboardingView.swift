@@ -23,8 +23,10 @@ struct OnboardingView: View {
 
     // Temporary workaround for UIKit compatibility
     var onDismiss: (() -> Void)? = nil
+    
+    var closeAfterPairing = false
 
-    @State var currentStep: OnboardingStep = .wireguard //.welcome
+    @State var currentStep: OnboardingStep = .welcome
     @State private var pairingFileURL: URL? = nil
     @State private var isWireGuardAppStorePageVisible: Bool = false
     @State private var isDownloadingWireGuardProfile: Bool = false
@@ -269,25 +271,27 @@ extension OnboardingView {
         do {
             // Read to a string
             let data = try Data(contentsOf: url)
-            let pairing_string = String(bytes: data, encoding: .utf8)
-            if pairing_string == nil {
-                // TODO: Show error message
+            let pairingString = String(bytes: data, encoding: .utf8)
+            if pairingString == nil {
+                // TODO: Show error message (this will only be triggered if the pairing file is not UTF8)
                 debugPrint("Unable to read pairing file")
                 // displayError("Unable to read pairing file")
             }
 
             // Save to a file for next launch
             let filename = "ALTPairingFile.mobiledevicepairing"
-            let fm = FileManager.default
-            let documentsPath = fm.documentsDirectory.appendingPathComponent("/\(filename)")
-            try pairing_string?.write(to: documentsPath, atomically: true, encoding: String.Encoding.utf8)
+            let documentsPath = FileManager.default.documentsDirectory.appendingPathComponent("/\(filename)")
+            try pairingString?.write(to: documentsPath, atomically: true, encoding: String.Encoding.utf8)
 
             // Start minimuxer now that we have a file
-            start_minimuxer_threads(pairing_string!)
+            start_minimuxer_threads(pairingString!)
 
-            // Show the next onboarding step
-            self.showNextStep()
-
+            // Show the next onboarding step, or finish onboarding
+            if !self.closeAfterPairing {
+                self.showNextStep()
+            } else {
+                self.finishOnboarding()
+            }
         } catch {
             NotificationManager.shared.reportError(error: error)
         }

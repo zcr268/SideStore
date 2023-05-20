@@ -17,47 +17,52 @@ struct AppIconsShowcase: View {
         VStack {
             GeometryReader { proxy in
                 ZStack(alignment: .bottom) {
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    // left
+                    Image(uiImage: UIImage(named: "Midnight-image")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 0.2 * proxy.size.width)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .circular))
-                        .offset(x: -0.3*proxy.size.width * self.animationProgress, y: -30)
+                        .cornerRadius(0.2 * proxy.size.width * 0.234)
+                        .offset(x: -0.3 * proxy.size.width * self.animationProgress, y: -30)
                         .rotationEffect(.degrees(-20 * self.animationProgress))
                         .shadow(radius: 8 * self.animationProgress)
 
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    // center-left
+                    Image(uiImage: UIImage(named: "Steel-image")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 0.25 * proxy.size.width)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .circular))
-                        .offset(x: -0.15*proxy.size.width * self.animationProgress, y: -10)
+                        .cornerRadius(0.25 * proxy.size.width * 0.234)
+                        .offset(x: -0.15 * proxy.size.width * self.animationProgress, y: -10)
                         .rotationEffect(.degrees(-10 * self.animationProgress))
                         .shadow(radius: 12 * self.animationProgress)
 
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    // right
+                    Image(uiImage: UIImage(named: "Storm-image")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 0.2 * proxy.size.width)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .circular))
-                        .offset(x: self.animationProgress*0.3*proxy.size.width, y: -30)
-                        .rotationEffect(.degrees(self.animationProgress*20))
+                        .cornerRadius(0.2 * proxy.size.width * 0.234)
+                        .offset(x: self.animationProgress * 0.3 * proxy.size.width, y: -30)
+                        .rotationEffect(.degrees(self.animationProgress * 20))
                         .shadow(radius: 8 * self.animationProgress)
-
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    
+                    // center-right
+                    Image(uiImage: UIImage(named: "Starburst-image")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 0.25 * proxy.size.width)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .circular))
-                        .offset(x: self.animationProgress * 0.15*proxy.size.width, y: -10)
+                        .cornerRadius(0.25 * proxy.size.width * 0.234)
+                        .offset(x: self.animationProgress * 0.15 * proxy.size.width, y: -10)
                         .rotationEffect(.degrees(self.animationProgress * 10))
                         .shadow(radius: 12 * self.animationProgress)
-
-                    Image(uiImage: UIImage(named: "AppIcon")!)
+                    
+                    // center
+                    Image(uiImage: UIImage(named: "Neon-image")!)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 0.3 * proxy.size.width)
-                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .circular))
+                        .cornerRadius(0.3 * proxy.size.width * 0.234)
                         .shadow(radius: 16 * self.animationProgress + 8 * self.animation2Progress)
                         .scaleEffect(1.0 + 0.05 * self.animation2Progress)
                 }
