@@ -12,6 +12,8 @@ enum AvailableUnstableFeature: String, CaseIterable {
     //
     // Unstable features must have a GitHub Issue for tracking progress, PRs and feedback/commenting.
     
+    case jitUrlScheme = "0"
+    
     /// Dummy variant to ensure there is always at least one variant. DO NOT USE!
     case dummy = "dummy"
     
@@ -20,6 +22,7 @@ enum AvailableUnstableFeature: String, CaseIterable {
         // If your unstable feature is stable enough to be used by nightly users who are not alpha testers or developers,
         // you may want to have it available in the "Unstable Features" menu in Settings (outside of dev mode). To do so, add this:
         //case .yourFeature: return true
+        case .jitUrlScheme: return true
         
         default: return false
         }
