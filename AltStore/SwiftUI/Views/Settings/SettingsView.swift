@@ -113,6 +113,10 @@ struct SettingsView: View {
                         SiriShortcutSetupView(shortcut: shortcut)
                     }
                 }
+                
+                NavigationLink("Show Refresh Attempts") {
+                    RefreshAttemptsView()
+                }
             } header: {
                 Text(L10n.SettingsView.refreshingApps)
             } footer: {
@@ -162,14 +166,16 @@ struct SettingsView: View {
                 NavigationLink("Show Error Log") {
                     ErrorLogView()
                 }
-
-                NavigationLink("Show Refresh Attempts") {
-                    RefreshAttemptsView()
-                }
                 
                 NavigationLink(L10n.AdvancedSettingsView.title) {
                     AdvancedSettingsView()
                 }
+                
+                #if UNSTABLE
+                NavigationLink(L10n.UnstableFeaturesView.title) {
+                    UnstableFeaturesView(allowDevModeOnlyFeatures: false)
+                }
+                #endif
                 
                 Toggle(L10n.SettingsView.debugLogging, isOn: self.$isDebugLoggingEnabled)
                     .onChange(of: self.isDebugLoggingEnabled) { value in

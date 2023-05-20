@@ -136,6 +136,15 @@ struct DevModeMenu: View {
                         LCManager.shared.isVisible = value
                     }
                 
+                NavigationLink(L10n.UnstableFeaturesView.title) {
+                    #if UNSTABLE
+                    UnstableFeaturesView(allowDevModeOnlyFeatures: true)
+                    #endif
+                }
+                #if !UNSTABLE
+                .disabled(true)
+                #endif
+                
                 NavigationLink(L10n.DevModeView.dataExplorer) {
                     FileExplorer.normal(url: FileManager.default.altstoreSharedDirectory)
                         .navigationTitle(L10n.DevModeView.dataExplorer)

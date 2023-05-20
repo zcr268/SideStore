@@ -88,6 +88,7 @@
 		4879A9622861049C00FC1BBD /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = 4879A9612861049C00FC1BBD /* OpenSSL */; };
 		990D2AE22A1910CD0055D93C /* UnstableFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */; };
 		990D2AF02A192E060055D93C /* UIApplication+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990D2AEF2A192E060055D93C /* UIApplication+Alert.swift */; };
+		990D2B002A19593F0055D93C /* UnstableFeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */; };
 		9922FFEC29B501C50020F868 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9922FFEB29B501C50020F868 /* Starscream */; };
 		992C896029A6A56500FB3501 /* LocalConsole in Frameworks */ = {isa = PBXBuildFile; productRef = 992C895F29A6A56500FB3501 /* LocalConsole */; };
 		994D6E9B29E326080045B3F7 /* minimuxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F87D1729D8E4C900B40039 /* minimuxer.swift */; };
@@ -655,6 +656,7 @@
 		1FFEF103298552DB0098374C /* AppVersionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHistoryView.swift; sourceTree = "<group>"; };
 		990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnstableFeatures.swift; sourceTree = "<group>"; };
 		990D2AEF2A192E060055D93C /* UIApplication+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Alert.swift"; sourceTree = "<group>"; };
+		990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnstableFeaturesView.swift; sourceTree = "<group>"; };
 		994D6EB429E35C130045B3F7 /* StoreApp+SideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreApp+SideStore.swift"; sourceTree = "<group>"; };
 		9961EC2D29BE9F2E00AF2C6F /* minimuxer-helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "minimuxer-helpers.swift"; path = "Dependencies/minimuxer/minimuxer-helpers.swift"; sourceTree = SOURCE_ROOT; };
 		99BCB7DE29A2AC050041D1A7 /* AdvancedSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsView.swift; sourceTree = "<group>"; };
@@ -1180,7 +1182,6 @@
 			isa = PBXGroup;
 			children = (
 				1FAFC5B52927E06300B8D837 /* RootView.swift */,
-				1FAFC5B12927E02E00B8D837 /* Authentication */,
 				1F981B0F29AA0F9B0014950E /* Onboarding */,
 				1FAFC5B22927E03300B8D837 /* News */,
 				1FAFC5B32927E03D00B8D837 /* Browse */,
@@ -1189,13 +1190,6 @@
 				1FAFC5B42927E04B00B8D837 /* App Detail */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		1FAFC5B12927E02E00B8D837 /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Authentication;
 			sourceTree = "<group>";
 		};
 		1FAFC5B22927E03300B8D837 /* News */ = {
@@ -1263,6 +1257,7 @@
 				99E59E1C299BFE5D00FAF33D /* AppIconsView.swift */,
 				99D87A5F299F1B1100ED09A9 /* DevModeView.swift */,
 				99BCB7DE29A2AC050041D1A7 /* AdvancedSettingsView.swift */,
+				990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2962,6 +2957,7 @@
 				1F0DD8452936B3FE007608A4 /* FilledButtonStyle.swift in Sources */,
 				BF8F69C222E659F700049BA1 /* AppContentViewController.swift in Sources */,
 				BF08858522DE7EC800DE9F1E /* UpdateCollectionViewCell.swift in Sources */,
+				990D2B002A19593F0055D93C /* UnstableFeaturesView.swift in Sources */,
 				BFB39B5C252BC10E00D1BE50 /* Managed.swift in Sources */,
 				BF770E5822BC3D0F002A40FE /* RefreshGroup.swift in Sources */,
 				19B9B7452845E6DF0076EF69 /* SelectTeamViewController.swift in Sources */,

@@ -65,7 +65,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         // Register default settings before doing anything else.
         UserDefaults.registerDefaults()
         
+        #if UNSTABLE
         UnstableFeatures.load()
+        #endif
         
         LCManager.shared.isVisible = UserDefaults.standard.isConsoleEnabled
         LCManager.shared.isCharacterLimitDisabled = true // we want all logs exported

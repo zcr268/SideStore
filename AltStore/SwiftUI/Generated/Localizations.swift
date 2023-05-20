@@ -405,6 +405,10 @@ internal enum L10n {
     /// Trusted Sources
     internal static let trustedSources = L10n.tr("Localizable", "SourcesView.trustedSources", fallback: "Trusted Sources")
   }
+  internal enum UnstableFeaturesView {
+    /// UnstableFeaturesView
+    internal static let title = L10n.tr("Localizable", "UnstableFeaturesView.title", fallback: "Unstable Features")
+  }
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces
