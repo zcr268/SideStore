@@ -1349,6 +1349,7 @@
 		990D2AFE2A1956740055D93C /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				BF41B805233423AE00C593A3 /* TabBarController.swift */,
 				BFE6325822A83BA800F30809 /* Authentication */,
 				BFB6B21C2318700D0022A802 /* News */,
 				BF9ABA4322DCFF33008935CF /* Browse */,
@@ -1942,7 +1943,6 @@
 				BFD2476D2284B9A500981D42 /* AppDelegate.swift */,
 				BF4B78FD24B3D1DB008AB4AC /* SceneDelegate.swift */,
 				BFE338E722F10E56002E24B9 /* LaunchViewController.swift */,
-				BF41B805233423AE00C593A3 /* TabBarController.swift */,
 				990D2AFE2A1956740055D93C /* UIKit */,
 				990D2AFD2A19566C0055D93C /* SwiftUI */,
 				990D2AE02A1910920055D93C /* Unstable Features */,
