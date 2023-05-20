@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
 
 
 struct OnboardingView: View {
-    enum OnboardingStep: Int {
+    enum OnboardingStep: Int, CaseIterable {
         case welcome, pairing, wireguard, wireguardConfig, addSources, finish
     }
 
@@ -374,6 +374,10 @@ extension OnboardingView {
 
 extension OnboardingView {
     func setupTrustedSources() {
+        guard self.areTrustedSourcesEnabled else {
+            return self.showNextStep()
+        }
+
         self.isLoadingTrustedSources = true
 
         AppManager.shared.fetchTrustedSources { result in
@@ -435,10 +439,12 @@ extension OnboardingView {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        Color.red
-            .ignoresSafeArea()
-            .sheet(isPresented: .constant(true)) {
-                OnboardingView()
-            }
+        ForEach(OnboardingView.OnboardingStep.allCases, id: \.self) { step in
+            Color.red
+                .ignoresSafeArea()
+                .sheet(isPresented: .constant(true)) {
+                    OnboardingView(currentStep: step)
+                }
+        }
     }
 }

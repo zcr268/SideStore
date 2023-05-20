@@ -84,54 +84,6 @@ struct OnboardingStepView_Previews: PreviewProvider {
             }
             .buttonStyle(FilledButtonStyle())
         })
-
-        OnboardingStepView(title: {
-            VStack(alignment: .leading) {
-                Text("Pair your Device")
-            }
-        }, hero: {
-            Image(systemSymbol: .link)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(.accentColor)
-                .shadow(color: .accentColor.opacity(0.8), radius: 12)
-        }, content: {
-            VStack {
-                Text("Before you can start sideloading apps, there is some setup to do.")
-                Text("The following setup will guide you through the steps one by one.")
-            }
-        }, action: {
-            SwiftUI.Button("Continue") {
-
-            }
-            .buttonStyle(FilledButtonStyle())
-        })
-
-        OnboardingStepView(title: {
-            VStack(alignment: .leading) {
-                Text("Download WireGuard")
-            }
-        }, hero: {
-            Image(systemSymbol: .icloudAndArrowDown)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .foregroundColor(.accentColor)
-                .shadow(color: .accentColor.opacity(0.8), radius: 12)
-        }, content: {
-            VStack {
-                Text("Before you can start sideloading apps, there is some setup to do.")
-                Text("The following setup will guide you through the steps one by one.")
-            }
-        }, action: {
-            SwiftUI.Button("Show in App Store") {
-
-            }
-            .buttonStyle(FilledButtonStyle())
-
-            AppStoreView(isVisible: self.$isWireGuardAppStorePageVisible, itunesItemId: 1441195209)
-                .frame(width: .zero, height: .zero)
-        })
-
     }
 }
 
