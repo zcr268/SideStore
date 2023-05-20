@@ -14,10 +14,10 @@ strings:
   - inputs: AltStore/Resources/en.lproj/Localizable.strings
     outputs:
       templateName: structured-swift5
-      output: AltStore/Generated/Localizations.swift
+      output: AltStore/SwiftUI/Generated/Localizations.swift
 
 xcassets:
   inputs: AltStore/Resources/Assets.xcassets
   outputs:
     templateName: swift5
-    output: AltStore/Generated/Assets.swift
+    output: AltStore/SwiftUI/Generated/Assets.swift

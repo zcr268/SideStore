@@ -1331,6 +1331,37 @@
 			path = "Unstable Features";
 			sourceTree = "<group>";
 		};
+		990D2AFD2A19566C0055D93C /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				1F07F553295458D800F7BE95 /* Generated */,
+				1FAFC5B72927E06C00B8D837 /* App */,
+				1FB96FEA292C1704007E68D1 /* Manager */,
+				1FB96FC1292A6D6C007E68D1 /* Helper */,
+				1FAFC5C22927E17100B8D837 /* Protocols */,
+				1FAFC5B02927E01400B8D837 /* Views */,
+				1F6E08DD29280AF1005059C0 /* View Extensions */,
+				1FB84BA72928E073006A5CF4 /* View Components */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		990D2AFE2A1956740055D93C /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				BFE6325822A83BA800F30809 /* Authentication */,
+				BFB6B21C2318700D0022A802 /* News */,
+				BF9ABA4322DCFF33008935CF /* Browse */,
+				BF3D64A022E7FAD800E9056B /* App Detail */,
+				BFBBE2E2229320A2002097FA /* My Apps */,
+				BFDB69FB22A9A7A6007EA6D6 /* Settings */,
+				BF56D2AD23DF9E170006506D /* App IDs */,
+				BFC84A4B2421A13000853474 /* Sources */,
+				BFD2478D2284C4C700981D42 /* Components */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
 		99F87D1429D8E3F100B40039 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
@@ -1906,37 +1937,22 @@
 		BFD2476C2284B9A500981D42 /* AltStore */ = {
 			isa = PBXGroup;
 			children = (
-				990D2AE02A1910920055D93C /* Unstable Features */,
-				1FAFC5B72927E06C00B8D837 /* App */,
-				1FB96FC1292A6D6C007E68D1 /* Helper */,
-				1F07F553295458D800F7BE95 /* Generated */,
-				1FB96FEA292C1704007E68D1 /* Manager */,
-				1FAFC5C22927E17100B8D837 /* Protocols */,
-				1FAFC5B02927E01400B8D837 /* Views */,
-				1FB84BA72928E073006A5CF4 /* View Components */,
-				1F6E08DD29280AF1005059C0 /* View Extensions */,
-				B39F16112918D7B5002E9404 /* Consts */,
 				BF219A7E22CAC431007676A6 /* AltStore.entitlements */,
+				BFD247732284B9A500981D42 /* Main.storyboard */,
 				BFD2476D2284B9A500981D42 /* AppDelegate.swift */,
 				BF4B78FD24B3D1DB008AB4AC /* SceneDelegate.swift */,
-				BFD247732284B9A500981D42 /* Main.storyboard */,
 				BFE338E722F10E56002E24B9 /* LaunchViewController.swift */,
 				BF41B805233423AE00C593A3 /* TabBarController.swift */,
-				BFE6325822A83BA800F30809 /* Authentication */,
-				BFB6B21C2318700D0022A802 /* News */,
-				BF9ABA4322DCFF33008935CF /* Browse */,
-				BF3D64A022E7FAD800E9056B /* App Detail */,
-				BFBBE2E2229320A2002097FA /* My Apps */,
-				BFDB69FB22A9A7A6007EA6D6 /* Settings */,
+				990D2AFE2A1956740055D93C /* UIKit */,
+				990D2AFD2A19566C0055D93C /* SwiftUI */,
+				990D2AE02A1910920055D93C /* Unstable Features */,
+				B39F16112918D7B5002E9404 /* Consts */,
 				BFD2478A2284C49000981D42 /* Managing Apps */,
-				BF56D2AD23DF9E170006506D /* App IDs */,
-				BFC84A4B2421A13000853474 /* Sources */,
-				BF0DCA642433BDE200E3A595 /* Analytics */,
-				BFF00D2E2501BD4B00746320 /* Intents */,
 				BFDB6A0922AAEDA1007EA6D6 /* Operations */,
-				BFD2478D2284C4C700981D42 /* Components */,
-				BF3D648922E79A7700E9056B /* Types */,
 				BFD2479D2284FBBD00981D42 /* Extensions */,
+				BFF00D2E2501BD4B00746320 /* Intents */,
+				BF0DCA642433BDE200E3A595 /* Analytics */,
+				BF3D648922E79A7700E9056B /* Types */,
 				BFD247962284D7C100981D42 /* Resources */,
 				BF6C8FA8242935CA00125131 /* Dependencies */,
 				BFD247972284D7D800981D42 /* Supporting Files */,
