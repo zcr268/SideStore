@@ -173,7 +173,7 @@ struct SettingsView: View {
                 
                 #if UNSTABLE
                 NavigationLink(L10n.UnstableFeaturesView.title) {
-                    UnstableFeaturesView(allowDevModeOnlyFeatures: false)
+                    UnstableFeaturesView(inDevMode: false)
                 }
                 #endif
                 

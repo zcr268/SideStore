@@ -12,11 +12,11 @@ import SwiftUI
 struct UnstableFeaturesView: View {
     @ObservedObject private var shared = UnstableFeatures.shared
     
-    var allowDevModeOnlyFeatures: Bool
+    var inDevMode: Bool
     
     var body: some View {
         List {
-            ForEach(shared.features.filter { feature, _ in feature != AvailableUnstableFeature.dummy && allowDevModeOnlyFeatures ? true : feature.availableOutsideDevMode() }.sorted(by: { _, _ in true }), id: \.key) { feature, _ in
+            ForEach(shared.features.filter { feature, _ in feature != .dummy && (inDevMode || feature.availableOutsideDevMode()) }.sorted(by: { _, _ in true }), id: \.key) { feature, _ in
                 Toggle(isOn: Binding(get: { UnstableFeatures.enabled(feature) }, set: { newValue in UnstableFeatures.set(feature, enabled: newValue) })) {
                     Text(String(describing: feature))
                     let link = "https://github.com/SideStore/SideStore/issues/\(feature.rawValue)"
@@ -29,7 +29,7 @@ struct UnstableFeaturesView: View {
 
 struct UnstableFeaturesView_Previews: PreviewProvider {
     static var previews: some View {
-        UnstableFeaturesView(allowDevModeOnlyFeatures: true)
+        UnstableFeaturesView(inDevMode: true)
     }
 }
 #endif

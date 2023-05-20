@@ -138,7 +138,7 @@ struct DevModeMenu: View {
                 
                 NavigationLink(L10n.UnstableFeaturesView.title) {
                     #if UNSTABLE
-                    UnstableFeaturesView(allowDevModeOnlyFeatures: true)
+                    UnstableFeaturesView(inDevMode: true)
                     #endif
                 }
                 #if !UNSTABLE
