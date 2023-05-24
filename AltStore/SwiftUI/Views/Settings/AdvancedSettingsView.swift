@@ -22,8 +22,6 @@ struct AdvancedSettingsView: View {
         Server(display: "Macley (US)", value: "http://us1.sternserv.tech"),
         Server(display: "Macley (DE)", value: "http://de1.sternserv.tech"),
         Server(display: "DrPudding", value: "https://sign.rheaa.xyz"),
-        Server(display: "jkcoxson (AltServer)", value: "http://jkcoxson.com:2095"),
-        Server(display: "jkcoxson (Provision)", value: "http://jkcoxson.com:2052"),
         Server(display: "Sideloadly", value: "https://sideloadly.io/anisette/irGb3Quww8zrhgqnzmrx"),
         Server(display: "Nick", value: "http://45.33.29.114"),
         Server(display: "Jawshoeadan", value: "https://anisette.jawshoeadan.me"),
