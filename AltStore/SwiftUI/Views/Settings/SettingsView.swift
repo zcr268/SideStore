@@ -104,6 +104,10 @@ struct SettingsView: View {
             }
             
             Section {
+                NavigationLink("Show Refresh Attempts") {
+                    RefreshAttemptsView()
+                }
+
                 Toggle(isOn: self.$isBackgroundRefreshEnabled, label: {
                     Text(L10n.SettingsView.backgroundRefresh)
                 })
@@ -112,10 +116,6 @@ struct SettingsView: View {
                     if let shortcut = INShortcut(intent: INInteraction.refreshAllApps().intent) {
                         SiriShortcutSetupView(shortcut: shortcut)
                     }
-                }
-                
-                NavigationLink("Show Refresh Attempts") {
-                    RefreshAttemptsView()
                 }
             } header: {
                 Text(L10n.SettingsView.refreshingApps)
@@ -170,12 +170,6 @@ struct SettingsView: View {
                 NavigationLink(L10n.AdvancedSettingsView.title) {
                     AdvancedSettingsView()
                 }
-                
-                #if UNSTABLE
-                NavigationLink(L10n.UnstableFeaturesView.title) {
-                    UnstableFeaturesView(inDevMode: false)
-                }
-                #endif
                 
                 Toggle(L10n.SettingsView.debugLogging, isOn: self.$isDebugLoggingEnabled)
                     .onChange(of: self.isDebugLoggingEnabled) { value in

@@ -40,27 +40,38 @@ struct AdvancedSettingsView: View {
     var body: some View {
         List {
             Section {
-                Picker(L10n.AdvancedSettingsView.anisette, selection: $selectedAnisetteServer) {
+                Picker(L10n.AdvancedSettingsView.AnisetteSettings.server, selection: $selectedAnisetteServer) {
                     ForEach(anisetteServers) { server in
                         Text(server.display)
                     }
                 }
-            }
-            
-            Section {
-                Toggle(L10n.AdvancedSettingsView.DangerZone.usePreferred, isOn: $usePreferred)
+                
+                Toggle(L10n.AdvancedSettingsView.AnisetteSettings.usePreferred, isOn: $usePreferred)
                 
                 HStack {
-                    Text(L10n.AdvancedSettingsView.DangerZone.anisetteURL)
+                    Text(L10n.AdvancedSettingsView.AnisetteSettings.anisetteURL)
                     TextField("", text: $anisetteURL)
                         .autocapitalization(.none)
                         .autocorrectionDisabled(true)
                 }
             } header: {
-                Text(L10n.AdvancedSettingsView.dangerZone)
+                Text(L10n.AdvancedSettingsView.anisetteSettings)
             } footer: {
-                Text(L10n.AdvancedSettingsView.dangerZoneInfo)
+                Text(L10n.AdvancedSettingsView.AnisetteSettings.footer)
             }
+            
+            #if UNSTABLE // TODO: remove this once we have more settings for the danger zone.
+            Section {
+                #if UNSTABLE
+                NavigationLink(L10n.UnstableFeaturesView.title) {
+                    UnstableFeaturesView(inDevMode: false)
+                }
+                .foregroundColor(.red)
+                #endif
+            } header: {
+                Text(L10n.AdvancedSettingsView.dangerZone)
+            }
+            #endif
         }
         .navigationTitle(L10n.AdvancedSettingsView.title)
         .enableInjection()

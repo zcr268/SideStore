@@ -37,19 +37,21 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "AddSourceView.title", fallback: "Add Source")
   }
   internal enum AdvancedSettingsView {
-    /// Anisette Server
-    internal static let anisette = L10n.tr("Localizable", "AdvancedSettingsView.anisette", fallback: "Anisette Server")
+    /// Anisette
+    internal static let anisetteSettings = L10n.tr("Localizable", "AdvancedSettingsView.anisetteSettings", fallback: "Anisette")
     /// Danger Zone
     internal static let dangerZone = L10n.tr("Localizable", "AdvancedSettingsView.dangerZone", fallback: "Danger Zone")
-    /// If you disable "Use preferred servers" then SideStore will use the server you input into the "Anisette URL" box rather than one selected in "Anisette Server".
-    internal static let dangerZoneInfo = L10n.tr("Localizable", "AdvancedSettingsView.dangerZoneInfo", fallback: "If you disable \"Use preferred servers\" then SideStore will use the server you input into the \"Anisette URL\" box rather than one selected in \"Anisette Server\".")
     /// AdvancedSettingsView
     internal static let title = L10n.tr("Localizable", "AdvancedSettingsView.title", fallback: "Advanced Settings")
-    internal enum DangerZone {
+    internal enum AnisetteSettings {
       /// Anisette URL
-      internal static let anisetteURL = L10n.tr("Localizable", "AdvancedSettingsView.DangerZone.anisetteURL", fallback: "Anisette URL")
+      internal static let anisetteURL = L10n.tr("Localizable", "AdvancedSettingsView.AnisetteSettings.anisetteURL", fallback: "Anisette URL")
+      /// If you disable "Use preferred servers" then SideStore will use the server you input into the "Anisette URL" box rather than one selected in "Anisette Server".
+      internal static let footer = L10n.tr("Localizable", "AdvancedSettingsView.AnisetteSettings.footer", fallback: "If you disable \"Use preferred servers\" then SideStore will use the server you input into the \"Anisette URL\" box rather than one selected in \"Anisette Server\".")
+      /// Anisette Server
+      internal static let server = L10n.tr("Localizable", "AdvancedSettingsView.AnisetteSettings.server", fallback: "Anisette Server")
       /// Use preferred servers
-      internal static let usePreferred = L10n.tr("Localizable", "AdvancedSettingsView.DangerZone.usePreferred", fallback: "Use preferred servers")
+      internal static let usePreferred = L10n.tr("Localizable", "AdvancedSettingsView.AnisetteSettings.usePreferred", fallback: "Use preferred servers")
     }
   }
   internal enum AppAction {
@@ -281,6 +283,8 @@ internal enum L10n {
     internal static let title = L10n.tr("Localizable", "DevModeView.title", fallback: "Developer Mode")
     /// Temporary File Explorer
     internal static let tmpExplorer = L10n.tr("Localizable", "DevModeView.tmpExplorer", fallback: "Temporary File Explorer")
+    /// Unstable Features are only available on nightly builds or debug builds
+    internal static let unstableFeaturesNightlyOnly = L10n.tr("Localizable", "DevModeView.unstableFeaturesNightlyOnly", fallback: "Unstable Features are only available on nightly builds or debug builds")
     internal enum Minimuxer {
       /// AFC File Explorer (check footer for notes)
       internal static let afcExplorer = L10n.tr("Localizable", "DevModeView.Minimuxer.afcExplorer", fallback: "AFC File Explorer (check footer for notes)")
@@ -406,6 +410,14 @@ internal enum L10n {
     internal static let trustedSources = L10n.tr("Localizable", "SourcesView.trustedSources", fallback: "Trusted Sources")
   }
   internal enum UnstableFeaturesView {
+    /// Unstable Features are features that are currently being tested or still a work-in-progress and not ready for public usage. Because of this, they are only available on nightly builds. By default, all unstable features are off. Additionally, only more stable unstable features are available in Advanced Settings; most are locked behind Developer Mode to ensure normal users don't use them.
+    /// 
+    /// Every unstable feature has a tracking issue, which contains info on what the unstable feature adds and tracks the unstable feature status. To view a tracking issue for an unstable feature, simply click it in the list. **Please use the tracking issue for reporting bugs or giving feedback.**
+    /// 
+    /// **Do not ask for support on using unstable features, you will not receive any help.**
+    internal static let description = L10n.tr("Localizable", "UnstableFeaturesView.description", fallback: "Unstable Features are features that are currently being tested or still a work-in-progress and not ready for public usage. Because of this, they are only available on nightly builds. By default, all unstable features are off. Additionally, only more stable unstable features are available in Advanced Settings; most are locked behind Developer Mode to ensure normal users don't use them.\n\nEvery unstable feature has a tracking issue, which contains info on what the unstable feature adds and tracks the unstable feature status. To view a tracking issue for an unstable feature, simply click it in the list. **Please use the tracking issue for reporting bugs or giving feedback.**\n\n**Do not ask for support on using unstable features, you will not receive any help.**")
+    /// There are currently no unstable features available.
+    internal static let noUnstableFeatures = L10n.tr("Localizable", "UnstableFeaturesView.noUnstableFeatures", fallback: "There are currently no unstable features available.")
     /// UnstableFeaturesView
     internal static let title = L10n.tr("Localizable", "UnstableFeaturesView.title", fallback: "Unstable Features")
   }

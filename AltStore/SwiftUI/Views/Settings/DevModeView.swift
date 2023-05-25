@@ -128,6 +128,10 @@ struct DevModeMenu: View {
     @AppStorage("isConsoleEnabled")
     var isConsoleEnabled: Bool = false
     
+    #if !UNSTABLE
+    @State var isUnstableAlertShowing = false
+    #endif
+    
     var body: some View {
         List {
             Section {
@@ -143,6 +147,10 @@ struct DevModeMenu: View {
                 }
                 #if !UNSTABLE
                 .disabled(true)
+                .alert(isPresented: $isUnstableAlertShowing) {
+                    Alert(title: Text(L10n.DevModeView.unstableFeaturesNightlyOnly))
+                }
+                .onTapGesture { isUnstableAlertShowing = true }
                 #endif
                 
                 NavigationLink(L10n.DevModeView.dataExplorer) {
