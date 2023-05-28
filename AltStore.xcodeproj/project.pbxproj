@@ -15,7 +15,6 @@
 		191E5FDC290AFA5C001A3B7C /* OpenSSL in Frameworks */ = {isa = PBXBuildFile; productRef = 191E5FDB290AFA5C001A3B7C /* OpenSSL */; };
 		191E607D290B2EA5001A3B7C /* jsmn.c in Sources */ = {isa = PBXBuildFile; fileRef = 191E5FD0290A651D001A3B7C /* jsmn.c */; };
 		191E607E290B2EA7001A3B7C /* jplist.c in Sources */ = {isa = PBXBuildFile; fileRef = 191E5FCF290A651D001A3B7C /* jplist.c */; };
-		1920B04F2924AC8300744F60 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1920B04E2924AC8300744F60 /* Settings.bundle */; };
 		19B9B7452845E6DF0076EF69 /* SelectTeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B9B7442845E6DF0076EF69 /* SelectTeamViewController.swift */; };
 		1F07F550295455A300F7BE95 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F07F552295455A300F7BE95 /* Localizable.strings */; };
 		1F07F556295458D800F7BE95 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F07F554295458D800F7BE95 /* Assets.swift */; };
@@ -590,7 +589,6 @@
 		191E5FCF290A651D001A3B7C /* jplist.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jplist.c; path = Dependencies/libplist/src/jplist.c; sourceTree = SOURCE_ROOT; };
 		191E5FD0290A651D001A3B7C /* jsmn.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jsmn.c; path = Dependencies/libplist/src/jsmn.c; sourceTree = SOURCE_ROOT; };
 		191E5FD1290A651D001A3B7C /* jsmn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = jsmn.h; path = Dependencies/libplist/src/jsmn.h; sourceTree = SOURCE_ROOT; };
-		1920B04E2924AC8300744F60 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		19B9B7442845E6DF0076EF69 /* SelectTeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTeamViewController.swift; sourceTree = "<group>"; };
 		1F07F551295455A300F7BE95 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1F07F554295458D800F7BE95 /* Assets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
@@ -1954,7 +1952,6 @@
 				BFD247962284D7C100981D42 /* Resources */,
 				BF6C8FA8242935CA00125131 /* Dependencies */,
 				BFD247972284D7D800981D42 /* Supporting Files */,
-				1920B04E2924AC8300744F60 /* Settings.bundle */,
 			);
 			path = AltStore;
 			sourceTree = "<group>";
@@ -2620,7 +2617,6 @@
 				BF44EEF3246B3A17002A52F2 /* AltBackup.ipa in Resources */,
 				BF770E6922BD57DD002A40FE /* Silence.m4a in Resources */,
 				BFD247772284B9A700981D42 /* Assets.xcassets in Resources */,
-				1920B04F2924AC8300744F60 /* Settings.bundle in Resources */,
 				BFF0B6922321A305007A79E1 /* AboutPatreonHeaderView.xib in Resources */,
 				BFB6B22423187A3D0022A802 /* NewsCollectionViewCell.xib in Resources */,
 				BFD247752284B9A500981D42 /* Main.storyboard in Resources */,
