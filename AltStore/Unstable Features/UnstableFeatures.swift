@@ -33,7 +33,7 @@ class UnstableFeatures {
             // If your unstable feature is stable enough to be used by nightly users who are not alpha testers or developers,
             // you may want to have it available in the Unstable Features menu in Advanced Settings (outside of dev mode). To do so, add this:
             //case .yourFeature: return Metadata(availableOutsideDevMode: true)
-            // You can also add custom hooks for when your feature is enabled or disabled. However, we strongly recommend moving these to a new file. Example: https://github.com/SideStore/SideStore/blob/feature/unstable-features/AltStore/Unstable%20Features/UnstableFeatures+SwiftUI.swift
+            // You can also add custom hooks for when your feature is enabled or disabled. However, we strongly recommend moving these to a new file. Example: https://github.com/SideStore/SideStore/blob/026392dbc7a5454a39b9287f469d32b5e6768bb8/AltStore/Unstable%20Features/UnstableFeatures%2BSwiftUI.swift
             // Please keep the ordering of the cases in this switch statement the same as the ordering of the enum variants!
 
             case .swiftUI: return Metadata(availableOutsideDevMode: true, onEnable: SwiftUI.onEnable, onDisable: SwiftUI.onDisable)
