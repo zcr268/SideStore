@@ -39,6 +39,9 @@ jobs:
       - name: Change default icon to nightly icon
         run: sed -e 's/= Neon/= Steel/' -i '' ./AltStore.xcodeproj/project.pbxproj
 
+      - name: Enable unstable features
+        run: echo '\nSWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) UNSTABLE' >> ./Build.xcconfig
+
       - name: Get version
         id: version
         run: echo "version=$(grep MARKETING_VERSION Build.xcconfig | sed -e "s/MARKETING_VERSION = //g")" >> $GITHUB_OUTPUT
