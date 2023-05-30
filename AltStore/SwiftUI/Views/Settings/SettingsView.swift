@@ -131,7 +131,7 @@ struct SettingsView: View {
                         Spacer()
                         Text("SideStore Team")
                         Image(systemSymbol: .chevronRight)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.secondary.opacity(0.5))
                     }
                 }
                 .foregroundColor(.primary)
@@ -145,7 +145,7 @@ struct SettingsView: View {
                         Spacer()
                         Text("fabianthdev")
                         Image(systemSymbol: .chevronRight)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.secondary.opacity(0.5))
                     }
                 }
                 .foregroundColor(.primary)
