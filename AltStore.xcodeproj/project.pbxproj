@@ -1257,7 +1257,6 @@
 				99E59E1C299BFE5D00FAF33D /* AppIconsView.swift */,
 				99D87A5F299F1B1100ED09A9 /* DevModeView.swift */,
 				99BCB7DE29A2AC050041D1A7 /* AdvancedSettingsView.swift */,
-				990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1322,6 +1321,7 @@
 			isa = PBXGroup;
 			children = (
 				990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */,
+				990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */,
 				998E3B102A2061850046BBAA /* UnstableFeatures+SwiftUI.swift */,
 			);
 			path = "Unstable Features";
