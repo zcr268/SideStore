@@ -35,7 +35,7 @@ struct DevModePrompt: View {
             Text(countdown <= 0 ? L10n.Action.enable + " " + L10n.DevModeView.title : L10n.DevModeView.read + " (\(countdown))")
                 .foregroundColor(.red)
         }
-        .buttonStyle(FilledButtonStyle()) // TODO: set tintColor so text is more readable
+        .buttonStyle(FilledButtonStyle(tintColor: Color.gray.opacity(0.5)))
         .disabled(countdown > 0)
     }
     
@@ -128,6 +128,9 @@ struct DevModeMenu: View {
     @AppStorage("isConsoleEnabled")
     var isConsoleEnabled: Bool = false
     
+    @AppStorage("isDevModeEnabled")
+    var isDevModeEnabled: Bool = false
+    
     #if !UNSTABLE
     @State var isUnstableAlertShowing = false
     #endif
@@ -135,7 +138,7 @@ struct DevModeMenu: View {
     var body: some View {
         List {
             Section {
-                Toggle(L10n.DevModeView.console, isOn: self.$isConsoleEnabled)
+                Toggle(L10n.DevModeView.General.console, isOn: self.$isConsoleEnabled)
                     .onChange(of: self.isConsoleEnabled) { value in
                         LCManager.shared.isVisible = value
                     }
@@ -148,25 +151,30 @@ struct DevModeMenu: View {
                 #if !UNSTABLE
                 .disabled(true)
                 .alert(isPresented: $isUnstableAlertShowing) {
-                    Alert(title: Text(L10n.DevModeView.unstableFeaturesNightlyOnly))
+                    Alert(title: Text(L10n.DevModeView.General.unstableFeaturesNightlyOnly))
                 }
                 .onTapGesture { isUnstableAlertShowing = true }
                 #endif
                 
-                NavigationLink(L10n.DevModeView.dataExplorer) {
+                SwiftUI.Button(action: {
+                    isDevModeEnabled = false
+                }, label: { Text(L10n.DevModeView.General.disableDevMode) }).foregroundColor(.red)
+            } header: {
+                Text(L10n.DevModeView.General.header)
+            }
+            
+            Section {
+                NavigationLink(L10n.DevModeView.Files.dataExplorer) {
                     FileExplorer.normal(url: FileManager.default.altstoreSharedDirectory)
-                        .navigationTitle(L10n.DevModeView.dataExplorer)
+                        .navigationTitle(L10n.DevModeView.Files.dataExplorer)
                 }.foregroundColor(.red)
                 
-                NavigationLink(L10n.DevModeView.tmpExplorer) {
+                NavigationLink(L10n.DevModeView.Files.tmpExplorer) {
                     FileExplorer.normal(url: FileManager.default.temporaryDirectory)
-                        .navigationTitle(L10n.DevModeView.tmpExplorer)
+                        .navigationTitle(L10n.DevModeView.Files.tmpExplorer)
                 }.foregroundColor(.red)
-                
-                Toggle(L10n.DevModeView.skipResign, isOn: ResignAppOperation.skipResignBinding)
-                    .foregroundColor(.red)
-            } footer: {
-                Text(L10n.DevModeView.footer)
+            } header: {
+                Text(L10n.DevModeView.Files.header)
             }
             
             Section {
@@ -184,9 +192,18 @@ struct DevModeMenu: View {
                         .navigationTitle(L10n.DevModeView.Minimuxer.afcExplorer)
                 }.foregroundColor(.red)
             } header: {
-                Text(L10n.DevModeView.minimuxer)
+                Text(L10n.DevModeView.Minimuxer.header)
             } footer: {
                 Text(L10n.DevModeView.Minimuxer.footer)
+            }
+            
+            Section {
+                Toggle(L10n.DevModeView.Signing.skipResign, isOn: ResignAppOperation.skipResignBinding)
+                    .foregroundColor(.red)
+            } header: {
+                Text(L10n.DevModeView.Signing.header)
+            } footer: {
+                Text(L10n.DevModeView.Signing.footer)
             }
         }
         .navigationTitle(L10n.DevModeView.title)

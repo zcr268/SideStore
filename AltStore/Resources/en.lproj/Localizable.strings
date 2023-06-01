@@ -197,6 +197,17 @@ You should only enable Developer Mode if you meet one of the following requireme
 "DevModeView.skipResign" = "Skip Resign";
 "DevModeView.footer" = "Skip Resign should only be used when you have an IPA that you have self signed. Otherwise, it will break things, and might make SideStore crash (there is absolutely no error handling and everything is expected to work).";
 "DevModeView.minimuxer" = "minimuxer debug actions";
+"DevModeView.General.header" = "General";
+"DevModeView.General.console" = "Console";
+"DevModeView.General.unstableFeaturesNightlyOnly" = "Unstable Features are only available on nightly builds, PR builds and debug builds.";
+"DevModeView.General.disableDevMode" = "Disable Developer Mode";
+"DevModeView.Files.header" = "Files";
+"DevModeView.Files.dataExplorer" = "Data File Explorer";
+"DevModeView.Files.tmpExplorer" = "Temporary File Explorer";
+"DevModeView.Signing.header" = "Signing";
+"DevModeView.Signing.skipResign" = "Skip Resign";
+"DevModeView.Signing.footer" = "Skip Resign should only be used when you have an IPA that you have self signed. Otherwise, it will break things, and might make SideStore crash (there is absolutely no error handling and everything is expected to work).";
+"DevModeView.Minimuxer.header" = "minimuxer debug actions";
 "DevModeView.Minimuxer.dumpProfiles" = "Dump provisioning profiles to Documents directory";
 "DevModeView.Minimuxer.afcExplorer" = "AFC File Explorer (check footer for notes)";
 "DevModeView.Minimuxer.footer" = "Notes on AFC File Explorer:
