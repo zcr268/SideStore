@@ -248,7 +248,6 @@ class SideloadingManager {
             }
         })
         
-        let rootViewController = UIApplication.shared.keyWindow?.rootViewController
-        rootViewController?.present(alertController, animated: true, completion: nil)
+        UIApplication.topController?.present(alertController, animated: true, completion: nil)
     }
 }

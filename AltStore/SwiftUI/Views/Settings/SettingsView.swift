@@ -225,7 +225,6 @@ struct SettingsView: View {
                 Text(L10n.SettingsView.debug)
             }
 
-            
             Section {} footer: {
                 Text("SideStore \(appVersion)")
                     .multilineTextAlignment(.center)
@@ -257,7 +256,7 @@ struct SettingsView: View {
 //    }
     
     func connectAppleID() {
-        guard let rootViewController = UIApplication.shared.keyWindow?.rootViewController else {
+        guard let rootViewController = UIApplication.topController else {
             return
         }
 
