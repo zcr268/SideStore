@@ -191,12 +191,6 @@ You should only enable Developer Mode if you meet one of the following requireme
 "DevModeView.password" = "Password";
 "DevModeView.incorrectPassword" = "Incorrect password.";
 "DevModeView.read" = "Read the text!";
-"DevModeView.console" = "Console";
-"DevModeView.dataExplorer" = "Data File Explorer";
-"DevModeView.tmpExplorer" = "Temporary File Explorer";
-"DevModeView.skipResign" = "Skip Resign";
-"DevModeView.footer" = "Skip Resign should only be used when you have an IPA that you have self signed. Otherwise, it will break things, and might make SideStore crash (there is absolutely no error handling and everything is expected to work).";
-"DevModeView.minimuxer" = "minimuxer debug actions";
 "DevModeView.General.header" = "General";
 "DevModeView.General.console" = "Console";
 "DevModeView.General.unstableFeaturesNightlyOnly" = "Unstable Features are only available on nightly builds, PR builds and debug builds.";
