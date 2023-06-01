@@ -36,6 +36,7 @@ struct SettingsView: View {
     @State var isShowingDevModePrompt = false
     @State var isShowingDevModeMenu = false
     @State var isShowingResetAdiPbConfirmation = false
+    @State var isShowingMDCPopup = false
 
     @State var externalURLToShow: URL?
     @State var quickLookURL: URL?
@@ -99,6 +100,21 @@ struct SettingsView: View {
                 NavigationLink(L10n.AppIconsView.title) {
                     AppIconsView()
                 }
+
+                #if MDC
+                NavigationLink(L10n.Remove3AppLimitView.title) {
+                    Remove3AppLimitView()
+                }
+                #else
+                if CowExploits.isSupported {
+                    NavigationLink(L10n.Remove3AppLimitView.title) {}
+                        .disabled(true)
+                        .alert(isPresented: self.$isShowingMDCPopup) {
+                            Alert(title: Text(L10n.Remove3AppLimitView.title), message: Text(L10n.SettingsView.mdcPopup))
+                        }
+                        .onTapGesture { self.isShowingMDCPopup = true }
+                }
+                #endif
             }
             
             Section {

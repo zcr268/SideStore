@@ -6,3 +6,9 @@
 #import "ALTAppPatcher.h"
 
 #include "fragmentzip.h"
+
+#ifdef MDC
+#import "grant_fda.h"
+#import "vm_unalign_csr.h"
+#import "helping_tools.h"
+#endif /* MDC */

@@ -50,6 +50,10 @@ public extension UserDefaults
     @NSManaged var trustedServerURL: String?
     
     @NSManaged var unstableFeatures: Data?
+    #if MDC
+    @NSManaged var hasPatchedInstalldEver: Bool
+    @NSManaged var lastInstalldPatchBootTime: Date?
+    #endif
     
     var activeAppsLimit: Int? {
         get {
@@ -82,6 +86,7 @@ public extension UserDefaults
             #keyPath(UserDefaults.isConsoleEnabled): false,
             #keyPath(UserDefaults.isDebugLoggingEnabled): false,
             #keyPath(UserDefaults.onboardingComplete): false,
+            #keyPath(UserDefaults.hasPatchedInstalldEver): false,
             #keyPath(UserDefaults.isBackgroundRefreshEnabled): true,
             #keyPath(UserDefaults.isLegacyDeactivationSupported): isLegacyDeactivationSupported,
             #keyPath(UserDefaults.activeAppLimitIncludesExtensions): activeAppLimitIncludesExtensions,

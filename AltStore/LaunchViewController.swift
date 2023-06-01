@@ -57,6 +57,10 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
 
+        #if MDC
+        CowExploits.alertIfNotPatched()
+        #endif
+        
         #if !targetEnvironment(simulator)
         if !UserDefaults.standard.onboardingComplete {
             self.showOnboarding()

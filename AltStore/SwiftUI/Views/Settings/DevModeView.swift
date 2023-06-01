@@ -205,6 +205,17 @@ struct DevModeMenu: View {
             } footer: {
                 Text(L10n.DevModeView.Signing.footer)
             }
+            
+            #if MDC
+            Section {
+                SwiftUI.Button(action: {
+                    UserDefaults.shared.lastInstalldPatchBootTime = nil
+                    UIApplication.alert(title: L10n.Action.success)
+                }, label: { Text(L10n.DevModeView.Mdc.fakeUndo3AppLimitPatch) }).foregroundColor(.red)
+            } header: {
+                Text(L10n.DevModeView.Mdc.header)
+            }
+            #endif
         }
         .navigationTitle(L10n.DevModeView.title)
         .enableInjection()
