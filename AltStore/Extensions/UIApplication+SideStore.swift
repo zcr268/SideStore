@@ -12,13 +12,11 @@ extension UIApplication {
     }
     
     static var topController: UIViewController? {
-        if var topController = keyWindow?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            return topController
+        guard var topController = keyWindow?.rootViewController else { return nil }
+        while let presentedViewController = topController.presentedViewController {
+            topController = presentedViewController
         }
-        return nil
+        return topController
     }
     
     static func alert(
