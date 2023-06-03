@@ -81,18 +81,21 @@ public extension UserDefaults
         let ios14 = OperatingSystemVersion(majorVersion: 14, minorVersion: 0, patchVersion: 0)
         let localServerSupportsRefreshing = !ProcessInfo.processInfo.isOperatingSystemAtLeast(ios14)
         
-        let defaults = [
+        var defaults = [
             #keyPath(UserDefaults.isDevModeEnabled): false,
             #keyPath(UserDefaults.isConsoleEnabled): false,
             #keyPath(UserDefaults.isDebugLoggingEnabled): false,
             #keyPath(UserDefaults.onboardingComplete): false,
-            #keyPath(UserDefaults.hasPatchedInstalldEver): false,
             #keyPath(UserDefaults.isBackgroundRefreshEnabled): true,
             #keyPath(UserDefaults.isLegacyDeactivationSupported): isLegacyDeactivationSupported,
             #keyPath(UserDefaults.activeAppLimitIncludesExtensions): activeAppLimitIncludesExtensions,
             #keyPath(UserDefaults.localServerSupportsRefreshing): localServerSupportsRefreshing,
             #keyPath(UserDefaults.requiresAppGroupMigration): true
         ]
+        
+        #if MDC
+        defaults[#keyPath(UserDefaults.hasPatchedInstalldEver)] = false
+        #endif
         
         UserDefaults.standard.register(defaults: defaults)
         UserDefaults.shared.register(defaults: defaults)
