@@ -62,7 +62,7 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
         #endif
         
         #if !targetEnvironment(simulator)
-        if !UserDefaults.standard.onboardingComplete {
+        if UnstableFeatures.enabled(.swiftUI) && !UserDefaults.standard.onboardingComplete {
             self.showOnboarding()
             return
         }

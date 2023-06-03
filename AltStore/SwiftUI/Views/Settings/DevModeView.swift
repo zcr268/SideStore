@@ -9,6 +9,7 @@
 import SwiftUI
 import LocalConsole
 import minimuxer
+import AltStoreCore
 
 // Yes, we know the password is right here. It's not supposed to be a secret, just something to hopefully prevent people breaking SideStore with dev mode and then complaining to us.
 let DEV_MODE_PASSWORD = "devmode"
@@ -131,6 +132,8 @@ struct DevModeMenu: View {
     @AppStorage("isDevModeEnabled")
     var isDevModeEnabled: Bool = false
     
+    @State var selectedOnboardingStep: String = "None"
+    
     #if !UNSTABLE
     @State var isUnstableAlertShowing = false
     #endif
@@ -204,6 +207,30 @@ struct DevModeMenu: View {
                 Text(L10n.DevModeView.Signing.header)
             } footer: {
                 Text(L10n.DevModeView.Signing.footer)
+            }
+            
+            Section {
+                Picker("Show onboarding step", selection: $selectedOnboardingStep) {
+                    Text("None").tag("None")
+                    ForEach(OnboardingStep.allCases, id: \.self) { server in
+                        Text(String(describing: server)).tag(String(describing: server))
+                    }
+                }.onChange(of: selectedOnboardingStep) { selectedOnboardingStep in
+                    guard let selectedOnboardingStep = OnboardingStep.allCases.first(where: { String(describing: $0) == selectedOnboardingStep }) else { return }
+                    let onboardingView = OnboardingView(onDismiss: { UIApplication.topController?.dismiss(animated: true) }, enabledSteps: [selectedOnboardingStep])
+                        .environment(\.managedObjectContext, DatabaseManager.shared.viewContext)
+                    let navigationController = UINavigationController(rootViewController: UIHostingController(rootView: onboardingView))
+                    navigationController.isNavigationBarHidden = true
+                    navigationController.isModalInPresentation = true
+                    UIApplication.topController?.present(navigationController, animated: true)
+                }
+                
+                SwiftUI.Button(action: {
+                    UserDefaults.shared.onboardingComplete = false
+                    UIApplication.alert(title: L10n.Action.success)
+                }, label: { Text("Tell SideStore onboarding has not been completed") })
+            } header: {
+                Text("Onboarding")
             }
             
             #if MDC

@@ -215,7 +215,7 @@ You should only enable Developer Mode if you meet one of the following requireme
 - Very buggy
 - There are multiple unimplemented actions";
 "DevModeView.Mdc.header" = "MDC";
-"DevModeView.Mdc.fakeUndo3AppLimitPatch" = "Tell SideStore installd has not been patched";
+"DevModeView.Mdc.fakeUndo3AppLimitPatch" = "Tell SideStore installd has not been patched (may cause undefined behavior or boot loop if run on a real device!!)";
 
 /* AsyncFallibleButton */
 "AsyncFallibleButton.error" = "An error occurred";

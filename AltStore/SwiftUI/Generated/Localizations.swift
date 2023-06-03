@@ -296,8 +296,8 @@ internal enum L10n {
       internal static let unstableFeaturesNightlyOnly = L10n.tr("Localizable", "DevModeView.General.unstableFeaturesNightlyOnly", fallback: "Unstable Features are only available on nightly builds, PR builds and debug builds.")
     }
     internal enum Mdc {
-      /// Tell SideStore installd has not been patched
-      internal static let fakeUndo3AppLimitPatch = L10n.tr("Localizable", "DevModeView.Mdc.fakeUndo3AppLimitPatch", fallback: "Tell SideStore installd has not been patched")
+      /// Tell SideStore installd has not been patched (may cause undefined behavior or boot loop if run on a real device!!)
+      internal static let fakeUndo3AppLimitPatch = L10n.tr("Localizable", "DevModeView.Mdc.fakeUndo3AppLimitPatch", fallback: "Tell SideStore installd has not been patched (may cause undefined behavior or boot loop if run on a real device!!)")
       /// MDC
       internal static let header = L10n.tr("Localizable", "DevModeView.Mdc.header", fallback: "MDC")
     }
