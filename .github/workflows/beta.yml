@@ -44,7 +44,7 @@ jobs:
 
       - name: "[Normal] Build SideStore, fakesign app and convert to IPA"
         run: |
-          make build | xcpretty && exit ${PIPESTATUS[0]}
+          make build | xcpretty
           make fakesign
           make ipa
 
@@ -54,7 +54,7 @@ jobs:
       - name: "[MDC] Build SideStore, fakesign app and convert to IPA"
         run: |
           make clean
-          make build DSYM_FOLDER=./MDC-dSYM | xcpretty && exit ${PIPESTATUS[0]}
+          make build DSYM_FOLDER=./MDC-dSYM | xcpretty
           make fakesign
           make ipa IPA_NAME=SideStore-MDC.ipa
 
