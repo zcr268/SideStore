@@ -2,11 +2,11 @@
 #ifndef helpers_h
 #define helpers_h
 
-char* get_temporary_file_location_paths(void);
+char* get_temp_file_path(void);
 void test_nsexpressions(void);
-char* setup_temporary_file(void);
+char* set_up_tmp_file(void);
 
-void crash_with_xpc_thingy(char* service_name);
+void xpc_crasher(char* service_name);
 
 #define ROUND_DOWN_PAGE(val) (val & ~(PAGE_SIZE - 1ULL))
 

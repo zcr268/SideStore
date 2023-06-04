@@ -92,11 +92,11 @@
 		992C896029A6A56500FB3501 /* LocalConsole in Frameworks */ = {isa = PBXBuildFile; productRef = 992C895F29A6A56500FB3501 /* LocalConsole */; };
 		993250B12A258EE6001EF2C8 /* Remove3AppLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993250B02A258EE6001EF2C8 /* Remove3AppLimitView.swift */; };
 		993F069A2A26EBF000717CEA /* Error+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993F06992A26EBF000717CEA /* Error+Message.swift */; };
-		993F06A12A2797DE00717CEA /* vm_unalign_csr.h in Headers */ = {isa = PBXBuildFile; fileRef = 993250A62A258B3F001EF2C8 /* vm_unalign_csr.h */; };
+		993F06A12A2797DE00717CEA /* vm_unaligned_copy_switch_race.h in Headers */ = {isa = PBXBuildFile; fileRef = 993250A62A258B3F001EF2C8 /* vm_unaligned_copy_switch_race.h */; };
 		993F06A22A27985A00717CEA /* CowExploits+AltStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993250A92A258B40001EF2C8 /* CowExploits+AltStore.swift */; };
-		993F06A32A27985F00717CEA /* grant_fda.m in Sources */ = {isa = PBXBuildFile; fileRef = 993250AA2A258B41001EF2C8 /* grant_fda.m */; };
-		993F06A42A27986400717CEA /* helping_tools.m in Sources */ = {isa = PBXBuildFile; fileRef = 993250A82A258B40001EF2C8 /* helping_tools.m */; };
-		993F06A52A27986900717CEA /* vm_unalign_csr.c in Sources */ = {isa = PBXBuildFile; fileRef = 993250AB2A258B41001EF2C8 /* vm_unalign_csr.c */; };
+		993F06A32A27985F00717CEA /* grant_full_disk_access.m in Sources */ = {isa = PBXBuildFile; fileRef = 993250AA2A258B41001EF2C8 /* grant_full_disk_access.m */; };
+		993F06A42A27986400717CEA /* helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 993250A82A258B40001EF2C8 /* helpers.m */; };
+		993F06A52A27986900717CEA /* vm_unaligned_copy_switch_race.c in Sources */ = {isa = PBXBuildFile; fileRef = 993250AB2A258B41001EF2C8 /* vm_unaligned_copy_switch_race.c */; };
 		993F06A72A2798D000717CEA /* CowExploits+AltStoreCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993F06A62A2798D000717CEA /* CowExploits+AltStoreCore.swift */; };
 		994D6E9B29E326080045B3F7 /* minimuxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F87D1729D8E4C900B40039 /* minimuxer.swift */; };
 		994D6EB529E35C130045B3F7 /* StoreApp+SideStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994D6EB429E35C130045B3F7 /* StoreApp+SideStore.swift */; };
@@ -664,13 +664,13 @@
 		990D2AE12A1910CD0055D93C /* UnstableFeatures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnstableFeatures.swift; sourceTree = "<group>"; };
 		990D2AEF2A192E060055D93C /* UIApplication+SideStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+SideStore.swift"; sourceTree = "<group>"; };
 		990D2AFF2A19593F0055D93C /* UnstableFeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnstableFeaturesView.swift; sourceTree = "<group>"; };
-		993250A52A258B3E001EF2C8 /* grant_fda.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grant_fda.h; sourceTree = "<group>"; };
-		993250A62A258B3F001EF2C8 /* vm_unalign_csr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vm_unalign_csr.h; sourceTree = "<group>"; };
-		993250A72A258B3F001EF2C8 /* helping_tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helping_tools.h; sourceTree = "<group>"; };
-		993250A82A258B40001EF2C8 /* helping_tools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helping_tools.m; sourceTree = "<group>"; };
+		993250A52A258B3E001EF2C8 /* grant_full_disk_access.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = grant_full_disk_access.h; sourceTree = "<group>"; };
+		993250A62A258B3F001EF2C8 /* vm_unaligned_copy_switch_race.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vm_unaligned_copy_switch_race.h; sourceTree = "<group>"; };
+		993250A72A258B3F001EF2C8 /* helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpers.h; sourceTree = "<group>"; };
+		993250A82A258B40001EF2C8 /* helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helpers.m; sourceTree = "<group>"; };
 		993250A92A258B40001EF2C8 /* CowExploits+AltStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CowExploits+AltStore.swift"; sourceTree = "<group>"; };
-		993250AA2A258B41001EF2C8 /* grant_fda.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = grant_fda.m; sourceTree = "<group>"; };
-		993250AB2A258B41001EF2C8 /* vm_unalign_csr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vm_unalign_csr.c; sourceTree = "<group>"; };
+		993250AA2A258B41001EF2C8 /* grant_full_disk_access.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = grant_full_disk_access.m; sourceTree = "<group>"; };
+		993250AB2A258B41001EF2C8 /* vm_unaligned_copy_switch_race.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vm_unaligned_copy_switch_race.c; sourceTree = "<group>"; };
 		993250B02A258EE6001EF2C8 /* Remove3AppLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Remove3AppLimitView.swift; sourceTree = "<group>"; };
 		993F06992A26EBF000717CEA /* Error+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Message.swift"; sourceTree = "<group>"; };
 		993F06A62A2798D000717CEA /* CowExploits+AltStoreCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CowExploits+AltStoreCore.swift"; sourceTree = "<group>"; };
@@ -1383,12 +1383,12 @@
 				993250B02A258EE6001EF2C8 /* Remove3AppLimitView.swift */,
 				993250A92A258B40001EF2C8 /* CowExploits+AltStore.swift */,
 				993F06A62A2798D000717CEA /* CowExploits+AltStoreCore.swift */,
-				993250A52A258B3E001EF2C8 /* grant_fda.h */,
-				993250AA2A258B41001EF2C8 /* grant_fda.m */,
-				993250A72A258B3F001EF2C8 /* helping_tools.h */,
-				993250A82A258B40001EF2C8 /* helping_tools.m */,
-				993250A62A258B3F001EF2C8 /* vm_unalign_csr.h */,
-				993250AB2A258B41001EF2C8 /* vm_unalign_csr.c */,
+				993250A52A258B3E001EF2C8 /* grant_full_disk_access.h */,
+				993250AA2A258B41001EF2C8 /* grant_full_disk_access.m */,
+				993250A72A258B3F001EF2C8 /* helpers.h */,
+				993250A82A258B40001EF2C8 /* helpers.m */,
+				993250A62A258B3F001EF2C8 /* vm_unaligned_copy_switch_race.h */,
+				993250AB2A258B41001EF2C8 /* vm_unaligned_copy_switch_race.c */,
 			);
 			path = MDC;
 			sourceTree = "<group>";
@@ -2253,7 +2253,7 @@
 				BF66EE942501AEBC007EE018 /* ALTAppPermission.h in Headers */,
 				BFAECC602501B0BF00528F27 /* NSError+ALTServerError.h in Headers */,
 				BFAECC5E2501B0BF00528F27 /* CFNotificationName+AltStore.h in Headers */,
-				993F06A12A2797DE00717CEA /* vm_unalign_csr.h in Headers */,
+				993F06A12A2797DE00717CEA /* vm_unaligned_copy_switch_race.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2926,7 +2926,7 @@
 				1F0DD8432936B0F9007608A4 /* RoundedTextField.swift in Sources */,
 				D57F2C9126E0070200B9FA39 /* EnableJITOperation.swift in Sources */,
 				BF8CAE4E248AEABA004D6CCE /* UIDevice+Jailbreak.swift in Sources */,
-				993F06A42A27986400717CEA /* helping_tools.m in Sources */,
+				993F06A42A27986400717CEA /* helpers.m in Sources */,
 				1FB96FC7292A853D007E68D1 /* SourcesView.swift in Sources */,
 				1F66F5BE2938F06100A910CA /* StoreApp+Filterable.swift in Sources */,
 				D5E1E7C128077DE90016FC96 /* FetchTrustedSourcesOperation.swift in Sources */,
@@ -2958,7 +2958,7 @@
 				1FFA56C2299994390011B6F5 /* OutputCapturer.swift in Sources */,
 				993F069A2A26EBF000717CEA /* Error+Message.swift in Sources */,
 				BF41B806233423AE00C593A3 /* TabBarController.swift in Sources */,
-				993F06A32A27985F00717CEA /* grant_fda.m in Sources */,
+				993F06A32A27985F00717CEA /* grant_full_disk_access.m in Sources */,
 				1FB96FC9292ABDD0007E68D1 /* AddSourceView.swift in Sources */,
 				1F6E08DC292807D3005059C0 /* AppIconView.swift in Sources */,
 				1F6284D5295209DA0060AAD8 /* AppAction.swift in Sources */,
@@ -3053,7 +3053,7 @@
 				BF4B78FE24B3D1DB008AB4AC /* SceneDelegate.swift in Sources */,
 				BF6C8FB02429599900125131 /* TextCollectionReusableView.swift in Sources */,
 				BF663C4F2433ED8200DAA738 /* FileManager+DirectorySize.swift in Sources */,
-				993F06A52A27986900717CEA /* vm_unalign_csr.c in Sources */,
+				993F06A52A27986900717CEA /* vm_unaligned_copy_switch_race.c in Sources */,
 				1F943C702927F90400ABE095 /* BrowseView.swift in Sources */,
 				1F981B1129AA0FAE0014950E /* OnboardingView.swift in Sources */,
 				1F943C692927F8F200ABE095 /* RootView.swift in Sources */,

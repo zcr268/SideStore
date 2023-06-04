@@ -8,7 +8,5 @@
 #include "fragmentzip.h"
 
 #ifdef MDC
-#import "grant_fda.h"
-#import "vm_unalign_csr.h"
-#import "helping_tools.h"
+#import "grant_full_disk_access.h"
 #endif /* MDC */
