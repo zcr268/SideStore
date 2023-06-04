@@ -1,10 +1,10 @@
-// Extension of CowExploits+AltStoreCore for the functionality AltStore uses
-// The only reason we can't have it all in AltStore is because AltStoreCore requires one variable of CowExploits to determine the free app limit
+// Extension of MDC+AltStoreCore for the functionality AltStore uses
+// The only reason we can't have it all in AltStore is because AltStoreCore requires one variable of MDC to determine the free app limit
 
 import Foundation
 import AltStoreCore
 
-extension CowExploits {
+extension MDC {
     #if MDC
     enum PatchError: LocalizedError {
         case NoFDA(error: String)
@@ -37,7 +37,7 @@ extension CowExploits {
         #else
         print("The patch would be running right now if you weren't using a simulator. It will stop \"running\" in 3 seconds.")
         try await Task.sleep(nanoseconds: UInt64(3 * Double(NSEC_PER_SEC)))
-//        throw CowExploits.PatchError.NoFDA(error: "This is a test error")
+//        throw MDC.PatchError.NoFDA(error: "This is a test error")
         #endif
         
         UserDefaults.shared.lastInstalldPatchBootTime = bootTime()
@@ -53,7 +53,7 @@ extension CowExploits {
             leftButton: (text: L10n.Remove3AppLimitView.NotAppliedAlert.apply, action: { _ in
                 Task {
                     do {
-                        try await CowExploits.patch3AppLimit()
+                        try await MDC.patch3AppLimit()
                         
                         await UIApplication.alert(
                             title: L10n.Remove3AppLimitView.success

@@ -106,7 +106,7 @@ struct SettingsView: View {
                     Remove3AppLimitView()
                 }
                 #else
-                if CowExploits.isSupported {
+                if MDC.isSupported {
                     NavigationLink(L10n.Remove3AppLimitView.title) {}
                         .disabled(true)
                         .alert(isPresented: self.$isShowingMDCPopup) {

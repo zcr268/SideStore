@@ -58,7 +58,7 @@ final class LaunchViewController: RSTLaunchViewController, UIDocumentPickerDeleg
         super.viewDidAppear(true)
 
         #if MDC
-        CowExploits.alertIfNotPatched()
+        MDC.alertIfNotPatched()
         #endif
         
         #if !targetEnvironment(simulator)

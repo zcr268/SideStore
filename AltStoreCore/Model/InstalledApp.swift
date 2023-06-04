@@ -17,7 +17,7 @@ public extension InstalledApp
     // Free developer accounts are limited to only 3 active sideloaded apps at a time as of iOS 13.3.1. However, the MDC exploit allows you to have 10 per Apple ID/SideStore instance.
     static var freeAccountActiveAppsLimit: Int {
         #if MDC
-        if CowExploits.installdHasBeenPatched {
+        if MDC.installdHasBeenPatched {
             return 10
         } else {
             return 3

@@ -1,5 +1,5 @@
 //
-//  CowExploits+AltStoreCore.swift
+//  MDC+AltStoreCore.swift
 //  AltStoreCore
 //
 //  Created by naturecodevoid on 5/31/23.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-// Parts of CowExploits we need in AltStoreCore
+// Parts of MDC we need in AltStoreCore
 // TODO: destroy AltStoreCore
 
-public class CowExploits {
+public class MDC {
     #if MDC
     public static var installdHasBeenPatched: Bool {
         guard let lastInstalldPatchBootTime = UserDefaults.shared.lastInstalldPatchBootTime else { return false }

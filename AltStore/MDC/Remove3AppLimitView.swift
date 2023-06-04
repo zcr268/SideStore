@@ -45,10 +45,10 @@ struct Remove3AppLimitView: View {
     
     var body: some View {
         VStack {
-            if !CowExploits.isSupported {
+            if !MDC.isSupported {
                 notSupported.common()
             } else {
-                if CowExploits.installdHasBeenPatched {
+                if MDC.installdHasBeenPatched {
                     installdHasBeenPatched.common()
                 } else {
                     applyPatch.common()
@@ -58,7 +58,7 @@ struct Remove3AppLimitView: View {
                                 guard !runningPatch else { return }
                                 runningPatch = true
                                 
-                                try await CowExploits.patch3AppLimit()
+                                try await MDC.patch3AppLimit()
                                 
                                 showSuccessAlert = true
                             } catch {
