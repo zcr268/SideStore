@@ -6,6 +6,7 @@ CURRENT_PROJECT_VERSION = 4000
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = $(inherited) UNSTABLE MDC
 GCC_PREPROCESSOR_DEFINITIONS[config=Debug] = $(inherited) MDC=1
+INFOPLIST_PREPROCESSOR_DEFINITIONS[config=Debug] = $(inherited) MDC=1
 
 // Vars to be overwritten by `CodeSigning.xcconfig` if exists
 DEVELOPMENT_TEAM = S32Z3HMYVQ

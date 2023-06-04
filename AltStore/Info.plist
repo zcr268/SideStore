@@ -208,5 +208,9 @@
 	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	#if MDC
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Full access to files on your device is required to apply the installd patch to remove the 3 app limit that free developer accounts have.</string>
+	#endif
 </dict>
 </plist>

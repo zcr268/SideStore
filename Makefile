@@ -164,6 +164,7 @@ enable_mdc:
 	echo >> ./Build.xcconfig
 	echo 'SWIFT_ACTIVE_COMPILATION_CONDITIONS = $$(inherited) MDC' >> ./Build.xcconfig
 	echo 'GCC_PREPROCESSOR_DEFINITIONS = $$(inherited) MDC=1' >> ./Build.xcconfig
+	echo 'INFOPLIST_PREPROCESSOR_DEFINITIONS = $$(inherited) MDC=1' >> ./Build.xcconfig
 
 DSYM_FOLDER ?= ./dSYM
 
