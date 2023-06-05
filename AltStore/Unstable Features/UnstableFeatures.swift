@@ -24,6 +24,7 @@ class UnstableFeatures {
         
         case swiftUI = "386"
         case jitUrlScheme = "385"
+        case onboarding = "000"
         
         /// Dummy variant to ensure there is always at least one variant. DO NOT USE!
         case dummy = "dummy"
