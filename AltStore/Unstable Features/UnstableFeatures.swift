@@ -22,8 +22,8 @@ class UnstableFeatures {
         //
         // Please order the case by the issue number. They will be ordered by issue number (ascending) in the unstable features menu, so please order them the same way here and in `metadata`.
         
-        case swiftUI = "0"
-        case jitUrlScheme = "00"
+        case swiftUI = "386"
+        case jitUrlScheme = "385"
         
         /// Dummy variant to ensure there is always at least one variant. DO NOT USE!
         case dummy = "dummy"
