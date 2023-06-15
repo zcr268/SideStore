@@ -82,7 +82,6 @@ public extension UserDefaults
         let localServerSupportsRefreshing = !ProcessInfo.processInfo.isOperatingSystemAtLeast(ios14)
         
         var defaults = [
-            #keyPath(UserDefaults.isDevModeEnabled): false,
             #keyPath(UserDefaults.isConsoleEnabled): false,
             #keyPath(UserDefaults.isDebugLoggingEnabled): false,
             #keyPath(UserDefaults.onboardingComplete): false,
@@ -92,6 +91,12 @@ public extension UserDefaults
             #keyPath(UserDefaults.localServerSupportsRefreshing): localServerSupportsRefreshing,
             #keyPath(UserDefaults.requiresAppGroupMigration): true
         ]
+        
+        #if targetEnvironment(simulator)
+        defaults[#keyPath(UserDefaults.isDevModeEnabled)] = true
+        #else
+        defaults[#keyPath(UserDefaults.isDevModeEnabled)] = false
+        #endif
         
         #if MDC
         defaults[#keyPath(UserDefaults.hasPatchedInstalldEver)] = false
