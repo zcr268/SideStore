@@ -239,6 +239,11 @@ struct DevModeMenu: View {
                     UserDefaults.shared.lastInstalldPatchBootTime = nil
                     UIApplication.alert(title: L10n.Action.success)
                 }, label: { Text(L10n.DevModeView.Mdc.fakeUndo3AppLimitPatch) }).foregroundColor(.red)
+                
+                SwiftUI.Button(action: {
+                    UserDefaults.shared.lastInstalldPatchBootTime = bootTime()
+                    UIApplication.alert(title: L10n.Action.success, message: "The free app limit will be reset to 3 upon reboot")
+                }, label: { Text("Force 10 app limit and tell SideStore installd patch has been applied (will cause staging errors if you haven't applied the patch elsewhere)") }).foregroundColor(.red)
             } header: {
                 Text(L10n.DevModeView.Mdc.header)
             }
