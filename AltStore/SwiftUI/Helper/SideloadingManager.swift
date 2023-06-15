@@ -216,7 +216,7 @@ class SideloadingManager {
         
         if UserDefaults.standard.activeAppLimitIncludesExtensions
         {
-            firstSentence = NSLocalizedString("Non-developer Apple IDs are limited to 3 active apps and app extensions.", comment: "")
+            firstSentence = NSLocalizedString("Non-developer Apple IDs are limited to \(InstalledApp.freeAccountActiveAppsLimit) active apps and app extensions.", comment: "")
         }
         else
         {
