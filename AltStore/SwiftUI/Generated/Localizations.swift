@@ -292,6 +292,8 @@ internal enum L10n {
       internal static let disableDevMode = L10n.tr("Localizable", "DevModeView.General.disableDevMode", fallback: "Disable Developer Mode")
       /// General
       internal static let header = L10n.tr("Localizable", "DevModeView.General.header", fallback: "General")
+      /// Reset Image Cache
+      internal static let resetImageCache = L10n.tr("Localizable", "DevModeView.General.resetImageCache", fallback: "Reset Image Cache")
       /// Unstable Features are only available on nightly builds, PR builds and debug builds.
       internal static let unstableFeaturesNightlyOnly = L10n.tr("Localizable", "DevModeView.General.unstableFeaturesNightlyOnly", fallback: "Unstable Features are only available on nightly builds, PR builds and debug builds.")
     }
@@ -438,8 +440,6 @@ internal enum L10n {
     internal static let refreshingAppsFooter = L10n.tr("Localizable", "SettingsView.refreshingAppsFooter", fallback: "Enable Background Refresh to automatically refresh apps in the background when connected to WiFi and with Wireguard active.")
     /// Reset adi.pb
     internal static let resetAdiPb = L10n.tr("Localizable", "SettingsView.resetAdiPb", fallback: "Reset adi.pb")
-    /// Reset Image Cache
-    internal static let resetImageCache = L10n.tr("Localizable", "SettingsView.resetImageCache", fallback: "Reset Image Cache")
     /// Reset Pairing File
     internal static let resetPairingFile = L10n.tr("Localizable", "SettingsView.resetPairingFile", fallback: "Reset Pairing File")
     /// Show Error Log

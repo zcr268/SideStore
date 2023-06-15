@@ -159,6 +159,9 @@ struct DevModeMenu: View {
                 .onTapGesture { isUnstableAlertShowing = true }
                 #endif
                 
+                SwiftUI.Button(L10n.DevModeView.General.resetImageCache, action: self.resetImageCache)
+                    .foregroundColor(.red)
+                
                 SwiftUI.Button(action: {
                     isDevModeEnabled = false
                 }, label: { Text(L10n.DevModeView.General.disableDevMode) }).foregroundColor(.red)
@@ -251,6 +254,19 @@ struct DevModeMenu: View {
         }
         .navigationTitle(L10n.DevModeView.title)
         .enableInjection()
+    }
+    
+    func resetImageCache() {
+        do {
+            let url = try FileManager.default.url(
+                for: .cachesDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true)
+            try FileManager.default.removeItem(at: url.appendingPathComponent("com.zeu.cache", isDirectory: true))
+        } catch let error {
+            fatalError("\(error)")
+        }
     }
 }
 

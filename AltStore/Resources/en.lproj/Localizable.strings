@@ -59,7 +59,6 @@
 "SettingsView.addToSiri" = "Add to Siri...";
 "SettingsView.refreshingApps" = "Refreshing Apps";
 "SettingsView.switchToUIKit" = "Switch to UIKit";
-"SettingsView.resetImageCache" = "Reset Image Cache";
 "SettingsView.debug" = "Debug";
 "SettingsView.swiftUIRedesign" = "SwiftUI Redesign";
 "SettingsView.credits" = "Credits";
@@ -198,6 +197,7 @@ You should only enable Developer Mode if you meet one of the following requireme
 "DevModeView.General.header" = "General";
 "DevModeView.General.console" = "Console";
 "DevModeView.General.unstableFeaturesNightlyOnly" = "Unstable Features are only available on nightly builds, PR builds and debug builds.";
+"DevModeView.General.resetImageCache" = "Reset Image Cache";
 "DevModeView.General.disableDevMode" = "Disable Developer Mode";
 "DevModeView.Files.header" = "Files";
 "DevModeView.Files.dataExplorer" = "Data File Explorer";

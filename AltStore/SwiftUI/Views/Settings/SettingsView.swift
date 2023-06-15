@@ -199,9 +199,6 @@ struct SettingsView: View {
                     }
                 }
 
-                SwiftUI.Button(L10n.SettingsView.resetImageCache, action: self.resetImageCache)
-                    .foregroundColor(.red)
-
                 SwiftUI.Button(L10n.SettingsView.resetPairingFile) {
                     self.isShowingResetPairingFileConfirmation = true
                 }
@@ -301,19 +298,6 @@ struct SettingsView: View {
                     NotificationManager.shared.reportError(error: error)
                 }
             }
-        }
-    }
-    
-    func resetImageCache() {
-        do {
-            let url = try FileManager.default.url(
-                for: .cachesDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true)
-            try FileManager.default.removeItem(at: url.appendingPathComponent("com.zeu.cache", isDirectory: true))
-        } catch let error {
-            fatalError("\(error)")
         }
     }
 
