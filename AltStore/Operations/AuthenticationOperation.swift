@@ -240,7 +240,7 @@ final class AuthenticationOperation: ResultOperation<(ALTTeam, ALTCertificate, A
                 }
                 
                 let activeAppsMinimumVersion = OperatingSystemVersion(majorVersion: 13, minorVersion: 3, patchVersion: 1)
-                if team.type == .free, ProcessInfo.processInfo.isOperatingSystemAtLeast(activeAppsMinimumVersion)
+                if team.type == .free, ProcessInfo.processInfo.isOperatingSystemAtLeast(activeAppsMinimumVersion), !UserDefaults.standard.isMDCEnabled
                 {
                     UserDefaults.standard.activeAppsLimit = ALTActiveAppsLimit
                 }

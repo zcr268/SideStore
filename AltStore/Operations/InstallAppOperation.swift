@@ -12,6 +12,9 @@ import AltStoreCore
 import AltSign
 import Roxas
 import minimuxer
+#if MACDIRTYCOW
+import MacDirtyCow
+#endif
 
 @objc(InstallAppOperation)
 final class InstallAppOperation: ResultOperation<InstalledApp>
@@ -200,10 +203,42 @@ final class InstallAppOperation: ResultOperation<InstalledApp>
             }
             
             do {
+                #if MACDIRTYCOW
+                if UserDefaults.standard.isMDCEnabled {
+                    grant_full_disk_access { error in
+                        if error != nil {
+                            self.finish(.failure(OperationError.mdcExploitFailed))
+                            return
+                        }
+                        if !patch_installd() {
+                            self.finish(.failure(OperationError.mdcExploitFailed))
+                            return
+                        }
+                        
+                        do
+                        {
+                            try install_ipa(installedApp.bundleIdentifier)
+                            installing = false
+                            installedApp.refreshedDate = Date()
+                            self.finish(.success(installedApp))
+                        } catch let error {
+                            installing = false
+                            self.finish(.failure(error))
+                        }
+                    }
+                }
+                else {
+                    try install_ipa(installedApp.bundleIdentifier)
+                    installing = false
+                    installedApp.refreshedDate = Date()
+                    self.finish(.success(installedApp))
+                }
+                #else
                 try install_ipa(installedApp.bundleIdentifier)
                 installing = false
                 installedApp.refreshedDate = Date()
                 self.finish(.success(installedApp))
+                #endif
             } catch let error {
                 installing = false
                 self.finish(.failure(error))

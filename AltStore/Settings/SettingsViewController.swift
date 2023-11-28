@@ -24,6 +24,7 @@ extension SettingsViewController
         case appRefresh
         case instructions
         case credits
+        case mdc
         case debug
     }
     
@@ -77,6 +78,7 @@ final class SettingsViewController: UITableViewController
     
     @IBOutlet private var backgroundRefreshSwitch: UISwitch!
     @IBOutlet private var noIdleTimeoutSwitch: UISwitch!
+    @IBOutlet private var MDCSwitch: UISwitch!
     
     @IBOutlet private var versionLabel: UILabel!
     
@@ -154,6 +156,26 @@ private extension SettingsViewController
         self.backgroundRefreshSwitch.isOn = UserDefaults.standard.isBackgroundRefreshEnabled
         self.noIdleTimeoutSwitch.isOn = UserDefaults.standard.isIdleTimeoutDisableEnabled
         
+        self.MDCSwitch.isOn = UserDefaults.standard.isMDCEnabled
+        
+        let MDCMinimumVersion = OperatingSystemVersion(majorVersion: 14, minorVersion: 0, patchVersion: 0)
+        let MDCMaximumVersion1 = OperatingSystemVersion(majorVersion: 15, minorVersion: 7, patchVersion: 2)
+        let MDCMaximumVersionSep = OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0)
+        let MDCMaximumVersion2 = OperatingSystemVersion(majorVersion: 16, minorVersion: 2, patchVersion: 0)
+        
+        var canUseMDC = false
+        
+        if ProcessInfo.processInfo.isOperatingSystemAtLeast(MDCMinimumVersion) { // at least 14.0.0
+            if !ProcessInfo.processInfo.isOperatingSystemAtLeast(MDCMaximumVersion1) { // not at least 15.7.2 (less than 15.7.2)
+                canUseMDC = true
+            }
+            if !ProcessInfo.processInfo.isOperatingSystemAtLeast(MDCMaximumVersion2) && ProcessInfo.processInfo.isOperatingSystemAtLeast(MDCMaximumVersionSep) { // not at least 16.2.0 but more than 16.0.0
+                canUseMDC = true
+            }
+        }
+        
+        self.MDCSwitch.isEnabled = canUseMDC
+        
         if self.isViewLoaded
         {
             self.tableView.reloadData()
@@ -212,6 +234,16 @@ private extension SettingsViewController
             
         case .credits:
             settingsHeaderFooterView.primaryLabel.text = NSLocalizedString("CREDITS", comment: "")
+        
+        case .mdc:
+            if isHeader
+            {
+                settingsHeaderFooterView.primaryLabel.text = NSLocalizedString("MACDIRTYCOW", comment: "")
+            }
+            else
+            {
+                settingsHeaderFooterView.secondaryLabel.text = NSLocalizedString("This only works on iOS 15 - 15.7.1 and iOS 16 - iOS 16.1.2", comment: "")
+            }
             
         case .debug:
             settingsHeaderFooterView.primaryLabel.text = NSLocalizedString("DEBUG", comment: "")
@@ -288,6 +320,17 @@ private extension SettingsViewController
     @IBAction func toggleNoIdleTimeoutEnabled(_ sender: UISwitch)
     {
         UserDefaults.standard.isIdleTimeoutDisableEnabled = sender.isOn
+    }
+    
+    @IBAction func toggleMDCEnabled(_ sender: UISwitch)
+    {
+        UserDefaults.standard.isMDCEnabled = sender.isOn
+        if sender.isOn {
+            UserDefaults.standard.activeAppsLimit = 69420
+        }
+        else {
+            UserDefaults.standard.activeAppsLimit = 3
+        }
     }
     
     @available(iOS 14, *)
@@ -450,7 +493,7 @@ extension SettingsViewController
         {
         case .signIn where self.activeTeam != nil: return nil
         case .account where self.activeTeam == nil: return nil
-        case .signIn, .account, .patreon, .appRefresh, .credits, .debug:
+        case .signIn, .account, .patreon, .appRefresh, .credits, .debug, .mdc:
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderFooterView") as! SettingsHeaderFooterView
             self.prepare(headerView, for: section, isHeader: true)
             return headerView
@@ -470,7 +513,7 @@ extension SettingsViewController
             self.prepare(footerView, for: section, isHeader: false)
             return footerView
             
-        case .account, .credits, .debug, .instructions: return nil
+        case .account, .credits, .debug, .instructions, .mdc: return nil
         }
     }
 
@@ -481,7 +524,7 @@ extension SettingsViewController
         {
         case .signIn where self.activeTeam != nil: return 1.0
         case .account where self.activeTeam == nil: return 1.0
-        case .signIn, .account, .patreon, .appRefresh, .credits, .debug:
+        case .signIn, .account, .patreon, .appRefresh, .credits, .debug, .mdc:
             let height = self.preferredHeight(for: self.prototypeHeaderFooterView, in: section, isHeader: true)
             return height
             
@@ -496,7 +539,7 @@ extension SettingsViewController
         {
         case .signIn where self.activeTeam != nil: return 1.0
         case .account where self.activeTeam == nil: return 1.0            
-        case .signIn, .patreon, .appRefresh:
+        case .signIn, .patreon, .appRefresh, .mdc:
             let height = self.preferredHeight(for: self.prototypeHeaderFooterView, in: section, isHeader: false)
             return height
             

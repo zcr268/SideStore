@@ -30,7 +30,7 @@ public extension UserDefaults
     @NSManaged var isIdleTimeoutDisableEnabled: Bool
     @NSManaged var isDebugModeEnabled: Bool
     @NSManaged var presentedLaunchReminderNotification: Bool
-    
+    @NSManaged var isMDCEnabled: Bool
     @NSManaged var legacySideloadedApps: [String]?
     
     @NSManaged var isLegacyDeactivationSupported: Bool
