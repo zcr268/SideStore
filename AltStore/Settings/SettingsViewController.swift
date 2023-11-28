@@ -156,8 +156,6 @@ private extension SettingsViewController
         self.backgroundRefreshSwitch.isOn = UserDefaults.standard.isBackgroundRefreshEnabled
         self.noIdleTimeoutSwitch.isOn = UserDefaults.standard.isIdleTimeoutDisableEnabled
         
-        self.MDCSwitch.isOn = UserDefaults.standard.isMDCEnabled
-        
         let MDCMinimumVersion = OperatingSystemVersion(majorVersion: 14, minorVersion: 0, patchVersion: 0)
         let MDCMaximumVersion1 = OperatingSystemVersion(majorVersion: 15, minorVersion: 7, patchVersion: 2)
         let MDCMaximumVersionSep = OperatingSystemVersion(majorVersion: 16, minorVersion: 0, patchVersion: 0)
@@ -174,6 +172,11 @@ private extension SettingsViewController
             }
         }
         
+        if !canUseMDC {
+            UserDefaults.standard.isMDCEnabled = false
+        }
+        
+        self.MDCSwitch.isOn = UserDefaults.standard.isMDCEnabled
         self.MDCSwitch.isEnabled = canUseMDC
         
         if self.isViewLoaded
@@ -188,7 +191,7 @@ private extension SettingsViewController
         settingsHeaderFooterView.secondaryLabel.isHidden = isHeader
         settingsHeaderFooterView.button.isHidden = true
         
-        settingsHeaderFooterView.layoutMargins.bottom = isHeader ? 0 : 8
+        settingsHeaderFooterView.layoutMargins.bottom = isHeader ? 0 : 9
         
         switch section
         {
@@ -242,7 +245,12 @@ private extension SettingsViewController
             }
             else
             {
+                #if MACDIRTYCOW
                 settingsHeaderFooterView.secondaryLabel.text = NSLocalizedString("This only works on iOS 15 - 15.7.1 and iOS 16 - iOS 16.1.2", comment: "")
+                #else
+                settingsHeaderFooterView.secondaryLabel.text = NSLocalizedString("This only works on iOS 15 - 15.7.1 and iOS 16 - iOS 16.1.2. This build is not a MacDirtyCow build, therefore this will only lift the 3 app limit", comment: "")
+                #endif
+                settingsHeaderFooterView.secondaryLabel.isHidden = false
             }
             
         case .debug:
@@ -508,12 +516,12 @@ extension SettingsViewController
         switch section
         {
         case .signIn where self.activeTeam != nil: return nil
-        case .signIn, .patreon, .appRefresh:
+        case .signIn, .patreon, .appRefresh, .mdc:
             let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderFooterView") as! SettingsHeaderFooterView
             self.prepare(footerView, for: section, isHeader: false)
             return footerView
             
-        case .account, .credits, .debug, .instructions, .mdc: return nil
+        case .account, .credits, .debug, .instructions: return nil
         }
     }
 
