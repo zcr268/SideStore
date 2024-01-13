@@ -2,7 +2,7 @@ name: Nightly SideStore build
 on:
   push:
     branches:
-      - develop
+      - connect-develop
 
 jobs:
   build:
