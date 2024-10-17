@@ -1017,7 +1017,7 @@ private extension AppManager
     
     func removeAppExtensions(from application: ALTApplication, extensions: Set<ALTApplication>, _ presentingViewController: UIViewController, completion: @escaping (Result<Void, Error>) -> Void)
     {
-        guard !application.appExtensions.isEmpty, !UserDefaults.standard.isAppLimitDisabled else { return completion(.success(())) }
+        guard !application.appExtensions.isEmpty else { return completion(.success(())) }
         
         let firstSentence: String
         
@@ -1178,12 +1178,12 @@ private extension AppManager
                 {
                     throw error
                 }
-
+/*
                 guard case .install = appOperation else {
                     operation.finish()
                     return
                 }
-                
+*/
                 guard let extensions = context.app?.appExtensions else { throw OperationError.invalidParameters }
                 
                 guard let app = context.app, let presentingViewController = context.authenticatedContext.presentingViewController else { throw OperationError.invalidParameters }
