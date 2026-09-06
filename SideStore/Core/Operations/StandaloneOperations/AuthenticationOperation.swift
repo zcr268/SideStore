@@ -97,55 +97,66 @@ final class AuthenticationOperation: BaseStandaloneOperation<AuthenticatedOperat
         }
         try await super.executePreconditionCheck(parentProgress: parentProgress)
 
-        let authResult = try await TaskChainCoalescerWithProgress.shared.coalesce(
-            key: "apple_auth",
-            onProgress: { [weak self] progress in
-                self?.setProgress(progress)
-            }
-        ) { [weak self] reportProgress -> AuthenticationResult in
-            guard let self = self else { throw OperationError.cancelled }
-            
-            do {
-                let result: AuthenticationResult
-
-                if var session = AuthManager.shared.session,
-                   let team = AuthManager.shared.team,
-                   (self.skipCertificateProvisioning || CertificateManager.shared.activeCertificate != nil)
-                {
-                    session.anisetteData = try await self.getAnisetteData(for: session)
-                    let certToUse = CertificateManager.shared.activeCertificate?.certificate
-                    
-                    self.debugLog("[Authentication] Using cached session, team, certificate")
-                    result = AuthenticationResult(
-                        team: team, 
-                        certificate: certToUse, 
-                        session: session, 
-                        portalCertificates: self.context.portalCertificates
-                    )
-                } else {
-                    result = try await self.startAuthentication(reportProgress: reportProgress)
+        let authResult: AuthenticationResult
+        do {
+            authResult = try await TaskChainCoalescerWithProgress.shared.coalesce(
+                key: "apple_auth",
+                onProgress: { [weak self] progress in
+                    self?.setProgress(progress)
                 }
+            ) { [weak self] reportProgress -> AuthenticationResult in
+                guard let self = self else { throw OperationError.cancelled }
                 
-                try await self.finalizeAuthentication(result: .success(result))
-                reportProgress(100)
-                return result
-            } catch {
-                self.debugLog("[AuthenticationOperation] execute caught error during authentication: \(error). Cleaning up...")
-                // if auth was good, but certs and others had errors don't signOut ourselves.
-                if !AuthManager.shared.hasStoredPassword &&
-                   !AuthManager.shared.hasStoredXcodeToken
-                {
-                    AuthManager.shared.signOut()
+                do {
+                    let result: AuthenticationResult
+
+                    if var session = AuthManager.shared.session,
+                       let team = AuthManager.shared.team,
+                       (self.skipCertificateProvisioning || CertificateManager.shared.activeCertificate != nil)
+                    {
+                        session.anisetteData = try await self.getAnisetteData(for: session)
+                        let certToUse = CertificateManager.shared.activeCertificate?.certificate
+                        
+                        self.debugLog("[Authentication] Using cached session, team, certificate")
+                        result = AuthenticationResult(
+                            team: team, 
+                            certificate: certToUse, 
+                            session: session, 
+                            portalCertificates: self.context.portalCertificates
+                        )
+                    } else {
+                        result = try await self.startAuthentication(reportProgress: reportProgress)
+                    }
+                    
+                    reportProgress(100)
+                    return result
+                } catch {
+                    self.debugLog("[AuthenticationOperation] execute caught error during authentication: \(error). Cleaning up...")
+                    // if auth was good, but certs and others had errors don't signOut ourselves.
+                    if !AuthManager.shared.hasStoredPassword &&
+                       !AuthManager.shared.hasStoredXcodeToken
+                    {
+                        AuthManager.shared.signOut()
+                    }
+                    throw error
                 }
-                try? await self.finalizeAuthentication(result: .failure(error))
-                throw error
             }
+        } catch {
+            try? await self.finalizeAuthentication(result: .failure(error))
+            throw error
         }
         
         self.context.team               = authResult.team
         self.context.signingCertificate = authResult.certificate
         self.context.session            = authResult.session
         self.context.portalCertificates = authResult.portalCertificates
+
+        do {
+            try await self.finalizeAuthentication(result: .success(authResult))
+        } catch {
+            try? await self.finalizeAuthentication(result: .failure(error))
+            throw error
+        }
 
         self.setProgress(100)
         return authResult
