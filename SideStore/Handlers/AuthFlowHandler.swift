@@ -106,20 +106,12 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
     }
     
     @MainActor
-    func verificationCode(for mode: TwoFactorMode) async throws -> TwoFactorAction {
+    func verificationCode(for request: TwoFactorRequest) async throws -> TwoFactorResponse {
         guard self.isPresenterAvailable else {
             throw OperationError.invalidOperationContext("AuthFlowHandler: Cannot prompt for 2FA verification code because presenting view controller is unavailable")
         }
 
-        let errorMessage: String?
-        switch mode {
-        case .trustedDevice(let error):
-            errorMessage = error
-        case .sms(_, _, let error):
-            errorMessage = error
-        case .voice(_, _, let error):
-            errorMessage = error
-        }
+        let errorMessage: String? = request.error
 
         if let errorMessage, !errorMessage.isEmpty {
             let shouldRetry = try await showErrorRetryAlert(message: errorMessage)
@@ -128,7 +120,17 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
             }
         }
 
-        switch mode {
+        switch request {
+        case .selectDeliveryMethod(let preferredMode, let phoneNumbers):
+            return try await withCheckedThrowingContinuation { continuation in
+                self.showDeliveryMethodDialog(
+                    preferredMode: preferredMode,
+                    phoneNumbers: phoneNumbers,
+                    activeID: phoneNumbers.first?.id ?? "",
+                    continuation: continuation
+                )
+            }
+
         case .trustedDevice:
             return try await promptCodeEntry(
                 title: NSLocalizedString("Please enter the 6-digit verification code that was sent to your Apple devices.", comment: ""),
@@ -241,7 +243,7 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                                  phoneNumbers: [TrustedPhoneNumber],
                                  activePhoneID: String,
                                  currentDeliveryMode: TwoFactorDeliveryMode?,
-                                 isTrustedDevice: Bool) async throws -> TwoFactorAction
+                                 isTrustedDevice: Bool) async throws -> TwoFactorResponse
     {
         return try await withCheckedThrowingContinuation { continuation in
             let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
@@ -263,13 +265,13 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                 }
                 let textField = alertController.textFields?.first
                 let code = textField?.text ?? ""
-                continuation.resume(returning: .code(code))
+                continuation.resume(returning: .verificationCode(code))
             }
             submitAction.isEnabled = false
             alertController.addAction(submitAction)
 
             if isTrustedDevice {
-                let smsAction = UIAlertAction(title: NSLocalizedString("Send Code to Phone", comment: ""), style: .default) { [weak self] _ in
+                let otherMethodsAction = UIAlertAction(title: NSLocalizedString("Other Options…", comment: ""), style: .default) { [weak self] _ in
                     if let observer = observer {
                         NotificationCenter.default.removeObserver(observer)
                     }
@@ -277,9 +279,9 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                         continuation.resume(returning: .cancel)
                         return
                     }
-                    self.showDeliveryMethodDialog(phoneNumbers: phoneNumbers, activeID: activePhoneID.isEmpty ? "1" : activePhoneID, continuation: continuation)
+                    self.showDeliveryMethodDialog(preferredMode: .sms, phoneNumbers: phoneNumbers, activeID: activePhoneID, continuation: continuation)
                 }
-                alertController.addAction(smsAction)
+                alertController.addAction(otherMethodsAction)
             } else if let mode = currentDeliveryMode {
                 let resendTitle = (mode == .sms)
                     ? NSLocalizedString("Resend SMS", comment: "")
@@ -288,21 +290,26 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                     if let observer = observer {
                         NotificationCenter.default.removeObserver(observer)
                     }
-                    continuation.resume(returning: .requestPhone(id: activePhoneID, mode: mode))
+                    if case .voice = mode {
+                        return continuation.resume(returning: .requestVoice(phoneID: activePhoneID))
+                    }
+                    if case .sms = mode {
+                        return continuation.resume(returning: .requestSMS(phoneID: activePhoneID))
+                    }
                 }
                 alertController.addAction(resendAction)
 
-                let switchTitle = (mode == .sms)
-                    ? NSLocalizedString("Call Me Instead", comment: "")
-                    : NSLocalizedString("Send SMS Instead", comment: "")
-                let oppositeMode: TwoFactorDeliveryMode = (mode == .sms) ? .voice : .sms
-                let switchModeAction = UIAlertAction(title: switchTitle, style: .default) { _ in
+                let otherMethodsAction = UIAlertAction(title: NSLocalizedString("Other Options…", comment: ""), style: .default) { [weak self] _ in
                     if let observer = observer {
                         NotificationCenter.default.removeObserver(observer)
                     }
-                    continuation.resume(returning: .requestPhone(id: activePhoneID, mode: oppositeMode))
+                    guard let self = self else {
+                        continuation.resume(returning: .cancel)
+                        return
+                    }
+                    self.showDeliveryMethodDialog(preferredMode: .trustedDevice, phoneNumbers: phoneNumbers, activeID: activePhoneID, continuation: continuation)
                 }
-                alertController.addAction(switchModeAction)
+                alertController.addAction(otherMethodsAction)
 
                 if phoneNumbers.count > 1 {
                     let changeNumberAction = UIAlertAction(title: NSLocalizedString("Choose Different Number", comment: ""), style: .default) { [weak self] _ in
@@ -331,9 +338,10 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
     }
 
     @MainActor
-    private func showDeliveryMethodDialog(phoneNumbers: [TrustedPhoneNumber],
+    private func showDeliveryMethodDialog(preferredMode: TwoFactorDeliveryMode,
+                                          phoneNumbers: [TrustedPhoneNumber],
                                           activeID: String,
-                                          continuation: CheckedContinuation<TwoFactorAction, Error>)
+                                          continuation: CheckedContinuation<TwoFactorResponse, Error>)
     {
         let alert = UIAlertController(
             title: NSLocalizedString("Verification Method", comment: ""),
@@ -341,7 +349,20 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
             preferredStyle: .alert
         )
 
-        let smsAction = UIAlertAction(title: NSLocalizedString("Text Message (SMS)", comment: ""), style: .default) { [weak self] _ in
+        let isAppleDefault = (preferredMode == .trustedDevice)
+        let trustedDeviceTitle = isAppleDefault
+            ? NSLocalizedString("Apple Devices (Recommended)", comment: "")
+            : NSLocalizedString("Apple Devices", comment: "")
+        let trustedDeviceAction = UIAlertAction(title: trustedDeviceTitle, style: .default) { _ in
+            continuation.resume(returning: .requestTrustedDevice)
+        }
+        alert.addAction(trustedDeviceAction)
+
+        let isSMSDefault = (preferredMode == .sms)
+        let smsTitle = isSMSDefault
+            ? NSLocalizedString("Text Message (SMS) (Recommended)", comment: "")
+            : NSLocalizedString("Text Message (SMS)", comment: "")
+        let smsAction = UIAlertAction(title: smsTitle, style: .default) { [weak self] _ in
             guard let self = self else {
                 continuation.resume(returning: .cancel)
                 return
@@ -350,12 +371,16 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                 self.showPhoneNumberSelectionDialog(phoneNumbers: phoneNumbers, activeID: activeID, mode: .sms, continuation: continuation)
             } else {
                 let targetID = phoneNumbers.first?.id ?? activeID
-                continuation.resume(returning: .requestPhone(id: targetID, mode: .sms))
+                continuation.resume(returning: .requestSMS(phoneID: targetID))
             }
         }
         alert.addAction(smsAction)
 
-        let voiceAction = UIAlertAction(title: NSLocalizedString("Phone Call", comment: ""), style: .default) { [weak self] _ in
+        let isVoiceDefault = (preferredMode == .voice)
+        let voiceTitle = isVoiceDefault
+            ? NSLocalizedString("Phone Call (Recommended)", comment: "")
+            : NSLocalizedString("Phone Call", comment: "")
+        let voiceAction = UIAlertAction(title: voiceTitle, style: .default) { [weak self] _ in
             guard let self = self else {
                 continuation.resume(returning: .cancel)
                 return
@@ -364,7 +389,7 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
                 self.showPhoneNumberSelectionDialog(phoneNumbers: phoneNumbers, activeID: activeID, mode: .voice, continuation: continuation)
             } else {
                 let targetID = phoneNumbers.first?.id ?? activeID
-                continuation.resume(returning: .requestPhone(id: targetID, mode: .voice))
+                continuation.resume(returning: .requestVoice(phoneID: targetID))
             }
         }
         alert.addAction(voiceAction)
@@ -373,6 +398,15 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
             continuation.resume(returning: .cancel)
         })
 
+        switch preferredMode {
+        case .trustedDevice:
+            alert.preferredAction = trustedDeviceAction
+        case .sms:
+            alert.preferredAction = smsAction
+        case .voice:
+            alert.preferredAction = voiceAction
+        }
+
         self.present(alert)
     }
 
@@ -380,7 +414,7 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
     private func showPhoneNumberSelectionDialog(phoneNumbers: [TrustedPhoneNumber],
                                                  activeID: String,
                                                  mode: TwoFactorDeliveryMode,
-                                                 continuation: CheckedContinuation<TwoFactorAction, Error>)
+                                                 continuation: CheckedContinuation<TwoFactorResponse, Error>)
     {
         let alert = UIAlertController(
             title: NSLocalizedString("Select Phone Number", comment: ""),
@@ -392,7 +426,12 @@ class AuthFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
             let isCurrent = (phone.id == activeID)
             let buttonTitle = isCurrent ? "\(phone.number) (Current)" : phone.number
             let action = UIAlertAction(title: buttonTitle, style: .default) { _ in
-                continuation.resume(returning: .requestPhone(id: phone.id, mode: mode))
+                if case .voice = mode {
+                    return continuation.resume(returning: .requestVoice(phoneID: phone.id))
+                }
+                if case .sms = mode {
+                    return continuation.resume(returning: .requestSMS(phoneID: phone.id))
+                }
             }
             alert.addAction(action)
         }

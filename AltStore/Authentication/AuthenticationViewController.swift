@@ -168,7 +168,7 @@ private extension AuthenticationViewController
         self.authenticationHandler?(emailAddress, password) { (result) in
             switch result
             {
-            case .failure(ALTAppleAPIError.requiresTwoFactorAuthentication):
+            case .failure(DeveloperPortalError.userCancelled):
                 debugLog("AuthenticationViewController: Two-factor authentication cancelled by user.")
                 DispatchQueue.main.async {
                     self.signInButton.isIndicatingActivity = false

@@ -335,8 +335,8 @@ final class AuthenticationOperation: BaseStandaloneOperation<AuthenticatedOperat
             accountRepairHandler: { url, message in
                 await handler.accountRepair(url: url, message: message)
             },
-            verificationHandler: { mode in
-                try await handler.verificationCode(for: mode)
+            verificationHandler: { request in
+                try await handler.verificationCode(for: request)
             }
         )
         
