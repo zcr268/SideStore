@@ -75,6 +75,8 @@ public final class AuthManager: @unchecked Sendable {
         debugLog("[AuthManager] Clearing sign-in info from keychain.")
         Keychain.shared.clearSignInInfo(keepAnisetteData: keepAnisetteData)
         debugLog("[AuthManager] Cleared sign-in info from keychain.")
+
+        AnisetteDataManager.shared.clearCache()
     }
     
     @discardableResult

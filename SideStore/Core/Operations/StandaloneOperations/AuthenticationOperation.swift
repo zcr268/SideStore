@@ -58,7 +58,6 @@ final class AuthenticationOperation: BaseStandaloneOperation<AuthenticatedOperat
     
     private var appleIDEmailAddress: String?
     private var requiresPostAuthFlow = false
-    private var lastFetchedAnisetteData: ALTAnisetteData?
     
     let skipDeviceRegistration: Bool
     let skipCertificateProvisioning: Bool
@@ -75,16 +74,8 @@ final class AuthenticationOperation: BaseStandaloneOperation<AuthenticatedOperat
         """)
     }
 
-    private func getAnisetteData(for session: ALTAppleAPISession? = nil) async throws -> ALTAnisetteData {
-        let currentAnisette = session?.anisetteData ?? self.lastFetchedAnisetteData
-        if let currentAnisette = currentAnisette,
-           currentAnisette.date.timeIntervalSinceNow >= -AnisetteProvider.validDuration {
-            return currentAnisette
-        }
-
-        let anisetteData = try await AnisetteProvider.fetch(handler: context.anisetteServerHandler)
-        self.lastFetchedAnisetteData = anisetteData
-        return anisetteData
+    private func getAnisetteData() async throws -> ALTAnisetteData {
+        try await AnisetteProvider.fetch(handler: context.anisetteServerHandler)
     }
     
     // Main Pipeline Execution
@@ -114,7 +105,7 @@ final class AuthenticationOperation: BaseStandaloneOperation<AuthenticatedOperat
                        let team = AuthManager.shared.team,
                        (self.skipCertificateProvisioning || CertificateManager.shared.activeCertificate != nil)
                     {
-                        session.anisetteData = try await self.getAnisetteData(for: session)
+                        session.anisetteData = try await self.getAnisetteData()
                         let certToUse = CertificateManager.shared.activeCertificate?.certificate
                         
                         self.debugLog("[Authentication] Using cached session, team, certificate")
@@ -725,8 +716,6 @@ private extension AuthenticationOperation {
 
 
 private enum AnisetteProvider {
-    static let validDuration: TimeInterval = 40.0
-
     static func fetch(handler: AnisetteServerHandler) async throws -> ALTAnisetteData {
         if UserDefaults.standard.useOnDeviceAnisette {
             debugLog("[AuthenticationOperation] Fetching anisette via On-Device Anisette (ODA)...")
@@ -747,15 +736,18 @@ private enum AnisetteProvider {
         let lastServer = UserDefaults.standard.menuAnisetteURL
         let startIndex = servers.firstIndex(where: { $0.absoluteString == lastServer }) ?? 0
 
-        let provider = SideSign.AnisetteDataProvider.shared
-        let existingBlob = AnisetteDataManager.shared.anisetteAdiBlob.flatMap { Data(base64Encoded: $0) }
+        let provider = SideSign.AnisetteDataManager.shared
+        let existingBlob = AnisetteConfigManager.shared.anisetteAdiBlob.flatMap { Data(base64Encoded: $0) }
+        let identifier = await AnisetteConfigManager.shared.resolveDeviceIdentifier()
 
         let (anisetteData, newAdiBlob) = try await provider.fetchAnisetteDataWithFailover(
             servers: UserDefaults.standard.disableAnisetteRotation ? [servers[startIndex]] : servers,
             startIndex: startIndex,
+            identifier: identifier,
             existingAdiBlob: existingBlob,
             onError: { error in
-                if case AnisetteError.outdatedV1Server(let serverURL, _) = error {
+                if let anisetteError = error as? SideSign.AnisetteError,
+                   case .outdatedV1Server(let serverURL, _) = anisetteError {
                     if UserDefaults.standard.defaultServerURL == serverURL.absoluteString {
                         return true
                     }
@@ -774,7 +766,7 @@ private enum AnisetteProvider {
         )
 
         if let freshBlob = newAdiBlob {
-            AnisetteDataManager.shared.anisetteAdiBlob = freshBlob.base64EncodedString()
+            AnisetteConfigManager.shared.anisetteAdiBlob = freshBlob.base64EncodedString()
         }
 
         return anisetteData
