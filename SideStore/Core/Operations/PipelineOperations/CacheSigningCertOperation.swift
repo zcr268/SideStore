@@ -9,7 +9,7 @@
 import Foundation
 import SideSign
 
-final class CacheSigningCertOperation: BasePipelineOperation<AppOperationContext, Void>, @unchecked Sendable {
+final class CacheSigningCertOperation: BasePipelineOperation<InstallAppOperationContext, Void>, @unchecked Sendable {
     override func execute(parentProgress: Progress?) async throws {
         let startTime = CFAbsoluteTimeGetCurrent()
         debugLog("[CacheSigningCertOperation] execute() started")

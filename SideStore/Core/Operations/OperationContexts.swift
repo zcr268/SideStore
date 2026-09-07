@@ -177,20 +177,6 @@ class StandaloneOperationContext: OperationContext
     }
 }
 
-final class AuthenticatedOperationContext: StandaloneOperationContext
-{
-    init(
-        error: Error? = nil,
-        dbBackgroundContext: NSManagedObjectContext
-    ) {
-        super.init(steps: .authenticate, error: error, dbBackgroundContext: dbBackgroundContext)
-    }
-
-    init(context: AuthenticatedOperationContext) {
-        super.init(context: context)
-    }
-}
-
 class PipelineOperationContext: OperationContext
 {
     let pipelineSteps: [PipelineExecutionStep]
@@ -250,7 +236,7 @@ final class SharedPipelineContext: @unchecked Sendable
     }
 }
 
-class AppOperationContext: PipelineOperationContext
+class InstallAppOperationContext: PipelineOperationContext
 {
     let bundleIdentifier: String
     var customBundleIdentifier: String?
@@ -271,49 +257,11 @@ class AppOperationContext: PipelineOperationContext
     var targetCertStatus: CertificateStatus?
     var appendTeamID: Bool = true
 
-    let authenticatedContext: AuthenticatedOperationContext
+    let standaloneContext: StandaloneOperationContext
     var sharedContext: SharedPipelineContext?
 
     var targetBundleIdentifier: String { customBundleIdentifier ?? bundleIdentifier }
 
-
-    override var error: Error? {
-        get { localError ?? authenticatedContext.error }
-        set { localError = newValue
-            if authenticatedContext.error == nil
-            {
-                // Assign newValue to authenticatedContext.error if the latter is nil.
-                // This fixes some operations continuing even after an error has occured.
-                authenticatedContext.error = newValue
-            }
-        }
-    }
-    private var localError: Error?
-
-    init(
-        pipelineSteps: [PipelineExecutionStep],
-        bundleIdentifier: String,
-        authenticatedContext: AuthenticatedOperationContext,
-        sharedContext: SharedPipelineContext? = nil,
-        handler: PipelineExecutionHandler,
-        overrideSigningCertificate: ALTCertificate? = nil
-    ) {
-        self.bundleIdentifier = bundleIdentifier
-        self.authenticatedContext = authenticatedContext
-        self.sharedContext = sharedContext
-        self.overrideSigningCertificate = overrideSigningCertificate
-        self.activeSigningCertificate = CertificateManager.shared.activeCertificate?.certificate
-        super.init(
-            pipelineSteps: pipelineSteps,
-            handler: handler,
-            error: nil,
-            dbBackgroundContext: authenticatedContext.dbBackgroundContext
-        )
-    }
-}
-
-class InstallAppOperationContext: AppOperationContext
-{
     lazy var temporaryDirectory: URL = {
         let temporaryDirectory = FileManager.default.uniqueTemporaryURL()
         do {
@@ -352,25 +300,41 @@ class InstallAppOperationContext: AppOperationContext
     // Non-nil when installing from a source.
     @AsyncManaged
     var appVersion: AppVersion?
-    
+
+    override var error: Error? {
+        get { localError ?? standaloneContext.error }
+        set { localError = newValue
+            if standaloneContext.error == nil
+            {
+                // Assign newValue to standaloneContext.error if the latter is nil.
+                // This fixes some operations continuing even after an error has occured.
+                standaloneContext.error = newValue
+            }
+        }
+    }
+    private var localError: Error?
+
     init(
         pipelineSteps: [PipelineExecutionStep],
         bundleIdentifier: String,
-        authenticatedContext: AuthenticatedOperationContext,
+        standaloneContext: StandaloneOperationContext,
         sharedContext: SharedPipelineContext? = nil,
         handler: PipelineExecutionHandler,
         additionalEntitlements: [ALTEntitlement: any Sendable] = [:],
+        activeSigningCertificate: ALTCertificate? = nil,
         overrideSigningCertificate: ALTCertificate? = nil
-    ){
+    ) {
+        self.bundleIdentifier = bundleIdentifier
+        self.standaloneContext = standaloneContext
+        self.sharedContext = sharedContext
         self.additionalEntitlements = additionalEntitlements
+        self.activeSigningCertificate = activeSigningCertificate
+        self.overrideSigningCertificate = overrideSigningCertificate
         super.init(
             pipelineSteps: pipelineSteps,
-            bundleIdentifier: bundleIdentifier,
-            authenticatedContext: authenticatedContext,
-            sharedContext: sharedContext,
             handler: handler,
-            overrideSigningCertificate: overrideSigningCertificate
+            error: nil,
+            dbBackgroundContext: standaloneContext.dbBackgroundContext
         )
     }
-
 }

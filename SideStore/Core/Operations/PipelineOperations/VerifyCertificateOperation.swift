@@ -11,10 +11,10 @@ import Foundation
 import CoreData
 import SideSign
 
-final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContext, Void>, @unchecked Sendable {
+final class VerifyCertificateOperation: BasePipelineOperation<InstallAppOperationContext, Void>, @unchecked Sendable {
     private let willResign: Bool
     
-    init(context: AppOperationContext, willResign: Bool = true) throws {
+    init(context: InstallAppOperationContext, willResign: Bool = true) throws {
         self.willResign = willResign
         try super.init(context: context)
     }
@@ -29,7 +29,7 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
         try await super.executePreconditionCheck(parentProgress: parentProgress)
         self.setProgress(10)
         
-        let auth = try await AuthManager.shared.getAuthenticatedSession(context: self.context)
+        let auth = try await AuthManager.shared.getAuthenticatedSession()
         let team = auth.team
         let session = auth.session
         
@@ -142,8 +142,7 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
     private func persistStateIfChanged(bundleID: String, status: CertificateStatus, initialStatus: CertificateStatus) async {
         guard status != initialStatus else { return }
         
-        if let installContext = self.context as? InstallAppOperationContext,
-           let installedApp = installContext.installedApp {
+        if let installedApp = self.context.installedApp {
             installedApp.certificateStatus = status
         }
         

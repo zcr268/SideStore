@@ -260,8 +260,8 @@ struct PipelineStepDefinition {
 }
 
 struct StandaloneStepDefinition {
-    static let authenticate: [StandaloneExecutionStep] = [
-        StandaloneExecutionStep(.authentication, 100)
+    static let signIn: [StandaloneExecutionStep] = [
+        StandaloneExecutionStep(.signIn, 100)
     ]
 
     static let backgroundRefreshApps: [StandaloneExecutionStep] = [
@@ -295,7 +295,7 @@ extension Array where Element == PipelineExecutionStep {
 }
 
 extension Array where Element == StandaloneExecutionStep {
-    static var authenticate:                          [StandaloneExecutionStep] { StandaloneStepDefinition.authenticate                          }
+    static var signIn:                                [StandaloneExecutionStep] { StandaloneStepDefinition.signIn                                }
     static var backgroundRefreshApps:                 [StandaloneExecutionStep] { StandaloneStepDefinition.backgroundRefreshApps                 }
     static var clearAppCache:                         [StandaloneExecutionStep] { StandaloneStepDefinition.clearAppCache                         }
     static var enableJIT:                             [StandaloneExecutionStep] { StandaloneStepDefinition.enableJIT                             }

@@ -578,7 +578,7 @@ class SignInFlowHandler: AnyObject, SignInHandler, AnisetteServerHandler {
     }
     
     @MainActor
-    func resolveResign(mismatchReason: CodeSignValidationReason, context: AuthenticatedOperationContext) async throws -> Bool {
+    func resolveResign(mismatchReason: CodeSignValidationReason, context: StandaloneOperationContext) async throws -> Bool {
         guard self.isPresenterAvailable else {
             throw OperationError.invalidOperationContext("SignInFlowHandler: Cannot resolve resign prompt because presenting view controller is unavailable")
         }

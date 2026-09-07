@@ -25,7 +25,7 @@ class FetchProvisioningProfilesOperation: BasePipelineOperation<InstallAppOperat
             throw error
         }
         
-        let auth = try await AuthManager.shared.getAuthenticatedSession(context: self.context)
+        let auth = try await AuthManager.shared.getAuthenticatedSession()
         let team = auth.team
         let session = auth.session
         

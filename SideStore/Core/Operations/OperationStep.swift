@@ -83,7 +83,7 @@ enum PipelineStep: OperationStep {
 }
 
 enum StandaloneStep: OperationStep {
-    case authentication
+    case signIn
     case backgroundRefreshApps
     case clearAppCache
     case enableJIT
@@ -93,7 +93,7 @@ enum StandaloneStep: OperationStep {
     case unknown
 
     fileprivate static let stepMap: [ObjectIdentifier: StandaloneStep] = [
-        ObjectIdentifier(AuthenticationOperation.self):                          .authentication,
+        ObjectIdentifier(SignInOperation.self):                          .signIn,
         ObjectIdentifier(BackgroundRefreshAppsOperation.self):                   .backgroundRefreshApps,
         ObjectIdentifier(ClearAppCacheOperation.self):                           .clearAppCache,
         ObjectIdentifier(EnableJITOperation.self):                               .enableJIT,

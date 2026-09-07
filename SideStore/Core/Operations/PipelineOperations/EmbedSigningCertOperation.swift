@@ -9,7 +9,7 @@
 import Foundation
 import SideSign
 
-final class EmbedSigningCertOperation: BasePipelineOperation<AppOperationContext, Void>, @unchecked Sendable {
+final class EmbedSigningCertOperation: BasePipelineOperation<InstallAppOperationContext, Void>, @unchecked Sendable {
     override func execute(parentProgress: Progress?) async throws {
         let startTime = CFAbsoluteTimeGetCurrent()
         debugLog("[EmbedSigningCertOperation] execute() started")

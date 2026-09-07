@@ -10,11 +10,11 @@
 import Foundation
 import SideSign
 
-final class PreflightChecksOperation: BasePipelineOperation<AuthenticatedOperationContext, Bool>, @unchecked Sendable {
+final class PreflightChecksOperation: BasePipelineOperation<StandaloneOperationContext, Bool>, @unchecked Sendable {
     let operations: [AppOperation]
     let handler: PreflightChecksHandler?
 
-    init(operations: [AppOperation], handler: PreflightChecksHandler?, context: AuthenticatedOperationContext) throws {
+    init(operations: [AppOperation], handler: PreflightChecksHandler?, context: StandaloneOperationContext) throws {
         self.operations = operations
         self.handler = handler
         try super.init(context: context)

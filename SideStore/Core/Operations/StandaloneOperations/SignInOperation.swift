@@ -441,8 +441,7 @@ private extension SignInOperation {
                 
                 let handler = self.signInHandler
                 do {
-                    let authContext = AuthenticatedOperationContext(dbBackgroundContext: self.context.dbBackgroundContext)
-                    return try await handler.resolveResign(mismatchReason: reason, context: authContext)
+                    return try await handler.resolveResign(mismatchReason: reason, context: self.context)
                 } catch {
                     self.verboseLog("[SignInOperation] validateCodeSign: error occured when handling resolveResign error: \(error)")
                     return false

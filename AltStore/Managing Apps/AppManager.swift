@@ -516,9 +516,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
             do {
                 let managedObjectContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
                 let context = self.makeAuthenticatedContext(dbBackgroundContext: managedObjectContext)
-                try await AuthManager.shared.getAuthenticatedSession(
-                    context: context
-                )
+                try await AuthManager.shared.getAuthenticatedSession()
                 
                 let syncAppIDsOperation = try SyncAppIDsOperation(context: context)
                 try await syncAppIDsOperation.execute()
@@ -610,7 +608,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
 
     @discardableResult
     func install<T: AppProtocol>(_ app: T, presentingViewController: UIViewController?,
-                                 context: AuthenticatedOperationContext? = nil,
+                                 context: StandaloneOperationContext? = nil,
                                  completionHandler: @escaping (Result<InstalledApp, Error>) -> Void) -> RefreshGroup
     {
         debugLog("[AppManager] install() called for app: \(app.bundleIdentifier)")
@@ -630,7 +628,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
     @discardableResult
     func installIPA(at ipaURL: URL,
                     presentingViewController: UIViewController? = nil,
-                    context: AuthenticatedOperationContext? = nil,
+                    context: StandaloneOperationContext? = nil,
                     completionHandler: @escaping (Result<InstalledApp, Error>) -> Void) -> RefreshGroup
     {
         debugLog("[AppManager] installIPA() called for file: \(ipaURL.lastPathComponent)")
@@ -875,12 +873,12 @@ extension AppManager: PipelineProgress, PipelineExecutionContext, PipelineErrorL
     }
 
     private func makeAuthenticatedContext(presentingViewController: UIViewController? = nil,
-                                          baseContext: AuthenticatedOperationContext? = nil,
-                                          dbBackgroundContext: NSManagedObjectContext? = nil) -> AuthenticatedOperationContext
+                                          baseContext: StandaloneOperationContext? = nil,
+                                          dbBackgroundContext: NSManagedObjectContext? = nil) -> StandaloneOperationContext
     {
         if let baseContext = baseContext { return baseContext }
         let backgroundContext = dbBackgroundContext ?? DatabaseManager.shared.persistentContainer.newBackgroundContext()
-        return AuthenticatedOperationContext(dbBackgroundContext: backgroundContext)
+        return StandaloneOperationContext(steps: .signIn, dbBackgroundContext: backgroundContext)
     }
     
 

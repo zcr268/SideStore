@@ -41,7 +41,7 @@ private let pipelineStepToggles: [(name: String, step: PipelineStep)] = [
 ]
 
 private let standaloneStepToggles: [(name: String, step: StandaloneStep)] = [
-    ("Authentication",                          .authentication),
+    ("Sign In",                                 .signIn),
     ("Background Refresh Apps",                 .backgroundRefreshApps),
     ("Clear App Cache",                         .clearAppCache),
     ("Enable JIT",                              .enableJIT),
