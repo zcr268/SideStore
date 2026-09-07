@@ -146,11 +146,7 @@ class CertificatesViewModel: ObservableObject {
                 return
             }
             do {
-                let authResult = try await AuthManager.shared.authenticate(
-                    presentingViewController: presentingViewController,
-                    skipDeviceRegistration: true,
-                    skipCertificateProvisioning: true
-                )
+                let authResult = try await AuthManager.shared.authenticate()
                 self.team    = authResult.team
                 self.session = authResult.session
                 
@@ -342,11 +338,7 @@ class CertificatesViewModel: ObservableObject {
         Task { @MainActor in
             defer { self.isLoading = false }
             do {
-                let authResult = try await AuthManager.shared.authenticate(
-                    presentingViewController: presentingViewController,
-                    skipDeviceRegistration: true,
-                    skipCertificateProvisioning: true
-                )
+                let authResult = try await AuthManager.shared.authenticate()
                 self.team    = authResult.team
                 self.session = authResult.session
                 
@@ -371,11 +363,7 @@ class CertificatesViewModel: ObservableObject {
         Task { @MainActor in
             defer { self.isLoading = false }
             do {
-                let authResult = try await AuthManager.shared.authenticate(
-                    presentingViewController: presentingViewController,
-                    skipDeviceRegistration: true,
-                    skipCertificateProvisioning: true
-                )
+                let authResult = try await AuthManager.shared.authenticate()
                 self.team    = authResult.team
                 self.session = authResult.session
                 

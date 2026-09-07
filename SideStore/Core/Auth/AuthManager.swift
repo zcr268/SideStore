@@ -81,30 +81,38 @@ public final class AuthManager: @unchecked Sendable {
     
     @discardableResult
     func authenticate(
+        context: StandaloneOperationContext? = nil
+    ) async throws -> AuthenticationResult {
+        let effectiveContext = context ?? StandaloneOperationContext(
+            steps: .authenticate,
+            dbBackgroundContext: DatabaseManager.shared.persistentContainer.newBackgroundContext()
+        )
+        
+        let authOperation = try AuthenticationOperation(context: effectiveContext)
+        return try await authOperation.execute()
+    }
+    
+    @discardableResult
+    func signIn(
         presentingViewController: UIViewController? = nil,
-        context: AuthenticatedOperationContext? = nil,
         skipDeviceRegistration: Bool = false,
         skipCertificateProvisioning: Bool = false
-    ) async throws -> AuthenticationResult {
-        let effectiveContext: AuthenticatedOperationContext
-        if let context = context {
-            effectiveContext = context
-        } else {
-            let dbBackgroundContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
-            let authFlowHandler = AuthFlowHandler(presentingViewController: presentingViewController)
-            effectiveContext = AuthenticatedOperationContext(
-                authenticationHandler: authFlowHandler,
-                anisetteServerHandler: authFlowHandler,
-                dbBackgroundContext: dbBackgroundContext
-            )
-        }
+    ) async throws -> SignInResult {
+        let dbBackgroundContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
+        let signInFlowHandler = SignInFlowHandler(presentingViewController: presentingViewController)
+        let context = StandaloneOperationContext(
+            steps: .authenticate,
+            dbBackgroundContext: dbBackgroundContext
+        )
         
-        let authOperation = try AuthenticationOperation(
-            context: effectiveContext,
+        let signInOperation = try SignInOperation(
+            context: context,
+            authenticationHandler: signInFlowHandler,
+            anisetteServerHandler: signInFlowHandler,
             skipDeviceRegistration: skipDeviceRegistration,
             skipCertificateProvisioning: skipCertificateProvisioning
         )
-        return try await authOperation.execute()
+        return try await signInOperation.execute()
     }
     
     
@@ -114,18 +122,20 @@ public final class AuthManager: @unchecked Sendable {
         return try await self.portalService.fetchAccount(session: session)
     }
     
-    public func authenticate(appleID: String, 
-                             password: String, 
-                             anisetteData: ALTAnisetteData, 
-                             xcodeVersion: String, 
-                             accountRepairHandler: DeveloperPortal.AccountRepairHandler = DeveloperPortal.defaultAccountRepairHandler,
-                             verificationHandler: DeveloperPortal.VerificationHandler?) async throws -> (ALTAccount, ALTAppleAPISession) 
+    public func signIn(appleID: String, 
+                       password: String, 
+                       anisetteData: ALTAnisetteData, 
+                       xcodeVersion: String, 
+                       machinePassword: String? = nil,
+                       accountRepairHandler: DeveloperPortal.AccountRepairHandler = DeveloperPortal.defaultAccountRepairHandler,
+                       verificationHandler: DeveloperPortal.VerificationHandler?) async throws -> (ALTAccount, ALTAppleAPISession) 
     {
-        return try await self.portalService.authenticate(
+        return try await self.portalService.signIn(
             appleID: appleID, 
             password: password, 
             anisetteData: anisetteData, 
             xcodeVersion: xcodeVersion, 
+            machinePassword: machinePassword,
             accountRepairHandler: accountRepairHandler, 
             verificationHandler: verificationHandler
         )

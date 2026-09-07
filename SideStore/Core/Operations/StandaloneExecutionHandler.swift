@@ -18,6 +18,11 @@ enum ProvisioningErrorDecision {
     case cancel
 }
 
+enum RevokeDecision {
+    case keepExisting
+    case revokeSelected([ALTX509Certificate])
+}
+
 protocol AuthenticationHandler: AnyObject {
     func credentials() async throws -> (String, String)
     func verificationCode(for request: TwoFactorRequest) async throws -> TwoFactorResponse

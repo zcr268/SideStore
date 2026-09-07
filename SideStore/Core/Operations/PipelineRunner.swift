@@ -164,11 +164,10 @@ final class PipelineRunner: Sendable
             {
                 do {
                     let result = try await AuthManager.shared.authenticate(
-                        context: group.context,
-                        skipDeviceRegistration: false
+                        context: group.context
                     )
                     group.context.team = result.team
-                    group.context.signingCertificate = result.certificate
+                    group.context.signingCertificate = CertificateManager.shared.activeCertificate?.certificate
                     group.context.session = result.session
                 } catch {
                     group.context.error = error
