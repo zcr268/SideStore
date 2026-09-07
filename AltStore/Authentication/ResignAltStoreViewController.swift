@@ -28,7 +28,7 @@ final class ResignAltStoreViewController: UIViewController
         self.placeholderView.detailTextLabel.textAlignment = .left
         self.placeholderView.detailTextLabel.textColor = UIColor.white.withAlphaComponent(0.6)
         
-        let reason = self.mismatchReason ?? (self.context?.team?.type == .free ? .freeAccountLimitRevoked : .revoked)
+        let reason = self.mismatchReason ?? (AuthManager.shared.team?.type == .free ? .freeAccountLimitRevoked : .revoked)
         debugLog("[ResignAltStoreViewController] Displaying Resign SideStore Now screen (mismatchReason: \(reason)).")
         let reasonText: String
         

@@ -29,11 +29,9 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
         try await super.executePreconditionCheck(parentProgress: parentProgress)
         self.setProgress(10)
         
-        guard let team = self.context.authenticatedContext.team, let session = self.context.authenticatedContext.session else {
-            debugLog("[VerifyCertificateOperation] Skipping certificate verification: team or session missing in context.")
-            self.setProgress(100)
-            throw OperationError.notAuthenticated
-        }
+        let auth = try await AuthManager.shared.getAuthenticatedSession(context: self.context)
+        let team = auth.team
+        let session = auth.session
         
         let bundleID = self.context.targetBundleIdentifier
         let (appName, installedAppSerial, initialStatus) = await self.fetchInstalledAppInitialState(bundleID: bundleID)
@@ -46,14 +44,14 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
             self.setProgress(30)
             
             let portalCertificateSerials = Set(portalCertificates.compactMap { $0.serialNumber })
-            let signingCertificateSerial = self.context.overrideCertificate?.serialNumber ?? CertificateManager.shared.activeCertificate?.serialNumber
+            let signingCertificateSerial = self.context.targetSigningCertificate?.serialNumber
             
             debugLog("""
             [VerifyCertificateOperation] Parameter Accountability for '\(appName)' (\(bundleID)):
               • installedAppSerial           : \(installedAppSerial ?? "nil")
-              • overrideCertSerial           : \(self.context.overrideCertificate?.serialNumber ?? "nil")
-              • authenticatedCertSerial      : \(self.context.authenticatedContext.signingCertificate?.serialNumber ?? "nil")
-              • signingCertificateSerial     : \(signingCertificateSerial ?? "nil")
+              • overrideCertSerial           : \(self.context.overrideSigningCertificate?.serialNumber ?? "nil")
+              • activeCertSerial             : \(self.context.activeSigningCertificate?.serialNumber ?? "nil")
+              • targetSigningCertSerial      : \(signingCertificateSerial ?? "nil")
               • portalCertificateSerials (\(portalCertificateSerials.count))  : \(Array(portalCertificateSerials))
               • willResign                   : \(self.willResign)
             """)
@@ -77,8 +75,8 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
                 // resigning branch
                 debugLog("[VerifyCertificateOperation] Running in signing mode (resigning) for '\(appName)'...")
                 
-                let certType = self.context.overrideCertificate != nil ? "Override" : "Active"
-                guard let target = self.context.overrideCertificate ?? CertificateManager.shared.activeCertificate?.certificate else {
+                let certType = self.context.overrideSigningCertificate != nil ? "Override" : "Active"
+                guard let target = self.context.targetSigningCertificate else {
                     throw OperationError.invalidParameters("\(certType) certificate is missing.")
                 }
                 
@@ -174,7 +172,7 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
         var activeTeamID: String? = nil
         var isCustomCertActive = false
         
-        if let team = self.context.authenticatedContext.team {
+        if let team = AuthManager.shared.team {
             if let activeCert = CertificateManager.shared.activeCertificate?.certificate,
                let data = activeCert.data {
                 let details = parseCertificate(derData: data)

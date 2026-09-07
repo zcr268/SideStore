@@ -11,12 +11,9 @@ import Foundation
 import CoreData
 import SideSign
 
-struct AuthenticationResult {
-    let team: ALTTeam
-    let session: ALTAppleAPISession
-}
+typealias AuthenticationResult = AuthManager.AuthenticatedSession
 
-final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperationContext, AuthenticationResult>, @unchecked Sendable {
+final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperationContext, AuthManager.AuthenticatedSession>, @unchecked Sendable {
 
     override init(context: StandaloneOperationContext) throws {
         try super.init(context: context)
@@ -28,7 +25,7 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
     }
     
     // Main Pipeline Execution
-    override func execute(parentProgress: Progress?) async throws -> AuthenticationResult {
+    override func execute(parentProgress: Progress?) async throws -> AuthManager.AuthenticatedSession {
         let startTime = CFAbsoluteTimeGetCurrent()
         debugLog("[AuthenticationOperation] execute() started")
         defer {
@@ -37,14 +34,14 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
         }
         try await super.executePreconditionCheck(parentProgress: parentProgress)
 
-        let authResult: AuthenticationResult
+        let authResult: AuthManager.AuthenticatedSession
         do {
             authResult = try await TaskChainCoalescerWithProgress.shared.coalesce(
                 key: "apple_auth",
                 onProgress: { [weak self] progress in
                     self?.setProgress(progress)
                 }
-            ) { [weak self] reportProgress -> AuthenticationResult in
+            ) { [weak self] reportProgress -> AuthManager.AuthenticatedSession in
                 guard let self = self else { throw OperationError.cancelled }
                 
                 // 1. Check for valid in-memory cached session
@@ -52,10 +49,11 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
                    let team = AuthManager.shared.team
                 {
                     session.anisetteData = try await self.getAnisetteData()
+                    AuthManager.shared.session = session
                     
                     self.debugLog("[AuthenticationOperation] Using cached session and team ('\(team.name)').")
                     reportProgress(100)
-                    return AuthenticationResult(
+                    return AuthManager.AuthenticatedSession(
                         team: team, 
                         session: session
                     )
@@ -75,16 +73,11 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
             throw error
         }
         
-        if let authContext = self.context as? AuthenticatedOperationContext {
-            authContext.team = authResult.team
-            authContext.session = authResult.session
-        }
-
         self.setProgress(100)
         return authResult
     }
     
-    private func resolveSessionSilently(reportProgress: @escaping @Sendable (Int64) -> Void) async throws -> AuthenticationResult? {
+    private func resolveSessionSilently(reportProgress: @escaping @Sendable (Int64) -> Void) async throws -> AuthManager.AuthenticatedSession? {
         // Silent session resolution strictly using Keychain Xcode Token
         guard let adsid = AuthManager.shared.adsid, 
               let xcodeToken = AuthManager.shared.xcodeToken 
@@ -105,19 +98,13 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
             )
             
             AuthManager.shared.session = session
-            if let authContext = self.context as? AuthenticatedOperationContext {
-                authContext.session = session
-            }
             
             // Resolve active team from CoreData
             let team = try await self.resolveActiveTeam()
             AuthManager.shared.team = team
-            if let authContext = self.context as? AuthenticatedOperationContext {
-                authContext.team = team
-            }
             
             self.debugLog("[AuthenticationOperation] Successfully resolved session and team ('\(team.name)').")
-            return AuthenticationResult(
+            return AuthManager.AuthenticatedSession(
                 team: team,
                 session: session
             )

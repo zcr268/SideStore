@@ -516,7 +516,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
             do {
                 let managedObjectContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
                 let context = self.makeAuthenticatedContext(dbBackgroundContext: managedObjectContext)
-                try await AuthManager.shared.authenticate(
+                try await AuthManager.shared.getAuthenticatedSession(
                     context: context
                 )
                 

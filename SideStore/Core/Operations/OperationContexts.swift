@@ -179,28 +179,15 @@ class StandaloneOperationContext: OperationContext
 
 final class AuthenticatedOperationContext: StandaloneOperationContext
 {
-    var session: ALTAppleAPISession?
-    var team: ALTTeam?
-    var signingCertificate: ALTCertificate?
-
     init(
-        session: ALTAppleAPISession? = nil,
-        team: ALTTeam? = nil,
-        signingCertificate: ALTCertificate? = nil,
         error: Error? = nil,
         dbBackgroundContext: NSManagedObjectContext
     ) {
-        self.session = session
-        self.team = team
-        self.signingCertificate = signingCertificate
         super.init(steps: .authenticate, error: error, dbBackgroundContext: dbBackgroundContext)
     }
 
     init(context: AuthenticatedOperationContext) {
         super.init(context: context)
-        self.session = context.session
-        self.team = context.team
-        self.signingCertificate = context.signingCertificate
     }
 }
 
@@ -274,12 +261,18 @@ class AppOperationContext: PipelineOperationContext
     var useMainProfile = false
     var isFinished = false
 
-    let authenticatedContext: AuthenticatedOperationContext
-    var sharedContext: SharedPipelineContext?
+    var overrideSigningCertificate: ALTCertificate?
+    let activeSigningCertificate: ALTCertificate?
 
-    var overrideCertificate: ALTCertificate?
+    var targetSigningCertificate: ALTCertificate? {
+        overrideSigningCertificate ?? activeSigningCertificate
+    }
+
     var targetCertStatus: CertificateStatus?
     var appendTeamID: Bool = true
+
+    let authenticatedContext: AuthenticatedOperationContext
+    var sharedContext: SharedPipelineContext?
 
     var targetBundleIdentifier: String { customBundleIdentifier ?? bundleIdentifier }
 
@@ -302,11 +295,14 @@ class AppOperationContext: PipelineOperationContext
         bundleIdentifier: String,
         authenticatedContext: AuthenticatedOperationContext,
         sharedContext: SharedPipelineContext? = nil,
-        handler: PipelineExecutionHandler
+        handler: PipelineExecutionHandler,
+        overrideSigningCertificate: ALTCertificate? = nil
     ) {
         self.bundleIdentifier = bundleIdentifier
         self.authenticatedContext = authenticatedContext
         self.sharedContext = sharedContext
+        self.overrideSigningCertificate = overrideSigningCertificate
+        self.activeSigningCertificate = CertificateManager.shared.activeCertificate?.certificate
         super.init(
             pipelineSteps: pipelineSteps,
             handler: handler,
@@ -363,14 +359,17 @@ class InstallAppOperationContext: AppOperationContext
         authenticatedContext: AuthenticatedOperationContext,
         sharedContext: SharedPipelineContext? = nil,
         handler: PipelineExecutionHandler,
-        additionalEntitlements: [ALTEntitlement: any Sendable] = [:]
+        additionalEntitlements: [ALTEntitlement: any Sendable] = [:],
+        overrideSigningCertificate: ALTCertificate? = nil
     ){
+        self.additionalEntitlements = additionalEntitlements
         super.init(
             pipelineSteps: pipelineSteps,
             bundleIdentifier: bundleIdentifier,
             authenticatedContext: authenticatedContext,
             sharedContext: sharedContext,
-            handler: handler
+            handler: handler,
+            overrideSigningCertificate: overrideSigningCertificate
         )
     }
 

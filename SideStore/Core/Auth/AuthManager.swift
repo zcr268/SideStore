@@ -79,16 +79,21 @@ public final class AuthManager: @unchecked Sendable {
         AnisetteDataManager.shared.clearCache()
     }
     
-    @discardableResult
-    func authenticate(
-        context: StandaloneOperationContext? = nil
-    ) async throws -> AuthenticationResult {
-        let effectiveContext = context ?? StandaloneOperationContext(
-            steps: .authenticate,
-            dbBackgroundContext: DatabaseManager.shared.persistentContainer.newBackgroundContext()
-        )
+    public struct AuthenticatedSession: Sendable {
+        public let team: ALTTeam
+        public let session: ALTAppleAPISession
         
-        let authOperation = try AuthenticationOperation(context: effectiveContext)
+        public init(team: ALTTeam, session: ALTAppleAPISession) {
+            self.team = team
+            self.session = session
+        }
+    }
+    
+    @discardableResult
+    public func getAuthenticatedSession(
+        context: StandaloneOperationContext? = nil
+    ) async throws -> AuthenticatedSession {
+        let authOperation = try AuthenticationOperation(context: context)
         return try await authOperation.execute()
     }
     

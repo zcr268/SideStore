@@ -25,11 +25,9 @@ class FetchProvisioningProfilesOperation: BasePipelineOperation<InstallAppOperat
             throw error
         }
         
-        guard let team = self.context.authenticatedContext.team,
-              let session = self.context.authenticatedContext.session else {
-            self.debugLog("[FetchProvisioningProfiles] Missing parameters: team=\(String(describing: self.context.authenticatedContext.team)), session=\(String(describing: self.context.authenticatedContext.session))")
-            throw OperationError.invalidParameters("FetchProvisioningProfilesOperation.main: self.context.authenticatedContext.team or self.context.authenticatedContext.session is nil")
-        }
+        let auth = try await AuthManager.shared.getAuthenticatedSession(context: self.context)
+        let team = auth.team
+        let session = auth.session
         
         guard let targetAppBundle = self.context.targetAppBundle else {
             self.debugLog("[FetchProvisioningProfiles] App not found in context.")

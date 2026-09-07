@@ -153,22 +153,6 @@ final class PipelineRunner: Sendable
             }
             
             
-            /* Authenticate (if necessary) */
-            if group.context.session == nil
-            {
-                do {
-                    let result = try await AuthManager.shared.authenticate(
-                        context: group.context
-                    )
-                    group.context.team = result.team
-                    group.context.signingCertificate = CertificateManager.shared.activeCertificate?.certificate
-                    group.context.session = result.session
-                } catch {
-                    group.context.error = error
-                    throw error
-                }
-            }
-            
             /* Preflight SideStore specific validations */
             let unhandledOperations = operations.filter { operation in
                 let isSideStore = (operation.app as? ALTApplication)?.isAltStoreApp == true ||

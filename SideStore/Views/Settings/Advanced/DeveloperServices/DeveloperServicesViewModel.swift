@@ -46,7 +46,7 @@ class DeveloperServicesViewModel: ObservableObject {
         guard AuthManager.shared.isAuthenticated else {
             throw OperationError.notAuthenticated
         }
-        let authResult = try await AuthManager.shared.authenticate()
+        let authResult = try await AuthManager.shared.getAuthenticatedSession()
         self.team = authResult.team
         self.session = authResult.session
         return (authResult.team, authResult.session)

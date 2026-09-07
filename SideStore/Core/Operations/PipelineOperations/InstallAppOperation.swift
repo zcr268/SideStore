@@ -39,12 +39,12 @@ final class InstallAppOperation: BasePipelineOperation<InstallAppOperationContex
         }
         
         guard
-            let certificate = context.overrideCertificate ?? context.authenticatedContext.signingCertificate,
+            let certificate = context.targetSigningCertificate,
             let resignedAppBundle = context.resignedAppBundle,
             let provisioningProfiles = context.provisioningProfiles
         else {
             throw OperationError.invalidParameters(
-                "InstallAppOperation.execute: self.context.authenticatedContext.signingCertificate or self.context.resignedAppBundle or self.context.provisioningProfiles is nil"
+                "InstallAppOperation.execute: self.context.targetSigningCertificate or self.context.resignedAppBundle or self.context.provisioningProfiles is nil"
             )
         }
 
