@@ -112,7 +112,7 @@ struct AppIDsListView: View {
             }
         }
         .refreshable {
-            await viewModel.fetchAppIDs(presentingViewController: presentingViewController)
+            await viewModel.fetchAppIDs(presentingViewController: presentingViewController, isPullToRefresh: true)
         }
         .sheet(isPresented: $showRegisterSheet) {
             NavigationView {

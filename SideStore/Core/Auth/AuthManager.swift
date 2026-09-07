@@ -14,8 +14,8 @@ import CoreData
 public final class AuthManager: @unchecked Sendable {
     public static let shared = AuthManager()
     
-    private var portalService: DeveloperPortalAuthService {
-        DeveloperPortalService.shared as! DeveloperPortalAuthService
+    private var portalProxy: DeveloperPortalProxyWithAuth {
+        DeveloperPortalProxy.shared as! DeveloperPortalProxyWithAuth
     }
     
     private init() {}
@@ -188,7 +188,7 @@ public final class AuthManager: @unchecked Sendable {
                        accountRepairHandler: DeveloperPortal.AccountRepairHandler = DeveloperPortal.defaultAccountRepairHandler,
                        verificationHandler: DeveloperPortal.VerificationHandler?) async throws -> (ALTAccount, ALTAppleAPISession) 
     {
-        return try await self.portalService.signIn(
+        return try await self.portalProxy.signIn(
             appleID: appleID, 
             password: password, 
             anisetteData: anisetteData, 
@@ -204,7 +204,7 @@ public final class AuthManager: @unchecked Sendable {
                                       anisetteData: ALTAnisetteData,
                                       xcodeVersion: String) async throws -> (ALTAccount, ALTAppleAPISession)
     {
-        return try await self.portalService.authenticateWithToken(
+        return try await self.portalProxy.authenticateWithToken(
             adsid: adsid,
             xcodeToken: xcodeToken,
             anisetteData: anisetteData,

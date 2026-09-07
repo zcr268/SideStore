@@ -126,7 +126,7 @@ struct ProfilesListView: View {
             }
         }
         .refreshable {
-            await viewModel.fetchProfiles(presentingViewController: presentingViewController)
+            await viewModel.fetchProfiles(presentingViewController: presentingViewController, isPullToRefresh: true)
         }
         .sheet(isPresented: $showDownloadSheet) {
             NavigationView {

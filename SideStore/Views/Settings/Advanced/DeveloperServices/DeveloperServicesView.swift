@@ -142,11 +142,13 @@ struct DeveloperServicesView: View {
         .navigationTitle("Developer Portal")
         .onAppear {
             if viewModel.appIDs.isEmpty && viewModel.profiles.isEmpty {
-                viewModel.loadAll(presentingViewController: presentingViewController)
+                Task {
+                    await viewModel.loadAll(presentingViewController: presentingViewController)
+                }
             }
         }
         .refreshable {
-            viewModel.loadAll(presentingViewController: presentingViewController, isPullToRefresh: true)
+            await viewModel.loadAll(presentingViewController: presentingViewController, isPullToRefresh: true)
         }
         .alert(isPresented: $viewModel.showErrorAlert) {
             Alert(

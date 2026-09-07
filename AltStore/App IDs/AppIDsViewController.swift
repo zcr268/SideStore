@@ -522,15 +522,7 @@ private extension AppIDsViewController
                             features: appID.features
                         )
                         
-                        let success = try await withCheckedThrowingContinuation { (c: CheckedContinuation<Bool, Error>) in
-                            ALTAppleAPI.shared.deleteAppID(altAppID, for: team, session: session) { (success, error) in
-                                if let error = error {
-                                    c.resume(throwing: error)
-                                } else {
-                                    c.resume(returning: success)
-                                }
-                            }
-                        }
+                        let success = try await DeveloperPortalProxy.shared.deleteAppID(altAppID, for: team, session: session)
                         
                         if success
                         {

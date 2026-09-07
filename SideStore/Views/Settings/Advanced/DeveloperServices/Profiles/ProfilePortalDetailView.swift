@@ -86,6 +86,9 @@ struct ProfilePortalDetailView: View {
         .listStyle(GroupedListStyle())
         #endif
         .navigationTitle(profile.name)
+        .refreshable {
+            await viewModel.fetchProfiles(presentingViewController: presentingViewController, isPullToRefresh: true)
+        }
         .alert(isPresented: $showDeleteAlert) {
             Alert(
                 title: Text("Delete Provisioning Profile?"),
