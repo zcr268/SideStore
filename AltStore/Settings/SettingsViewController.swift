@@ -555,7 +555,7 @@ private extension SettingsViewController
     func signIn()
     {
         debugLog("[SettingsVC] signIn() invoked by user action")
-        AppManager.shared.authenticate(presentingViewController: self) { [weak self] (result) in
+        AppManager.shared.signIn(presentingViewController: self) { [weak self] (result) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 switch result

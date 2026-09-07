@@ -157,14 +157,14 @@ final class AppManager: ObservableObject, @unchecked Sendable
     
 
 
-    func authenticate(presentingViewController: UIViewController?,
-                      skipDeviceRegistration: Bool = false,
-                      skipCertificateProvisioning: Bool = false,
-                      completionHandler: @escaping (Result<(ALTTeam, ALTCertificate?, ALTAppleAPISession), Error>) -> Void)
+    func signIn(presentingViewController: UIViewController?,
+                skipDeviceRegistration: Bool = false,
+                skipCertificateProvisioning: Bool = false,
+                completionHandler: @escaping (Result<(ALTTeam, ALTCertificate?, ALTAppleAPISession), Error>) -> Void)
     {
         Task.detached {
             do {
-                let result = try await AuthManager.shared.authenticate(
+                let result = try await AuthManager.shared.signIn(
                     presentingViewController: presentingViewController,
                     skipDeviceRegistration: skipDeviceRegistration,
                     skipCertificateProvisioning: skipCertificateProvisioning
@@ -184,8 +184,8 @@ final class AppManager: ObservableObject, @unchecked Sendable
             // Only apps signed with a free developer certificate count toward the 3-app free account limit.
             // Apps signed with a paid certificate coexist independently and must not be counted here.
             let activeApps = InstalledApp.fetchActiveApps(in: DatabaseManager.shared.viewContext)
-                .filter { $0.bundleIdentifier != appBundle.bundleIdentifier } // Don't count app towards total if it matches activating app
-                .filter { ($0.team?.type ?? .unknown) == .free }        // Only free-cert-signed apps count against the free limit
+                .filter { $0.bundleIdentifier != appBundle.bundleIdentifier }   // Don't count app towards total if it matches activating app
+                .filter { ($0.team?.type ?? .unknown) == .free }                // Only free-cert-signed apps count against the free limit
                 .sorted { ($0.name, $0.refreshedDate) < ($1.name, $1.refreshedDate) }
             
             var title: String = NSLocalizedString("Cannot Activate More than 3 Apps", comment: "")
@@ -255,7 +255,8 @@ final class AppManager: ObservableObject, @unchecked Sendable
     {
         Task.detached {
             do {
-                let context = StandaloneOperationContext(steps: .clearAppCache)
+                let dbBackgroundContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
+                let context = StandaloneOperationContext(steps: .clearAppCache, dbBackgroundContext: dbBackgroundContext)
                 try await ClearAppCacheOperation(context: context).execute()
                 completion(.success(()))
             } catch {
@@ -503,20 +504,18 @@ final class AppManager: ObservableObject, @unchecked Sendable
         }
     }
     
-    func syncAppIDs(presentingViewController: UIViewController? = nil, showAuthIfRequired: Bool = false, completionHandler: @escaping (Result<Void, Error>) -> Void)
+    func syncAppIDs(completionHandler: @escaping (Result<Void, Error>) -> Void)
     {
-        guard AuthManager.shared.isAuthenticated || showAuthIfRequired else {
-            debugLog("[AppManager] syncAppIDs: User is unauthenticated and showAuthIfRequired is false. Skipping syncAppIDs.")
+        guard AuthManager.shared.isAuthenticated else {
+            debugLog("[AppManager] syncAppIDs: User is unauthenticated. Skipping syncAppIDs.")
             completionHandler(.failure(OperationError.notAuthenticated))
             return
         }
         
-        let effectivePresentingVC = showAuthIfRequired ? presentingViewController : nil
-        
         Task.detached(priority: .utility) {
             do {
                 let managedObjectContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
-                let context = self.makeAuthenticatedContext(presentingViewController: effectivePresentingVC, dbBackgroundContext: managedObjectContext)
+                let context = self.makeAuthenticatedContext(dbBackgroundContext: managedObjectContext)
                 try await AuthManager.shared.authenticate(
                     context: context
                 )

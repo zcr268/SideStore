@@ -166,7 +166,7 @@ private extension AppIDsViewController
         guard !self.isLoading else { return }
         self.isLoading = true
         
-        AppManager.shared.syncAppIDs(presentingViewController: self) { [weak self] (result) in
+        AppManager.shared.syncAppIDs { [weak self] (result) in
             guard let self = self else { return }
             do
             {
@@ -475,16 +475,8 @@ private extension AppIDsViewController
     
     func getSessionAndTeam() async throws -> (ALTTeam, ALTAppleAPISession)
     {
-        try await withCheckedThrowingContinuation { continuation in
-            AppManager.shared.authenticate(presentingViewController: self) { result in
-                switch result {
-                case .success(let (team, _, session)):
-                    continuation.resume(returning: (team, session))
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+        let authResult = try await AuthManager.shared.authenticate()
+        return (authResult.team, authResult.session)
     }
     
     func deleteSelectedAppIDs()
