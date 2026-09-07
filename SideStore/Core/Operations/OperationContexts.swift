@@ -36,14 +36,14 @@ protocol WeightedOperationContext: AnyObject {
 class OperationContext: WeightedOperationContext
 {
     var error: Error?
-    var dbBackgroundContext: NSManagedObjectContext?
+    var dbBackgroundContext: NSManagedObjectContext
 
     private var stepItems: [OperationStepItem]
     private var currentIndex = 0
     private var remainingReuses: [Int: Int] = [:]
     private var stepProgressSlots: [Int: Progress] = [:]
 
-    fileprivate init(stepItems: [OperationStepItem] = [], error: Error? = nil, dbBackgroundContext: NSManagedObjectContext? = nil)
+    fileprivate init(stepItems: [OperationStepItem] = [], error: Error? = nil, dbBackgroundContext: NSManagedObjectContext)
     {
         self.stepItems = stepItems
         self.error = error
@@ -154,7 +154,7 @@ class StandaloneOperationContext: OperationContext
 {
     let steps: [StandaloneExecutionStep]
 
-    init(steps: [StandaloneExecutionStep], error: Error? = nil, dbBackgroundContext: NSManagedObjectContext? = nil)
+    init(steps: [StandaloneExecutionStep], error: Error? = nil, dbBackgroundContext: NSManagedObjectContext)
     {
         self.steps = steps
         super.init(stepItems: steps.map { 
@@ -182,30 +182,25 @@ final class AuthenticatedOperationContext: StandaloneOperationContext
     var session: ALTAppleAPISession?
     var team: ALTTeam?
     var signingCertificate: ALTCertificate?
-    var portalCertificates: [ALTX509Certificate]?
-
-    let authenticationHandler: AuthenticationHandler
-    let anisetteServerHandler: AnisetteServerHandler
 
     init(
-        authenticationHandler: AuthenticationHandler,
-        anisetteServerHandler: AnisetteServerHandler,
+        session: ALTAppleAPISession? = nil,
+        team: ALTTeam? = nil,
+        signingCertificate: ALTCertificate? = nil,
         error: Error? = nil,
-        dbBackgroundContext: NSManagedObjectContext? = nil
+        dbBackgroundContext: NSManagedObjectContext
     ) {
-        self.authenticationHandler = authenticationHandler
-        self.anisetteServerHandler = anisetteServerHandler
+        self.session = session
+        self.team = team
+        self.signingCertificate = signingCertificate
         super.init(steps: .authenticate, error: error, dbBackgroundContext: dbBackgroundContext)
     }
 
     init(context: AuthenticatedOperationContext) {
-        self.authenticationHandler = context.authenticationHandler
-        self.anisetteServerHandler = context.anisetteServerHandler
         super.init(context: context)
         self.session = context.session
         self.team = context.team
         self.signingCertificate = context.signingCertificate
-        self.portalCertificates = context.portalCertificates
     }
 }
 
@@ -218,7 +213,7 @@ class PipelineOperationContext: OperationContext
         pipelineSteps: [PipelineExecutionStep],
         handler: PipelineExecutionHandler,
         error: Error? = nil,
-        dbBackgroundContext: NSManagedObjectContext? = nil
+        dbBackgroundContext: NSManagedObjectContext
     ) {
         self.pipelineSteps = pipelineSteps
         self.handler = handler

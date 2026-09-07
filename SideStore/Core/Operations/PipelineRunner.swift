@@ -111,13 +111,7 @@ final class PipelineRunner: Sendable
             }
         }
         
-        if group.context.dbBackgroundContext == nil {
-            // create a background core-data managedObject context
-            group.context.dbBackgroundContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
-        }
-        
         defer {
-            group.context.dbBackgroundContext = nil         // Clean up pipeline database context
             for operation in operations {                   // Clean up progress for all operations
                 progress.set(nil, for: operation)
             }
@@ -233,28 +227,25 @@ final class PipelineRunner: Sendable
             
             // persist the result
             let bundleID = result.bundleIdentifier
-            if let dbContext = group.context.dbBackgroundContext {
-                do {
-                    try dbContext.performAndWait {
-                        let hasChanges = dbContext.hasChanges
-                        if hasChanges {
-                            try dbContext.save()
-                        }
-                        debugLog("[AppManager] performOperation: Context changes were saved for installedApp: \(bundleID)")
+            let dbContext = group.context.dbBackgroundContext
+            do {
+                try dbContext.performAndWait {
+                    let hasChanges = dbContext.hasChanges
+                    if hasChanges {
+                        try dbContext.save()
                     }
-                } catch {
-                    debugLog("[AppManager] perform(): Failed to save InstalledApp to database. \(error.localizedDescription)")
+                    debugLog("[AppManager] performOperation: Context changes were saved for installedApp: \(bundleID)")
                 }
+            } catch {
+                debugLog("[AppManager] perform(): Failed to save InstalledApp to database. \(error.localizedDescription)")
             }
             
             group.set(.success(result), forAppWithBundleIdentifier: bundleID)
             debugLog("[AppManager] performOperation: Execution SUCCESS for app: \(operation.bundleIdentifier)")
             
-            if let dbContext = group.context.dbBackgroundContext {
-                debugLog("[AppManager] performOperation: Reloading widget timelines...")
-                await WidgetDataManager.publishCurrentInstalledApps(in: dbContext)
-                debugLog("[AppManager] performOperation: Reloading COMPLETE for widget timelines.")
-            }
+            debugLog("[AppManager] performOperation: Reloading widget timelines...")
+            await WidgetDataManager.publishCurrentInstalledApps(in: dbContext)
+            debugLog("[AppManager] performOperation: Reloading COMPLETE for widget timelines.")
             
             if result.bundleIdentifier == StoreApp.altstoreAppID {
                 let context = StandaloneOperationContext(steps: .scheduleExpirationWarningNotification, dbBackgroundContext: group.context.dbBackgroundContext)

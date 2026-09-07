@@ -128,17 +128,13 @@ final class AuthenticationOperation: BaseStandaloneOperation<StandaloneOperation
     }
 
     private func resolveActiveTeam() async throws -> ALTTeam {
-        let dbContext = self.context.dbBackgroundContext ?? DatabaseManager.shared.viewContext
-        let activeTeam = await dbContext.perform {
-            if let dbTeam = DatabaseManager.shared.activeTeam(in: dbContext) {
-                return ALTTeam(identifier: dbTeam.identifier, name: dbTeam.name, type: dbTeam.type)
+        let dbContext = self.context.dbBackgroundContext
+        return try await dbContext.perform {
+            guard let dbTeam = DatabaseManager.shared.activeTeam(in: dbContext) else {
+                throw OperationError.notAuthenticated
             }
-            return nil
+            return ALTTeam(identifier: dbTeam.identifier, name: dbTeam.name, type: dbTeam.type)
         }
-        guard let activeTeam = activeTeam else {
-            throw OperationError.notAuthenticated
-        }
-        return activeTeam
     }
 }
 

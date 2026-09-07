@@ -15,7 +15,6 @@ import SideSign
 
 final class InstallAppOperation: BasePipelineOperation<InstallAppOperationContext, InstalledApp>, @unchecked Sendable {
     let storeApp: StoreApp?
-    var backgroundContext: NSManagedObjectContext?
     
     private var didCleanUp = false
     
@@ -58,10 +57,7 @@ final class InstallAppOperation: BasePipelineOperation<InstallAppOperationContex
         @Managed var appVersion = context.appVersion
         let storeBuildVersion = $appVersion.buildVersion
         
-        guard let backgroundContext = self.context.dbBackgroundContext else {
-            throw OperationError.invalidParameters("InstallAppOperation: context.dbBackgroundContext is nil")
-        }
-        self.backgroundContext = backgroundContext
+        let backgroundContext = self.context.dbBackgroundContext
         
         self.setProgress(10)
         do {

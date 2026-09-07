@@ -40,16 +40,8 @@ final class VerifyCertificateOperation: BasePipelineOperation<AppOperationContex
         var finalStatus = initialStatus
         
         do {
-            // 2. Obtain active portal certificates (auth context or direct fetch as fallback)
-            let portalCertificates: [ALTX509Certificate]
-            if let cachedPortalCerts = self.context.authenticatedContext.portalCertificates, !cachedPortalCerts.isEmpty {
-                portalCertificates = cachedPortalCerts
-                self.debugLog("[VerifyCertificateOperation] Utilizing \(portalCertificates.count) active certificates cached from Auth context.")
-            } else {
-                self.debugLog("[VerifyCertificateOperation] Active certificates not found in Auth context. Fetching live from Apple Developer Portal...")
-                portalCertificates = try await DeveloperPortalService.shared.fetchCertificates(team: team, session: session)
-                self.context.authenticatedContext.portalCertificates = portalCertificates
-            }
+            // 2. Obtain active portal certificates directly from Apple Developer Portal
+            let portalCertificates = try await DeveloperPortalService.shared.fetchCertificates(team: team, session: session)
             
             self.setProgress(30)
             

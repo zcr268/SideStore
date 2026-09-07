@@ -23,19 +23,19 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
     private var requiresPostAuthFlow = false
     private var portalCertificates: [ALTX509Certificate]?
     
-    let authenticationHandler: AuthenticationHandler
+    let signInHandler: SignInHandler
     let anisetteServerHandler: AnisetteServerHandler
     let skipDeviceRegistration: Bool
     let skipCertificateProvisioning: Bool
 
     init(
         context: StandaloneOperationContext,
-        authenticationHandler: AuthenticationHandler,
+        signInHandler: SignInHandler,
         anisetteServerHandler: AnisetteServerHandler,
         skipDeviceRegistration: Bool = false,
         skipCertificateProvisioning: Bool = false
     ) throws {
-        self.authenticationHandler = authenticationHandler
+        self.signInHandler = signInHandler
         self.anisetteServerHandler = anisetteServerHandler
         self.skipDeviceRegistration = skipDeviceRegistration
         self.skipCertificateProvisioning = skipCertificateProvisioning
@@ -188,7 +188,7 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
                 if self.isCancelled { throw OperationError.cancelled }
 
                 self.debugLog("[SignInOperation] provisioningLoop caught error: \(error)")
-                let decision = await self.authenticationHandler.resolveProvisioningError(error)
+                let decision = await self.signInHandler.resolveProvisioningError(error)
                 switch decision {
                     case .retry:
                         self.debugLog("[SignInOperation] User chose retry in provisioningLoop")
@@ -240,7 +240,7 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
 
     private func authenticationLoop() async throws -> (account: ALTAccount, session: ALTAppleAPISession) {
         self.verboseLog("[SignInOperation] authenticationLoop: Requesting credentials...")
-        let handler = self.authenticationHandler
+        let handler = self.signInHandler
         
         while true {
             let (appleID, password) = try await handler.credentials()
@@ -265,7 +265,7 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
         self.appleIDEmailAddress = appleID
         
         let anisetteData = try await self.getAnisetteData()
-        let handler = self.authenticationHandler
+        let handler = self.signInHandler
         
         let xcodeVersion = await AnisetteConfigManager.shared.resolvedXcodeVersion()
 
@@ -296,7 +296,7 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
         switch result {
             case .failure(let error):
                 self.debugLog("[SignInOperation] finalizeAuthentication: Failure result - \(error.localizedDescription)")
-                await self.authenticationHandler.complete()
+                await self.signInHandler.complete()
                 self.verboseLog("[SignInOperation] finalizeAuthentication: invoked auth complete for .failure case...")
                 
             case .success(let result):
@@ -319,12 +319,12 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
                     self.verboseLog("[SignInOperation] finalizeAuthentication: didResign = \(didResign)")
                     
                     if !didResign && self.requiresPostAuthFlow {
-                        await self.authenticationHandler.resolvePostAuth()
+                        await self.signInHandler.resolvePostAuth()
                         self.verboseLog("[SignInOperation] finalizeAuthentication: post auth flow completed...")
                     }
                 }
                 
-                await self.authenticationHandler.complete()
+                await self.signInHandler.complete()
                 self.verboseLog("[SignInOperation] finalizeAuthentication: invoked auth complete for .success case...")
         }
     }
@@ -334,9 +334,7 @@ final class SignInOperation: BaseStandaloneOperation<StandaloneOperationContext,
 private extension SignInOperation {
 
     private func saveTeamAndAccount(_ altTeam: ALTTeam, makeActive: Bool = false) async throws {
-        guard let context = self.context.dbBackgroundContext else {
-            throw OperationError.invalidParameters("SignInOperation: context.dbBackgroundContext is nil")
-        }
+        let context = self.context.dbBackgroundContext
         try await context.perform {
             let account: Account
             let team: Team
@@ -441,9 +439,10 @@ private extension SignInOperation {
                     return false
                 }
                 
-                let handler = self.authenticationHandler
+                let handler = self.signInHandler
                 do {
-                    return try await handler.resolveResign(mismatchReason: reason, context: self.context)
+                    let authContext = AuthenticatedOperationContext(session: session, team: signer.team, signingCertificate: signer.certificate, dbBackgroundContext: self.context.dbBackgroundContext)
+                    return try await handler.resolveResign(mismatchReason: reason, context: authContext)
                 } catch {
                     self.verboseLog("[SignInOperation] validateCodeSign: error occured when handling resolveResign error: \(error)")
                     return false
@@ -460,7 +459,7 @@ private extension SignInOperation {
         let teams = try await DeveloperPortalService.shared.fetchTeams(for: account, session: session)
         
         guard !teams.isEmpty else {
-            throw AuthenticationError(.noTeam)
+            throw DeveloperPortalError.noTeams
         }
         
         let selectedTeam: ALTTeam
@@ -468,7 +467,7 @@ private extension SignInOperation {
             selectedTeam = teams[0]
         } else {
             self.debugLog("[SignInOperation] Multiple teams found (\(teams.count)). Prompting user for team selection...")
-            selectedTeam = try await self.authenticationHandler.resolveTeam(teams)
+            selectedTeam = try await self.signInHandler.resolveTeam(teams)
         }
         
         self.debugLog("[SignInOperation] fetchTeam completed successfully ('\(selectedTeam.name)').")
@@ -534,24 +533,7 @@ private extension SignInOperation {
             return finalCert
         } catch {
             self.debugLog("[SignInOperation] requestCertificate: Failed with error: \(error)")
-            if case .tooManyCertificates = error as? DeveloperPortalError {
-                let friendlyError: AuthenticationError = (team.type == .free) 
-                                        ? AuthenticationError(.certificateLimitReachedFree) 
-                                        : AuthenticationError(.certificateLimitReachedPaid)
-
-                let wrappedError = NSError(
-                    domain: (friendlyError as NSError).domain,
-                    code: (friendlyError as NSError).code,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: friendlyError.localizedDescription,
-                        NSLocalizedFailureReasonErrorKey: friendlyError.failureReason ?? "",
-                        NSUnderlyingErrorKey: error as NSError
-                    ]
-                )
-                throw wrappedError
-            } else {
-                throw error
-            }
+            throw error
         }
     }
 
@@ -569,7 +551,7 @@ private extension SignInOperation {
         }
         
         self.debugLog("[SignInOperation] replaceCertificate: Presenting revoke alert for \(iosCertificates.count) iOS Development cert(s)...")
-        let action = try await self.authenticationHandler.resolveRevocation(certificates: iosCertificates, teamType: team.type)
+        let action = try await self.signInHandler.resolveRevocation(certificates: iosCertificates, teamType: team.type)
         self.debugLog("[SignInOperation] replaceCertificate: User action was \(action)")
         switch action {
             case .keepExisting:

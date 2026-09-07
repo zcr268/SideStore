@@ -9,7 +9,7 @@
 import UIKit
 import SideSign
 
-class SignInFlowHandler: AnyObject, AuthenticationHandler, AnisetteServerHandler {
+class SignInFlowHandler: AnyObject, SignInHandler, AnisetteServerHandler {
     
     private weak var presentingViewController: UIViewController?
     private weak var presentedAuthVC: AuthenticationViewController?

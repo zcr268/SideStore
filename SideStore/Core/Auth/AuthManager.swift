@@ -107,7 +107,7 @@ public final class AuthManager: @unchecked Sendable {
         
         let signInOperation = try SignInOperation(
             context: context,
-            authenticationHandler: signInFlowHandler,
+            signInHandler: signInFlowHandler,
             anisetteServerHandler: signInFlowHandler,
             skipDeviceRegistration: skipDeviceRegistration,
             skipCertificateProvisioning: skipCertificateProvisioning
@@ -117,11 +117,6 @@ public final class AuthManager: @unchecked Sendable {
     
     
     // Developer Portal Operations
-    @discardableResult
-    public func fetchAccount(session: ALTAppleAPISession) async throws -> ALTAccount {
-        return try await self.portalService.fetchAccount(session: session)
-    }
-    
     public func signIn(appleID: String, 
                        password: String, 
                        anisetteData: ALTAnisetteData, 

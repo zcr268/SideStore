@@ -518,9 +518,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
                 let managedObjectContext = DatabaseManager.shared.persistentContainer.newBackgroundContext()
                 let context = self.makeAuthenticatedContext(presentingViewController: effectivePresentingVC, dbBackgroundContext: managedObjectContext)
                 try await AuthManager.shared.authenticate(
-                    context: context,
-                    skipDeviceRegistration: true,
-                    skipCertificateProvisioning: true
+                    context: context
                 )
                 
                 let syncAppIDsOperation = try SyncAppIDsOperation(context: context)
@@ -877,17 +875,13 @@ extension AppManager: PipelineProgress, PipelineExecutionContext, PipelineErrorL
         )
     }
 
-    private func makeAuthenticatedContext(presentingViewController: UIViewController?,
+    private func makeAuthenticatedContext(presentingViewController: UIViewController? = nil,
                                           baseContext: AuthenticatedOperationContext? = nil,
                                           dbBackgroundContext: NSManagedObjectContext? = nil) -> AuthenticatedOperationContext
     {
         if let baseContext = baseContext { return baseContext }
-        let authFlowHandler = AuthFlowHandler(presentingViewController: presentingViewController)
-        return AuthenticatedOperationContext(
-            authenticationHandler: authFlowHandler,
-            anisetteServerHandler: authFlowHandler,
-            dbBackgroundContext: dbBackgroundContext
-        )
+        let backgroundContext = dbBackgroundContext ?? DatabaseManager.shared.persistentContainer.newBackgroundContext()
+        return AuthenticatedOperationContext(dbBackgroundContext: backgroundContext)
     }
     
 
