@@ -17,6 +17,7 @@ private extension Color {
 struct UserCustomizationsView: View {
     @State private var selectedBackend: GatewayBackend = selectedGatewayBackendCache
     @State private var useOnDeviceAnisette: Bool = UserDefaults.standard.useOnDeviceAnisette
+    @State private var showAnisetteRestartConfirmation: Bool = false
     @State private var customizeAppId: Bool = UserDefaults.standard.customizeAppId
     @State private var customizeAppExtensions: Bool = UserDefaults.standard.customizeAppExtensions
     @State private var autoFixAppGroupIDs: Bool = UserDefaults.standard.autoFixAppGroupIDs
@@ -86,7 +87,7 @@ struct UserCustomizationsView: View {
                                 get: { useOnDeviceAnisette },
                                 set: { newValue in
                                     useOnDeviceAnisette = newValue
-                                    UserDefaults.standard.useOnDeviceAnisette = newValue
+                                    showAnisetteRestartConfirmation = true
                                 }
                             )
                         )
@@ -343,6 +344,18 @@ struct UserCustomizationsView: View {
         #if !os(tvOS)
         .navigationBarTitleDisplayMode(.large)
         #endif
+        .alert("Restart Required", isPresented: $showAnisetteRestartConfirmation) {
+            SwiftUI.Button("Restart Now", role: .destructive) {
+                AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false)
+                UserDefaults.standard.useOnDeviceAnisette = useOnDeviceAnisette
+                exit(0)
+            }
+            SwiftUI.Button("Cancel", role: .cancel) {
+                useOnDeviceAnisette = UserDefaults.standard.useOnDeviceAnisette
+            }
+        } message: {
+            Text("Changing Anisette config will invalidate your current provisioned Anisette data and you will be signed out.\n\nThis action will require a restart, do you want to proceed?")
+        }
         .alert("Restart Required", isPresented: $showEMPRestartConfirmation) {
             SwiftUI.Button("Restart Now", role: .destructive) {
                 enableEMPforWireguard = pendingEMPOption
