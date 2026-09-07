@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SideSign
 
 public final class MaintenanceManager {
     public static let shared = MaintenanceManager()
@@ -45,8 +46,8 @@ public final class MaintenanceManager {
             case 1:
                 Keychain.shared.clearAll()
             case 2:
-                Keychain.shared.adiPb = nil
                 AnisetteDataManager.shared.clearCache()
+                AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false)
             default:
                 break
             }
