@@ -333,24 +333,22 @@ private extension NewsViewController
             return
         }
         
-        Task(priority: .userInitiated) { @MainActor in
-            if let installedApp = storeApp.installedApp, installedApp.hasUpdate
-            {
-                let progress = AppManager.shared.update(installedApp, presentingViewController: self, completionHandler: finish(_:))
-                progressUpdateHandler(progress)
-            }
-            else
-            {
-                let group = await AppManager.shared.installAsync(
-                    storeApp,
-                    presentingViewController: self,
-                    completionHandler: finish(_:)
-                )
-                progressUpdateHandler(group.progress)
-            }
+        if let installedApp = storeApp.installedApp, installedApp.hasUpdate
+        {
+            let progress = AppManager.shared.update(installedApp, presentingViewController: self, completionHandler: finish(_:))
+            progressUpdateHandler(progress)
+        }
+        else
+        {
+            let group = AppManager.shared.install(
+                .app(storeApp),
+                presentingViewController: self,
+                completionHandler: finish(_:)
+            )
+            progressUpdateHandler(group.progress)
         }
         
-        nonisolated func finish(_ result: Result<InstalledApp, Error>) -> Void
+        func finish(_ result: Result<InstalledApp, Error>) -> Void
         {
             DispatchQueue.main.async {
                 switch result

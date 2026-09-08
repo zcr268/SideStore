@@ -947,7 +947,7 @@ private extension MyAppsViewController
         self.pendingImportURL = nil
         self.navigationItem.leftBarButtonItem?.isIndicatingActivity = true
         
-        let group = AppManager.shared.installIPA(at: url, presentingViewController: self) { [weak self] result in
+        let group = AppManager.shared.install(.url(url), presentingViewController: self) { [weak self] result in
             Task { @MainActor in
                 self?.navigationItem.leftBarButtonItem?.isIndicatingActivity = false
                 self?.sideloadingProgressView.observedProgress = nil

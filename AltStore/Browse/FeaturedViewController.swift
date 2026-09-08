@@ -485,7 +485,7 @@ private extension FeaturedViewController
         }
         else
         {
-            let group = AppManager.shared.install(storeApp, presentingViewController: self, completionHandler: finish(_:))
+            let group = AppManager.shared.install(.app(storeApp), presentingViewController: self, completionHandler: finish(_:))
             progressUpdateHandler(group.progress)
         }
         

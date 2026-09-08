@@ -67,8 +67,11 @@ struct InstallIPAIntent: AppIntent, ProgressReportingIntent
             try self.ipaFile.data.write(to: ipaURL)
 
             let intentProgress = self.progress
-            _ = try await AppManager.shared.installIPA(at: ipaURL) { progress in
-                intentProgress.addChild(progress, withPendingUnitCount: 1)
+            _ = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<InstalledApp, Error>) in
+                let group = AppManager.shared.install(.url(ipaURL)) { result in
+                    continuation.resume(with: result)
+                }
+                intentProgress.addChild(group.progress, withPendingUnitCount: 1)
             }
 
             return .result()

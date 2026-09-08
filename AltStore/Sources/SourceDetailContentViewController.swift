@@ -401,13 +401,11 @@ private extension SourceDetailContentViewController
                 }
                 else
                 {
-                    Task { @MainActor in
-                        let group = await AppManager.shared.installAsync(storeApp, presentingViewController: self) { result in
-                            continuation.resume(with: result.map { _ in () })
-                        }
-                        
-                        sender.progress = group.progress
+                    let group = AppManager.shared.install(.app(storeApp), presentingViewController: self) { result in
+                        continuation.resume(with: result.map { _ in () })
                     }
+                    
+                    sender.progress = group.progress
                 }
             }
         }

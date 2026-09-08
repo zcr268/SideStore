@@ -563,21 +563,19 @@ private extension BrowseViewController
             return
         }
         
-        Task(priority: .userInitiated) { @MainActor in
-            // if let installedApp = app.installedApp, installedApp.isUpdateAvailable
-            if let installedApp = app.installedApp, installedApp.hasUpdate
-            {
-                let progress = AppManager.shared.update(installedApp, presentingViewController: self, completionHandler: finish(_:))
-                progressUpdateHandler(progress)
-            }
-            else
-            {
-                let group = await AppManager.shared.installAsync(app, presentingViewController: self, completionHandler: finish(_:))
-                progressUpdateHandler(group.progress)
-            }
+        // if let installedApp = app.installedApp, installedApp.isUpdateAvailable
+        if let installedApp = app.installedApp, installedApp.hasUpdate
+        {
+            let progress = AppManager.shared.update(installedApp, presentingViewController: self, completionHandler: finish(_:))
+            progressUpdateHandler(progress)
+        }
+        else
+        {
+            let group = AppManager.shared.install(.app(app), presentingViewController: self, completionHandler: finish(_:))
+            progressUpdateHandler(group.progress)
         }
         
-        nonisolated func finish(_ result: Result<InstalledApp, Error>)
+        func finish(_ result: Result<InstalledApp, Error>)
         {
             debugLog("BrowseViewController.finish invoked with result: \(result) for \(app.bundleIdentifier)")
             DispatchQueue.main.async {
