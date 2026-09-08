@@ -643,7 +643,9 @@ final class AppManager: ObservableObject, @unchecked Sendable
 
         group.activeTask = Task.detached {
             do {
-                guard ipaURL.pathExtension.lowercased() == "ipa" else { throw OperationError.invalidApp }
+                guard PackageType(url: ipaURL) != nil else {
+                    throw OperationError.invalidApp(reason: "Unsupported package format '.\(ipaURL.pathExtension)'. Expected '.ipa' or '.app'.")
+                }
 
                 let temporaryDirectory = FileManager.default.uniqueTemporaryURL()
                 let unzippedAppDirectory = temporaryDirectory.appendingPathComponent("App")
@@ -675,6 +677,15 @@ final class AppManager: ObservableObject, @unchecked Sendable
                 }
                 group.progress.addChild(subGroup.progress, withPendingUnitCount: 100)
             } catch {
+                let elapsed = CFAbsoluteTimeGetCurrent() - group.context.operationStartTime
+                let status = Task.isCancelled ? "CANCELLED" : "FAILED"
+                logOperationSummary(
+                    operation: "install",
+                    target: ipaURL.lastPathComponent,
+                    status: status,
+                    elapsed: elapsed,
+                    error: error
+                )
                 completionHandler(.failure(error))
             }
         }
@@ -857,6 +868,15 @@ final class AppManager: ObservableObject, @unchecked Sendable
             }
         }
         return backgroundRefreshAppsOperation
+    }
+}
+
+enum PackageType: String, CaseIterable, Sendable {
+    case ipa
+    case app
+
+    init?(url: URL) {
+        self.init(rawValue: url.pathExtension.lowercased())
     }
 }
 

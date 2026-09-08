@@ -49,7 +49,12 @@ public extension FileManager {
     }
 
     func copyItem(at sourceURL: URL, to destinationURL: URL, shouldReplace: Bool) throws {
-        if !shouldReplace {
+        let destinationExists = self.fileExists(atPath: destinationURL.path)
+        if !shouldReplace || !destinationExists {
+            let parentDirectory = destinationURL.deletingLastPathComponent()
+            if !self.fileExists(atPath: parentDirectory.path) {
+                try self.createDirectory(at: parentDirectory, withIntermediateDirectories: true, attributes: nil)
+            }
             try self.copyItem(at: sourceURL, to: destinationURL)
             return
         }
@@ -73,5 +78,21 @@ public extension FileManager {
             removeDirectory()
             throw error
         }
+    }
+
+    func moveItem(at sourceURL: URL, to destinationURL: URL, shouldReplace: Bool) throws {
+        let destinationExists = self.fileExists(atPath: destinationURL.path)
+        if destinationExists {
+            if shouldReplace {
+                try self.removeItem(at: destinationURL)
+            } else {
+                return
+            }
+        }
+        let parentDirectory = destinationURL.deletingLastPathComponent()
+        if !self.fileExists(atPath: parentDirectory.path) {
+            try self.createDirectory(at: parentDirectory, withIntermediateDirectories: true, attributes: nil)
+        }
+        try self.moveItem(at: sourceURL, to: destinationURL)
     }
 }
