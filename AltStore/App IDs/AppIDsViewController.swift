@@ -475,8 +475,9 @@ private extension AppIDsViewController
     
     func getSessionAndTeam() async throws -> (ALTTeam, ALTAppleAPISession)
     {
-        let auth = try await AuthManager.shared.getAuthenticatedSession()
-        return (auth.team, auth.session)
+        let session = try await AuthManager.shared.getAuthenticatedSession()
+        let team = try await AuthManager.shared.getAuthenticatedTeam()
+        return (team, session)
     }
     
     func deleteSelectedAppIDs()

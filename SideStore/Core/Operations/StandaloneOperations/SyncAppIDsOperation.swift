@@ -21,8 +21,7 @@ final class SyncAppIDsOperation: BaseStandaloneOperation<StandaloneOperationCont
         }
         try await super.executePreconditionCheck(parentProgress: parentProgress)
         
-        let auth = try await AuthManager.shared.getAuthenticatedSession()
-        let team = auth.team
+        let team = try await AuthManager.shared.getAuthenticatedTeam()
         
         self.setProgress(10)
         

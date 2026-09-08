@@ -146,9 +146,8 @@ class CertificatesViewModel: ObservableObject {
                 return
             }
             do {
-                let authResult = try await AuthManager.shared.getAuthenticatedSession()
-                self.team    = authResult.team
-                self.session = authResult.session
+                self.session = try await AuthManager.shared.getAuthenticatedSession()
+                self.team    = try? await AuthManager.shared.getAuthenticatedTeam()
                 
                 let remoteCerts = try await DeveloperPortalProxy.shared.fetchCertificates()
                 var merged = [ALTX509Certificate]()
@@ -338,9 +337,8 @@ class CertificatesViewModel: ObservableObject {
         Task { @MainActor in
             defer { self.isLoading = false }
             do {
-                let authResult = try await AuthManager.shared.getAuthenticatedSession()
-                self.team    = authResult.team
-                self.session = authResult.session
+                self.session = try await AuthManager.shared.getAuthenticatedSession()
+                self.team    = try? await AuthManager.shared.getAuthenticatedTeam()
                 
                 let newCert = try await DeveloperPortalProxy.shared.createCertificate(machineName: machineName)
                 self.saveLocalCertificate(newCert)
@@ -363,9 +361,8 @@ class CertificatesViewModel: ObservableObject {
         Task { @MainActor in
             defer { self.isLoading = false }
             do {
-                let authResult = try await AuthManager.shared.getAuthenticatedSession()
-                self.team    = authResult.team
-                self.session = authResult.session
+                self.session = try await AuthManager.shared.getAuthenticatedSession()
+                self.team    = try? await AuthManager.shared.getAuthenticatedTeam()
                 
                 let success = try await DeveloperPortalProxy.shared.revokeCertificate(certificate)
                 if success {

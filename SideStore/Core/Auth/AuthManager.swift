@@ -80,70 +80,37 @@ public final class AuthManager: @unchecked Sendable {
         AnisetteDataManager.shared.clearCache()
     }
     
-    public struct AuthenticatedSession: Sendable {
-        public let team: ALTTeam
-        public let session: ALTAppleAPISession
-        
-        public init(team: ALTTeam, session: ALTAppleAPISession) {
-            self.team = team
-            self.session = session
-        }
-    }
-    
     @discardableResult
-    public func getAuthenticatedSession() async throws -> AuthenticatedSession {
-        return try await TaskChainCoalescerWithProgress.shared.coalesce(key: "apple_auth") { reportProgress in
-            // 1. Check for valid in-memory cached session & team
-            if var session = self.session, let team = self.team {
-                session.anisetteData = try await AnisetteProvider.fetch()
-                self.session = session
-                
-                debugLog("[AuthManager] Using cached session and team ('\(team.name)').")
-                reportProgress(100)
-                return AuthenticatedSession(team: team, session: session)
+    public func getAuthenticatedSession() async throws -> ALTAppleAPISession {
+        return try await TaskChainCoalescer.shared.coalesce(key: "apple_auth_session") {
+            guard let adsid = self.adsid,                           // directory services id
+                  let xcodeToken = self.xcodeToken else             // xcode token
+            {
+                debugLog("[AuthManager] No stored tokens found.")
+                throw OperationError.notAuthenticated
             }
-            
-            // 2. Perform direct token-based session resolution
-            if let silentResult = try await self.resolveSessionSilently(reportProgress: reportProgress) {
-                reportProgress(100)
-                return silentResult
-            }
-            
-            // 3. If session cannot be resolved silently, fail fast
-            debugLog("[AuthManager] No active or valid session found.")
-            throw OperationError.notAuthenticated
-        }
-    }
-    
-    private func resolveSessionSilently(reportProgress: @escaping @Sendable (Int64) -> Void) async throws -> AuthenticatedSession? {
-        guard let adsid = self.adsid, let xcodeToken = self.xcodeToken else {
-            return nil
-        }
-
-        verboseLog("[AuthManager] Resolving session via tokens...")
-        do {
-            let anisetteData = try await AnisetteProvider.fetch()
+            let anisetteData = try await AnisetteProvider.fetch()   // one time pass
             let xcodeVersion = await AnisetteConfigManager.shared.resolvedXcodeVersion()
-
-            let (_, session) = try await self.authenticateWithToken(
-                adsid: adsid,
-                xcodeToken: xcodeToken, 
-                anisetteData: anisetteData, 
+            
+            let session = ALTAppleAPISession(
+                dsid: adsid,
+                authToken: xcodeToken,
+                anisetteData: anisetteData,
                 xcodeVersion: xcodeVersion
             )
-            
             self.session = session
-            
-            // Resolve active team from CoreData
-            let team = try await self.resolveActiveTeam()
-            self.team = team
-            
-            debugLog("[AuthManager] Successfully resolved session and team ('\(team.name)').")
-            return AuthenticatedSession(team: team, session: session)
-        } catch {
-            debugLog("[AuthManager] Silent token session resolution failed: \(error)")
-            return nil
+            return session
         }
+    }
+
+    public func getAuthenticatedTeam() async throws -> ALTTeam {
+        if let team = self.team {
+            return team
+        }
+        
+        let team = try await self.resolveActiveTeam()
+        self.team = team
+        return team
     }
 
     private func resolveActiveTeam() async throws -> ALTTeam {
