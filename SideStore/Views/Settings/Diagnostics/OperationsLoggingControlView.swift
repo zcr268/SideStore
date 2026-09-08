@@ -20,7 +20,7 @@ private let pipelineStepToggles: [(name: String, step: PipelineStep)] = [
     ("Clean Staged App",                        .cleanStagedApp),
     ("Deactivate App",                          .deactivateApp),
     ("Download App",                            .downloadApp),
-    ("Export Resigned App",                     .exportResignedApp),
+    ("Export Resigned IPA",                     .exportResignedIPA),
     ("Fetch Provisioning Profiles",             .fetchProvisioningProfiles),
     ("Install App",                             .installApp),
     ("Preflight Checks",                        .preflightChecks),

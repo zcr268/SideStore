@@ -34,13 +34,14 @@ final class SendAppOperation: BasePipelineOperation<InstallAppOperationContext, 
         do {
             await CellularRefreshManager.shared.turnOffDataIfNeeded()
             
-            // try await sendAppBundleAfc(bundleIdentifier, at: appURL)
-            guard let ipaURL = self.context.ipaURL else {
-                throw OperationError.invalidParameters("SendAppOperation: context.ipaURL is nil")
+            if UserDefaults.standard.preferResignedIPA, let ipaURL = self.context.ipaURL {
+                debugLog("[SendAppOperation] Sending IPA at \(ipaURL.path) via AFC...")
+                let rawBytes = try Data(contentsOf: ipaURL, options: .mappedIfSafe)
+                try await sendIpaAfc(bundleIdentifier, rawBytes)
+            } else {
+                debugLog("[SendAppOperation] Sending App Bundle at \(appURL.path) via AFC...")
+                try await sendAppBundleAfc(bundleIdentifier, at: appURL)
             }
-            debugLog("[SendAppOperation] Sending IPA at \(ipaURL.path) via AFC...")
-            let rawBytes = try Data(contentsOf: ipaURL, options: .mappedIfSafe)
-            try await sendIpaAfc(bundleIdentifier, rawBytes)
             self.setProgress(100)
         } catch {
             await CellularRefreshManager.shared.turnOnDataIfNeeded()

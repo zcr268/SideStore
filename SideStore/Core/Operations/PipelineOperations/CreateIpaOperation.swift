@@ -9,9 +9,9 @@
 import Foundation
 import SideSign
 
-final class CreateIpaOperation: BasePipelineOperation<InstallAppOperationContext, URL>, @unchecked Sendable {
+final class CreateIpaOperation: BasePipelineOperation<InstallAppOperationContext, URL?>, @unchecked Sendable {
 
-    override func execute(parentProgress: Progress?) async throws -> URL {
+    override func execute(parentProgress: Progress?) async throws -> URL? {
         let startTime = CFAbsoluteTimeGetCurrent()
         debugLog("[CreateIpaOperation] execute() started")
         defer {
@@ -20,6 +20,12 @@ final class CreateIpaOperation: BasePipelineOperation<InstallAppOperationContext
         }
         try await super.executePreconditionCheck(parentProgress: parentProgress)
         self.setProgress(10)
+
+        guard UserDefaults.standard.preferResignedIPA || UserDefaults.standard.isExportResignedAppEnabled else {
+            debugLog("[CreateIpaOperation] Skipping: preferResignedIPA and isExportResignedAppEnabled are disabled")
+            self.setProgress(100)
+            return nil
+        }
 
         guard let resignedAppBundle = self.context.resignedAppBundle else {
             throw OperationError.invalidParameters("CreateIpaOperation: context.resignedAppBundle is nil")

@@ -1,5 +1,5 @@
 //
-//  ExportResignedAppOperation.swift
+//  ExportResignedIpaOperation.swift
 //  SideStore
 //
 //  Created by Magesh K on 30/07/26.
@@ -9,28 +9,33 @@
 import Foundation
 import SideSign
 
-final class ExportResignedAppOperation: BasePipelineOperation<InstallAppOperationContext, URL>, @unchecked Sendable {
+final class ExportResignedIpaOperation: BasePipelineOperation<InstallAppOperationContext, URL?>, @unchecked Sendable {
 
-    override func execute(parentProgress: Progress?) async throws -> URL {
+    override func execute(parentProgress: Progress?) async throws -> URL? {
         let startTime = CFAbsoluteTimeGetCurrent()
-        debugLog("[ExportResignedAppOperation] execute() started")
+        debugLog("[ExportResignedIpaOperation] execute() started")
         defer {
             let elapsed = CFAbsoluteTimeGetCurrent() - startTime
-            debugLog("[ExportResignedAppOperation] execute() took: \(String(format: "%.3fs", elapsed))")
+            debugLog("[ExportResignedIpaOperation] execute() took: \(String(format: "%.3fs", elapsed))")
         }
         try await super.executePreconditionCheck(parentProgress: parentProgress)
         self.setProgress(10)
 
-        guard let resignedAppBundle = self.context.resignedAppBundle else {
-            throw OperationError.invalidParameters("ExportResignedAppOperation: context.resignedAppBundle is nil")
-        }
-
         guard UserDefaults.standard.isExportResignedAppEnabled else {
             self.setProgress(100)
-            return resignedAppBundle.fileURL
+            return context.ipaURL
         }
 
-        let sourceURL = resignedAppBundle.fileURL
+        guard let resignedAppBundle = self.context.resignedAppBundle else {
+            throw OperationError.invalidParameters("ExportResignedIpaOperation: context.resignedAppBundle is nil")
+        }
+
+        guard let sourceURL = self.context.ipaURL else {
+            debugLog("[ExportResignedIpaOperation] context.ipaURL is nil, skipping export")
+            self.setProgress(100)
+            return nil
+        }
+
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let resignedAppsURL = documentsURL.appendingPathComponent("ResignedApps")
         self.setProgress(30)
@@ -46,7 +51,7 @@ final class ExportResignedAppOperation: BasePipelineOperation<InstallAppOperatio
         let utis = Bundle(url: resignedAppBundle.fileURL)?.infoDictionary?[Bundle.Info.exportedUTIs] as? [[String: Any]]
         let isSideBackup = utis?.first?["UTTypeDescription"] as? String == "SideStore Backup App"
         let destPath = isSideBackup ? resignedAppBundle.name + "-sidebackup" : resignedAppBundle.name
-        let destinationURL = resignedAppsURL.appendingPathComponent(destPath + ".app")
+        let destinationURL = resignedAppsURL.appendingPathComponent(destPath + ".ipa")
         self.setProgress(60)
         do {
             if FileManager.default.fileExists(atPath: destinationURL.path) {

@@ -172,9 +172,12 @@ final class InstallAppOperation: BasePipelineOperation<InstallAppOperationContex
             self.handleSelfReinstallation(for: installedApp)
         }
         
-        // Phase 2: App bundle installation
-        // try await installAppBundle(bundleID, appName: resignedAppBundle.fileURL.lastPathComponent)
-        try await installIPA(bundleID)
+        // Phase 2: App installation
+        if UserDefaults.standard.preferResignedIPA {
+            try await installIPA(bundleID)
+        } else {
+            try await installAppBundle(bundleID, appName: resignedAppBundle.fileURL.lastPathComponent)
+        }
         
         self.setProgress(90)
         

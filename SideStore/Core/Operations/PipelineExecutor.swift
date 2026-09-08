@@ -147,9 +147,9 @@ final class PipelineExecutor: @unchecked Sendable {
                 result = resignedAppBundle
                 return nil
                 
-            case .exportResignedApp:
-                loggerType = ExportResignedAppOperation.self
-                let step = try ExportResignedAppOperation(context: context)
+            case .exportResignedIPA:
+                loggerType = ExportResignedIpaOperation.self
+                let step = try ExportResignedIpaOperation(context: context)
                 result = try await step.execute(parentProgress: progress)
                 return nil
                 
