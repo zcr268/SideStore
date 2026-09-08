@@ -26,6 +26,10 @@ class DeveloperServicesViewModel: ObservableObject {
     @Published var toastMessage: String = ""
     @Published var showToast = false
 
+    var team: ALTTeam? {
+        AuthManager.shared.team
+    }
+
     var isPaidAccount: Bool {
         guard let team = AuthManager.shared.team else { return false }
         return team.type != .free && team.type != .unknown

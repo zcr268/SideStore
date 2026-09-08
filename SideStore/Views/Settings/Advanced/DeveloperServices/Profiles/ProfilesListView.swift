@@ -51,35 +51,7 @@ struct ProfilesListView: View {
                 } else {
                     ForEach(filteredProfiles, id: \.uuid) { profile in
                         NavigationLink(destination: ProfilePortalDetailView(profile: profile, viewModel: viewModel, presentingViewController: presentingViewController)) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack {
-                                    Text(profile.name)
-                                        .font(.headline)
-                                    Spacer()
-                                    if profile.expirationDate < Date() {
-                                        Text("Expired")
-                                            .font(.caption2)
-                                            .padding(.horizontal, 6)
-                                            .padding(.vertical, 2)
-                                            .background(Color.red.opacity(0.15))
-                                            .foregroundColor(.red)
-                                            .cornerRadius(6)
-                                    }
-                                }
-                                Text(profile.bundleIdentifier)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                HStack {
-                                    Text("UUID: \(profile.uuid.uuidString.prefix(8))...")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                    Text("Expires: \(formatDate(profile.expirationDate))")
-                                        .font(.caption)
-                                        .foregroundColor(profile.expirationDate < Date() ? .red : .secondary)
-                                }
-                            }
-                            .padding(.vertical, 2)
+                            ProfileRow(profile: profile, formatDate: formatDate)
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             SwiftUI.Button(role: .destructive) {
@@ -203,3 +175,45 @@ struct ProfilesListView: View {
         return formatter.string(from: date)
     }
 }
+
+private struct ProfileRow: View {
+    let profile: ALTProvisioningProfile
+    let formatDate: (Date) -> String
+
+    private var isExpired: Bool {
+        profile.expirationDate < Date()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(profile.name)
+                    .font(.headline)
+                Spacer()
+                if isExpired {
+                    Text("Expired")
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.red.opacity(0.15))
+                        .foregroundColor(.red)
+                        .cornerRadius(6)
+                }
+            }
+            Text(profile.bundleIdentifier)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            HStack {
+                Text("UUID: \(profile.uuid.uuidString.prefix(8))...")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer()
+                Text("Expires: \(formatDate(profile.expirationDate))")
+                    .font(.caption)
+                    .foregroundColor(isExpired ? .red : .secondary)
+            }
+        }
+        .padding(.vertical, 2)
+    }
+}
+
