@@ -13,7 +13,7 @@ public final class MaintenanceManager {
     public static let shared = MaintenanceManager()
 
     // Increment this counter whenever you want to trigger another maintenance pass in future updates
-    public static let currentMaintenanceCounter = 2
+    public static let currentMaintenanceCounter = 3
 
     public static let maintenanceCounterFileName = ".maintenance_counter"
 
@@ -48,6 +48,8 @@ public final class MaintenanceManager {
             case 2:
                 AnisetteDataManager.shared.clearCache()
                 AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false)
+            case 3:
+                UserDefaults.standard.tunnelOverridePeerIp = nil
             default:
                 break
             }
