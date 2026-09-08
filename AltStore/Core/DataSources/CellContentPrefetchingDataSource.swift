@@ -1,19 +1,19 @@
 //
-//  RSTCellContentPrefetchingDataSource.swift
+//  CellContentPrefetchingDataSource.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 
-public protocol RSTCellContentPrefetchingDataSource: AnyObject {
+public protocol CellContentPrefetchingDataSource: AnyObject {
     associatedtype ContentType
-    associatedtype CellType: UIView & RSTCellContentCell
+    associatedtype CellType: UIView & CellContentCell
     associatedtype PrefetchContentType
     
     var prefetchItemCache: NSCache<AnyObject, AnyObject> { get }
-    var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)? { get set }
+    var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)? { get set }
     var prefetchCompletionHandler: ((CellType, PrefetchContentType?, IndexPath, Error?) -> Void)? { get set }
 }

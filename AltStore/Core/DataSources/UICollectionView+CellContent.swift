@@ -2,58 +2,58 @@
 //  UICollectionView+CellContent.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 
-extension UICollectionView: RSTCellContentUpdateableView, RSTCellContentTransactionUpdateable {
+extension UICollectionView: CellContentUpdateableView, CellContentTransactionUpdateable {
     private struct AssociatedKeys {
         static var nestedUpdatesCounter: UInt8 = 0
         static var operations: UInt8 = 0
     }
 
-    private var rst_nestedUpdatesCounter: Int {
+    private var nestedUpdatesCounter: Int {
         get { objc_getAssociatedObject(self, &AssociatedKeys.nestedUpdatesCounter) as? Int ?? 0 }
         set { objc_setAssociatedObject(self, &AssociatedKeys.nestedUpdatesCounter, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC) }
     }
 
-    private var rst_operations: [RSTCellContentChange]? {
-        get { objc_getAssociatedObject(self, &AssociatedKeys.operations) as? [RSTCellContentChange] }
+    private var operations: [CellContentChange]? {
+        get { objc_getAssociatedObject(self, &AssociatedKeys.operations) as? [CellContentChange] }
         set { objc_setAssociatedObject(self, &AssociatedKeys.operations, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 
-    @objc public func beginUpdates() {
-        if rst_nestedUpdatesCounter == 0 {
-            rst_operations = []
+    public func beginUpdates() {
+        if nestedUpdatesCounter == 0 {
+            operations = []
         }
-        rst_nestedUpdatesCounter += 1
+        nestedUpdatesCounter += 1
     }
 
-    @objc public func endUpdates() {
-        guard rst_nestedUpdatesCounter > 0 else { return }
-        rst_nestedUpdatesCounter -= 1
+    public func endUpdates() {
+        guard nestedUpdatesCounter > 0 else { return }
+        nestedUpdatesCounter -= 1
         
-        if rst_nestedUpdatesCounter > 0 {
+        if nestedUpdatesCounter > 0 {
             return
         }
         
-        guard let operations = rst_operations else { return }
-        rst_operations = nil
+        guard let currentOperations = operations else { return }
+        operations = nil
         
-        var postMoveUpdateChanges = [RSTCellContentChange]()
-        for change in operations {
+        var postMoveUpdateChanges = [CellContentChange]()
+        for change in currentOperations {
             if change.type == .move, let destinationIndexPath = change.destinationIndexPath {
-                let updateChange = RSTCellContentChange(type: .update, currentIndexPath: destinationIndexPath, destinationIndexPath: nil)
+                let updateChange = CellContentChange(type: .update, currentIndexPath: destinationIndexPath, destinationIndexPath: nil)
                 updateChange.rowAnimation = change.rowAnimation
                 postMoveUpdateChanges.append(updateChange)
             }
         }
         
         var updateIndexPaths = [IndexPath]()
-        for change in operations {
-            if change.sectionIndex == RSTUnknownSectionIndex && change.type == .update, let indexPath = change.currentIndexPath {
+        for change in currentOperations {
+            if change.sectionIndex == UnknownSectionIndex && change.type == .update, let indexPath = change.currentIndexPath {
                 updateIndexPaths.append(indexPath)
             }
         }
@@ -79,8 +79,8 @@ extension UICollectionView: RSTCellContentUpdateableView, RSTCellContentTransact
         }
         
         self.performBatchUpdates({
-            for change in operations {
-                if change.sectionIndex != RSTUnknownSectionIndex {
+            for change in currentOperations {
+                if change.sectionIndex != UnknownSectionIndex {
                     let indexSet = IndexSet(integer: change.sectionIndex)
                     switch change.type {
                     case .insert: self.insertSections(indexSet)
@@ -114,12 +114,12 @@ extension UICollectionView: RSTCellContentUpdateableView, RSTCellContentTransact
         CATransaction.commit()
     }
 
-    public func addChange(_ change: RSTCellContentChange) {
-        if rst_nestedUpdatesCounter > 0 {
-            rst_operations?.append(change)
+    public func addChange(_ change: CellContentChange) {
+        if nestedUpdatesCounter > 0 {
+            operations?.append(change)
         } else {
             self.performBatchUpdates({
-                if change.sectionIndex != RSTUnknownSectionIndex {
+                if change.sectionIndex != UnknownSectionIndex {
                     let indexSet = IndexSet(integer: change.sectionIndex)
                     switch change.type {
                     case .insert: self.insertSections(indexSet)
@@ -154,8 +154,7 @@ extension UICollectionView: RSTCellContentUpdateableView, RSTCellContentTransact
 }
 
 public extension UICollectionView {
-    func add(_ change: RSTCellContentChange) {
+    func add(_ change: CellContentChange) {
         self.addChange(change)
     }
 }
-

@@ -64,7 +64,7 @@ final class AppIDsViewController: UICollectionViewController
 
 private extension AppIDsViewController
 {
-    func makeDataSource() -> RSTFetchedResultsCollectionViewDataSource<AppID>
+    func makeDataSource() -> FetchedResultsCollectionViewDataSource<AppID>
     {
         let fetchRequest = AppID.fetchRequest() as NSFetchRequest<AppID>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \AppID.name, ascending: true),
@@ -81,7 +81,7 @@ private extension AppIDsViewController
             fetchRequest.predicate = NSPredicate(value: false)
         }
         
-        let dataSource = RSTFetchedResultsCollectionViewDataSource<AppID>(fetchRequest: fetchRequest, managedObjectContext: DatabaseManager.shared.viewContext)
+        let dataSource = FetchedResultsCollectionViewDataSource<AppID>(fetchRequest: fetchRequest, managedObjectContext: DatabaseManager.shared.viewContext)
         dataSource.proxy = self
         dataSource.cellConfigurationHandler = { [weak self] (cell, appID, indexPath) in
             guard let self = self else { return }

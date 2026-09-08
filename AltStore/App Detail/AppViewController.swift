@@ -134,15 +134,29 @@ final class AppViewController: UIViewController
         self._backgroundBlurTintColor = self.backgroundBlurView.contentView.backgroundColor
         
         // Load Images
-        for imageView in [self.bannerView.iconImageView!, self.backgroundAppIconImageView!, self.navigationBarAppIconImageView!]
+        let imageViews = [self.bannerView.iconImageView, self.backgroundAppIconImageView, self.navigationBarAppIconImageView]
+        for imageView in imageViews
         {
-            imageView.isIndicatingActivity = true
-            
-            Nuke.loadImage(with: self.app.iconURL, options: .shared, into: imageView, progress: nil) { [weak imageView] (result) in
-                switch result
+            imageView?.isIndicatingActivity = true
+        }
+        
+        Task { [weak self] in
+            guard let self else { return }
+            do
+            {
+                let image = try await ImagePipeline.shared.image(for: self.app.iconURL)
+                for imageView in [self.bannerView.iconImageView, self.backgroundAppIconImageView, self.navigationBarAppIconImageView]
                 {
-                case .success: imageView?.isIndicatingActivity = false
-                case .failure(let error): debugLog("[ALTLog] Failed to load app icons. \(error)")
+                    imageView?.image = image
+                    imageView?.isIndicatingActivity = false
+                }
+            }
+            catch
+            {
+                debugLog("[ALTLog] Failed to load app icons. \(error)")
+                for imageView in [self.bannerView.iconImageView, self.backgroundAppIconImageView, self.navigationBarAppIconImageView]
+                {
+                    imageView?.isIndicatingActivity = false
                 }
             }
         }

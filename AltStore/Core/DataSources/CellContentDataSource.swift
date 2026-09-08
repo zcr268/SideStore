@@ -1,23 +1,22 @@
 //
-//  RSTCellContentDataSource.swift
+//  CellContentDataSource.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import CoreData
 
-public let RSTCellContentGenericCellIdentifier = "Cell"
+public let CellContentGenericCellIdentifier = "Cell"
 
-@objc(RSTCellContentIndexPathTranslating)
-public protocol RSTCellContentIndexPathTranslating: AnyObject {
-    @objc func dataSource(_ dataSource: AnyObject, globalIndexPathForLocalIndexPath localIndexPath: IndexPath) -> IndexPath?
-    @objc func dataSource(_ dataSource: AnyObject, localIndexPathForGlobalIndexPath globalIndexPath: IndexPath) -> IndexPath?
+public protocol CellContentIndexPathTranslating: AnyObject {
+    func dataSource(_ dataSource: AnyObject, globalIndexPathForLocalIndexPath localIndexPath: IndexPath) -> IndexPath?
+    func dataSource(_ dataSource: AnyObject, localIndexPathForGlobalIndexPath globalIndexPath: IndexPath) -> IndexPath?
 }
 
-protocol RSTAnyCellContentDataSource: AnyObject {
+protocol AnyCellContentDataSource: AnyObject {
     var anyItemCount: Int { get }
     func setAnyContentView(_ contentView: UIScrollView?)
     func anyNumberOfSections() -> Int
@@ -25,21 +24,21 @@ protocol RSTAnyCellContentDataSource: AnyObject {
     func anyItem(at indexPath: IndexPath) -> Any
     func anyCellIdentifier(at indexPath: IndexPath) -> String
     func configureAnyCell(_ cell: UIView, at indexPath: IndexPath)
-    var anyIndexPathTranslator: RSTCellContentIndexPathTranslating? { get set }
+    var anyIndexPathTranslator: CellContentIndexPathTranslating? { get set }
     var anyIsDynamic: Bool { get }
 }
 
-open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellContentCell, ViewType: UIScrollView, DataSourceType>: NSObject, UITableViewDataSource, UICollectionViewDataSource {
+open class CellContentDataSource<ContentType, CellType: UIView & CellContentCell, ViewType: UIScrollView, DataSourceType>: NSObject, UITableViewDataSource, UICollectionViewDataSource, UISearchResultsUpdating {
     open weak var contentView: ViewType?
     open weak var proxy: AnyObject?
-    open var cellIdentifierHandler: ((IndexPath) -> String) = { _ in RSTCellContentGenericCellIdentifier }
+    open var cellIdentifierHandler: ((IndexPath) -> String) = { _ in CellContentGenericCellIdentifier }
     open var cellConfigurationHandler: ((CellType, ContentType, IndexPath) -> Void) = { _, _, _ in }
     private var _predicate: NSPredicate?
     open var predicate: NSPredicate? {
         get { return _predicate }
         set { setPredicate(newValue, refreshContent: true) }
     }
-    open weak var indexPathTranslator: RSTCellContentIndexPathTranslating?
+    open weak var indexPathTranslator: CellContentIndexPathTranslating?
     open var isDynamic: Bool { false }
     
     public func localIndexPath(for globalIndexPath: IndexPath) -> IndexPath? {
@@ -56,7 +55,7 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
         return localIndexPath
     }
 
-        open var placeholderView: UIView? {
+    open var placeholderView: UIView? {
         didSet {
             placeholderView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             updatePlaceholderVisibility()
@@ -117,12 +116,12 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
     open var rowAnimation: UITableView.RowAnimation = .automatic
     open var itemCount: Int = 0
 
-    public lazy var searchController: RSTSearchController = {
-        let controller = RSTSearchController(searchResultsController: nil)
-        controller.searchHandler = { [weak self] searchValue, _ in
-            self?.predicate = searchValue.predicate
-            return nil
-        }
+    public var searchableKeyPaths: Set<String> = []
+
+    public lazy var searchController: UISearchController = {
+        let controller = UISearchController(searchResultsController: nil)
+        controller.obscuresBackgroundDuringPresentation = false
+        controller.searchResultsUpdater = self
         return controller
     }()
 
@@ -149,21 +148,21 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
         return true
     }
 
-    open func addChange(_ change: RSTCellContentChange) {
-        let transformedChange: RSTCellContentChange
+    open func addChange(_ change: CellContentChange) {
+        let transformedChange: CellContentChange
         
-        if change.sectionIndex != RSTUnknownSectionIndex {
+        if change.sectionIndex != UnknownSectionIndex {
             let sectionIndexPath = IndexPath(item: 0, section: change.sectionIndex)
             let globalIndexPath = indexPathTranslator?.dataSource(self, globalIndexPathForLocalIndexPath: sectionIndexPath) ?? sectionIndexPath
-            transformedChange = RSTCellContentChange(type: change.type, sectionIndex: globalIndexPath.section)
+            transformedChange = CellContentChange(type: change.type, sectionIndex: globalIndexPath.section)
         } else {
             let currentIndexPath = change.currentIndexPath.flatMap { indexPathTranslator?.dataSource(self, globalIndexPathForLocalIndexPath: $0) ?? $0 }
             let destinationIndexPath = change.destinationIndexPath.flatMap { indexPathTranslator?.dataSource(self, globalIndexPathForLocalIndexPath: $0) ?? $0 }
-            transformedChange = RSTCellContentChange(type: change.type, currentIndexPath: currentIndexPath, destinationIndexPath: destinationIndexPath)
+            transformedChange = CellContentChange(type: change.type, currentIndexPath: currentIndexPath, destinationIndexPath: destinationIndexPath)
         }
         transformedChange.rowAnimation = change.rowAnimation
         
-        if change.sectionIndex == RSTUnknownSectionIndex {
+        if change.sectionIndex == UnknownSectionIndex {
             var indexPathForRemovingFromCache: IndexPath? = nil
             switch change.type {
             case .update:
@@ -175,13 +174,13 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
             }
             if let cachePath = indexPathForRemovingFromCache, isValidIndexPath(cachePath) {
                 let item = self.item(at: cachePath)
-                if let prefetchSelf = self as? any RSTCellContentPrefetchingDataSource {
+                if let prefetchSelf = self as? any CellContentPrefetchingDataSource {
                     prefetchSelf.prefetchItemCache.removeObject(forKey: item as AnyObject)
                 }
             }
         }
         
-        (contentView as? RSTCellContentUpdateableView)?.addChange(transformedChange)
+        (contentView as? CellContentUpdateableView)?.addChange(transformedChange)
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -217,7 +216,7 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let compositeDataSource = self as? RSTAnyCompositeDataSource {
+        if let compositeDataSource = self as? AnyCompositeDataSource {
             return compositeDataSource.compositeCollectionView(collectionView, cellForItemAt: indexPath)
         }
 
@@ -231,7 +230,7 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let compositeDataSource = self as? RSTAnyCompositeDataSource {
+        if let compositeDataSource = self as? AnyCompositeDataSource {
             return compositeDataSource.compositeTableView(tableView, cellForRowAt: indexPath)
         }
 
@@ -276,9 +275,15 @@ open class RSTCellContentDataSource<ContentType, CellType: UIView & RSTCellConte
         }
         return super.forwardingTarget(for: aSelector)
     }
+
+    @objc public func updateSearchResults(for searchController: UISearchController) {
+        let text = searchController.searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let searchPredicate = NSPredicate.forSearching(forText: text, inValuesForKeyPaths: self.searchableKeyPaths)
+        self.predicate = searchPredicate
+    }
 }
 
-extension RSTCellContentDataSource: RSTAnyCellContentDataSource {
+extension CellContentDataSource: AnyCellContentDataSource {
     var anyItemCount: Int { itemCount }
 
     func setAnyContentView(_ contentView: UIScrollView?) {
@@ -308,7 +313,7 @@ extension RSTCellContentDataSource: RSTAnyCellContentDataSource {
         configureCell(cell, at: indexPath)
     }
 
-    var anyIndexPathTranslator: RSTCellContentIndexPathTranslating? {
+    var anyIndexPathTranslator: CellContentIndexPathTranslating? {
         get { self.indexPathTranslator }
         set { self.indexPathTranslator = newValue }
     }

@@ -1,20 +1,20 @@
 //
-//  RSTCompositeDataSource.swift
+//  CompositeDataSource.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import CoreData
 
-protocol RSTAnyCompositeDataSource: AnyObject {
+protocol AnyCompositeDataSource: AnyObject {
     func compositeCollectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     func compositeTableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
 }
 
-open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContentCell, ViewType: UIScrollView, DataSourceType>: RSTCellContentDataSource<ContentType, CellType, ViewType, DataSourceType>, RSTCellContentIndexPathTranslating {
+open class CompositeDataSource<ContentType, CellType: UIView & CellContentCell, ViewType: UIScrollView, DataSourceType>: CellContentDataSource<ContentType, CellType, ViewType, DataSourceType>, CellContentIndexPathTranslating {
     open var dataSources: [AnyObject]
     open var shouldFlattenSections = false {
         didSet { (contentView as? UICollectionView)?.reloadData(); (contentView as? UITableView)?.reloadData() }
@@ -23,13 +23,13 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
         self.dataSources = dataSources
         super.init()
         for dataSource in dataSources {
-            if let anyDataSource = dataSource as? RSTAnyCellContentDataSource {
+            if let anyDataSource = dataSource as? AnyCellContentDataSource {
                 anyDataSource.anyIndexPathTranslator = self
             }
         }
         self.cellIdentifierHandler = { [weak self] indexPath in
             guard let self, let resolved = self.resolve(indexPath) else {
-                return RSTCellContentGenericCellIdentifier
+                return CellContentGenericCellIdentifier
             }
             return resolved.dataSource.anyCellIdentifier(at: resolved.indexPath)
         }
@@ -39,8 +39,8 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
         }
     }
 
-    private var typedDataSources: [RSTAnyCellContentDataSource] {
-        dataSources.compactMap { $0 as? RSTAnyCellContentDataSource }
+    private var typedDataSources: [AnyCellContentDataSource] {
+        dataSources.compactMap { $0 as? AnyCellContentDataSource }
     }
 
     private func prepareChildren(for contentView: ViewType?) {
@@ -49,11 +49,11 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
         }
     }
 
-    private func childSectionCount(for dataSource: RSTAnyCellContentDataSource) -> Int {
+    private func childSectionCount(for dataSource: AnyCellContentDataSource) -> Int {
         dataSource.anyNumberOfSections()
     }
 
-    private func childItemCount(for dataSource: RSTAnyCellContentDataSource) -> Int {
+    private func childItemCount(for dataSource: AnyCellContentDataSource) -> Int {
         let sectionCount = dataSource.anyNumberOfSections()
         guard sectionCount > 0 else { return dataSource.anyItemCount }
         return (0..<sectionCount).reduce(0) { total, section in
@@ -61,7 +61,7 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
         }
     }
 
-    private func localIndexPath(forFlattenedItem item: Int, in dataSource: RSTAnyCellContentDataSource) -> IndexPath {
+    private func localIndexPath(forFlattenedItem item: Int, in dataSource: AnyCellContentDataSource) -> IndexPath {
         var remainingItem = item
         for section in 0..<dataSource.anyNumberOfSections() {
             let count = dataSource.anyNumberOfItems(in: section)
@@ -73,7 +73,7 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
         return IndexPath(item: max(remainingItem, 0), section: 0)
     }
 
-    func resolve(_ indexPath: IndexPath) -> (dataSource: RSTAnyCellContentDataSource, indexPath: IndexPath)? {
+    func resolve(_ indexPath: IndexPath) -> (dataSource: AnyCellContentDataSource, indexPath: IndexPath)? {
         prepareChildren(for: contentView)
 
         if shouldFlattenSections {
@@ -160,7 +160,7 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
     }
 
     public func dataSource(_ dataSource: AnyObject, globalIndexPathForLocalIndexPath localIndexPath: IndexPath) -> IndexPath? {
-        guard let anyDataSource = dataSource as? RSTAnyCellContentDataSource else { return nil }
+        guard let anyDataSource = dataSource as? AnyCellContentDataSource else { return nil }
         
         guard let dataSourceIndex = typedDataSources.firstIndex(where: { $0 === anyDataSource }) else {
             return nil
@@ -194,7 +194,7 @@ open class RSTCompositeDataSource<ContentType, CellType: UIView & RSTCellContent
     }
 }
 
-extension RSTCompositeDataSource: RSTAnyCompositeDataSource {
+extension CompositeDataSource: AnyCompositeDataSource {
     func compositeCollectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         contentView = collectionView as? ViewType
         guard let resolved = resolve(indexPath) else {
@@ -224,11 +224,12 @@ extension RSTCompositeDataSource: RSTAnyCompositeDataSource {
     }
 }
 
-open class RSTCompositeCollectionViewDataSource<ContentType>: RSTCompositeDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
-open class RSTCompositeTableViewDataSource<ContentType>: RSTCompositeDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
-open class RSTCompositeCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTCompositeCollectionViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
+open class CompositeCollectionViewDataSource<ContentType>: CompositeDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
+open class CompositeTableViewDataSource<ContentType>: CompositeDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
+
+open class CompositeCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: CompositeCollectionViewDataSource<ContentType>, CellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UICollectionViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
     
     private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
@@ -236,9 +237,9 @@ open class RSTCompositeCollectionViewPrefetchingDataSource<ContentType, Prefetch
     public override func configureCell(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
         super.configureCell(cell, at: indexPath)
         
-        if prefetchHandler == nil {
+        guard let prefetchHandler else {
             if let resolved = resolve(indexPath),
-               let _ = resolved.dataSource as? any RSTCellContentPrefetchingDataSource {
+               let _ = resolved.dataSource as? any CellContentPrefetchingDataSource {
                 resolved.dataSource.configureAnyCell(cell, at: resolved.indexPath)
             }
             return
@@ -252,34 +253,39 @@ open class RSTCompositeCollectionViewPrefetchingDataSource<ContentType, Prefetch
             return
         }
         
-        if let task = prefetchHandler?(item, indexPath, { [weak self, weak cell] (content, error) in
-            guard let self, let cell else { return }
-            if let content {
-                self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-            }
-            DispatchQueue.main.async {
+        prefetchTasks[indexPath] = Task { @MainActor [weak self, weak cell] in
+            defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+            do {
+                guard let content = try await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
+                
+                guard let self, let cell else { return }
                 if let collectionView = self.contentView,
                    let cellIndexPath = collectionView.indexPath(for: cell) {
                     let localIndexPath = self.localIndexPath(for: cellIndexPath) ?? cellIndexPath
                     if self.isValidIndexPath(localIndexPath) {
                         let currentItem = self.item(at: localIndexPath)
                         if (currentItem as AnyObject) === (item as AnyObject) || localIndexPath == indexPath {
-                            self.prefetchCompletionHandler?(cell, content, localIndexPath, error)
+                            self.prefetchCompletionHandler?(cell, content, localIndexPath, nil)
                         }
                     }
                 } else {
-                    self.prefetchCompletionHandler?(cell, content, indexPath, error)
+                    self.prefetchCompletionHandler?(cell, content, indexPath, nil)
                 }
+            } catch {
+                guard !Task.isCancelled else { return }
+                guard let self, let cell else { return }
+                self.prefetchCompletionHandler?(cell, nil, indexPath, error)
             }
-        }) {
-            prefetchTasks[indexPath] = task
         }
     }
 
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isValidIndexPath(indexPath) else { continue }
-            if prefetchHandler == nil {
+            guard let prefetchHandler else {
                 if let resolved = resolve(indexPath),
                    let childPrefetching = resolved.dataSource as? any UICollectionViewDataSourcePrefetching {
                     childPrefetching.collectionView(collectionView, prefetchItemsAt: [resolved.indexPath])
@@ -291,13 +297,13 @@ open class RSTCompositeCollectionViewPrefetchingDataSource<ContentType, Prefetch
             if prefetchItemCache.object(forKey: item as AnyObject) != nil {
                 continue
             }
-            if let task = prefetchHandler?(item, indexPath, { [weak self] (content, error) in
-                guard let self else { return }
-                if let content {
-                    self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-                }
-            }) {
-                prefetchTasks[indexPath] = task
+            guard prefetchTasks[indexPath] == nil else { continue }
+            
+            prefetchTasks[indexPath] = Task { [weak self] in
+                defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+                guard let content = try? await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
             }
         }
     }
@@ -315,9 +321,10 @@ open class RSTCompositeCollectionViewPrefetchingDataSource<ContentType, Prefetch
         }
     }
 }
-open class RSTCompositeTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTCompositeTableViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
+
+open class CompositeTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: CompositeTableViewDataSource<ContentType>, CellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UITableViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
     
     private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
@@ -325,9 +332,9 @@ open class RSTCompositeTableViewPrefetchingDataSource<ContentType, PrefetchConte
     public override func configureCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
         super.configureCell(cell, at: indexPath)
         
-        if prefetchHandler == nil {
+        guard let prefetchHandler else {
             if let resolved = resolve(indexPath),
-               let _ = resolved.dataSource as? any RSTCellContentPrefetchingDataSource {
+               let _ = resolved.dataSource as? any CellContentPrefetchingDataSource {
                 resolved.dataSource.configureAnyCell(cell, at: resolved.indexPath)
             }
             return
@@ -341,34 +348,39 @@ open class RSTCompositeTableViewPrefetchingDataSource<ContentType, PrefetchConte
             return
         }
         
-        if let task = prefetchHandler?(item, indexPath, { [weak self, weak cell] (content, error) in
-            guard let self, let cell else { return }
-            if let content {
-                self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-            }
-            DispatchQueue.main.async {
+        prefetchTasks[indexPath] = Task { @MainActor [weak self, weak cell] in
+            defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+            do {
+                guard let content = try await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
+                
+                guard let self, let cell else { return }
                 if let tableView = self.contentView,
                    let cellIndexPath = tableView.indexPath(for: cell) {
                     let localIndexPath = self.localIndexPath(for: cellIndexPath) ?? cellIndexPath
                     if self.isValidIndexPath(localIndexPath) {
                         let currentItem = self.item(at: localIndexPath)
                         if (currentItem as AnyObject) === (item as AnyObject) || localIndexPath == indexPath {
-                            self.prefetchCompletionHandler?(cell, content, localIndexPath, error)
+                            self.prefetchCompletionHandler?(cell, content, localIndexPath, nil)
                         }
                     }
                 } else {
-                    self.prefetchCompletionHandler?(cell, content, indexPath, error)
+                    self.prefetchCompletionHandler?(cell, content, indexPath, nil)
                 }
+            } catch {
+                guard !Task.isCancelled else { return }
+                guard let self, let cell else { return }
+                self.prefetchCompletionHandler?(cell, nil, indexPath, error)
             }
-        }) {
-            prefetchTasks[indexPath] = task
         }
     }
 
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard isValidIndexPath(indexPath) else { continue }
-            if prefetchHandler == nil {
+            guard let prefetchHandler else {
                 if let resolved = resolve(indexPath),
                    let childPrefetching = resolved.dataSource as? any UITableViewDataSourcePrefetching {
                     childPrefetching.tableView(tableView, prefetchRowsAt: [resolved.indexPath])
@@ -380,13 +392,13 @@ open class RSTCompositeTableViewPrefetchingDataSource<ContentType, PrefetchConte
             if prefetchItemCache.object(forKey: item as AnyObject) != nil {
                 continue
             }
-            if let task = prefetchHandler?(item, indexPath, { [weak self] (content, error) in
-                guard let self else { return }
-                if let content {
-                    self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-                }
-            }) {
-                prefetchTasks[indexPath] = task
+            guard prefetchTasks[indexPath] == nil else { continue }
+            
+            prefetchTasks[indexPath] = Task { [weak self] in
+                defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+                guard let content = try? await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
             }
         }
     }
@@ -404,4 +416,3 @@ open class RSTCompositeTableViewPrefetchingDataSource<ContentType, PrefetchConte
         }
     }
 }
-

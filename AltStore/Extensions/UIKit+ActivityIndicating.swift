@@ -2,24 +2,24 @@
 //  UIKit+ActivityIndicating.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
+//  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import ObjectiveC
 
-@objc(RSTActivityIndicating)
-public protocol RSTActivityIndicating: AnyObject {
-    @objc var isIndicatingActivity: Bool { get set }
-    @objc var activityCount: Int { get }
+public protocol ActivityIndicating: AnyObject {
+    var isIndicatingActivity: Bool { get set }
+    var activityCount: Int { get }
     
-    @objc func incrementActivityCount()
-    @objc func decrementActivityCount()
+    func incrementActivityCount()
+    func decrementActivityCount()
 }
 
 private var activityIndicatingHelperKey: UInt8 = 0
 
-internal final class ActivityIndicatingHelper: NSObject, RSTActivityIndicating {
+internal final class ActivityIndicatingHelper: NSObject, ActivityIndicating {
     weak var indicatingObject: AnyObject?
     
     private let lock = NSLock()
@@ -129,7 +129,7 @@ extension NSObject {
     }
 }
 
-extension UIButton: _ActivityIndicating, RSTActivityIndicating {
+extension UIButton: _ActivityIndicating, ActivityIndicating {
     @objc open var isIndicatingActivity: Bool {
         get { return activityIndicatingHelper.isIndicatingActivity }
         set { activityIndicatingHelper.isIndicatingActivity = newValue }
@@ -147,7 +147,6 @@ extension UIButton: _ActivityIndicating, RSTActivityIndicating {
         activityIndicatingHelper.decrementActivityCount()
     }
     
-    @objc(rst_activityIndicatorView)
     public var activityIndicatorView: UIActivityIndicatorView {
         return activityIndicatingHelper.activityIndicatorView
     }
@@ -206,7 +205,7 @@ extension UIButton: _ActivityIndicating, RSTActivityIndicating {
     }
 }
 
-extension UIBarButtonItem: _ActivityIndicating, RSTActivityIndicating {
+extension UIBarButtonItem: _ActivityIndicating, ActivityIndicating {
     public var isIndicatingActivity: Bool {
         get { return activityIndicatingHelper.isIndicatingActivity }
         set { activityIndicatingHelper.isIndicatingActivity = newValue }
@@ -224,7 +223,6 @@ extension UIBarButtonItem: _ActivityIndicating, RSTActivityIndicating {
         activityIndicatingHelper.decrementActivityCount()
     }
     
-    @objc(rst_activityIndicatorView)
     public var activityIndicatorView: UIActivityIndicatorView {
         return activityIndicatingHelper.activityIndicatorView
     }
@@ -262,7 +260,7 @@ extension UIBarButtonItem: _ActivityIndicating, RSTActivityIndicating {
     }
 }
 
-extension UIImageView: _ActivityIndicating, RSTActivityIndicating {
+extension UIImageView: _ActivityIndicating, ActivityIndicating {
     public var isIndicatingActivity: Bool {
         get { return activityIndicatingHelper.isIndicatingActivity }
         set { activityIndicatingHelper.isIndicatingActivity = newValue }
@@ -280,7 +278,6 @@ extension UIImageView: _ActivityIndicating, RSTActivityIndicating {
         activityIndicatingHelper.decrementActivityCount()
     }
     
-    @objc(rst_activityIndicatorView)
     public var activityIndicatorView: UIActivityIndicatorView {
         return activityIndicatingHelper.activityIndicatorView
     }
@@ -300,7 +297,7 @@ extension UIImageView: _ActivityIndicating, RSTActivityIndicating {
     }
 }
 
-extension UITextField: _ActivityIndicating, RSTActivityIndicating {
+extension UITextField: _ActivityIndicating, ActivityIndicating {
     public var isIndicatingActivity: Bool {
         get { return activityIndicatingHelper.isIndicatingActivity }
         set { activityIndicatingHelper.isIndicatingActivity = newValue }
@@ -318,7 +315,6 @@ extension UITextField: _ActivityIndicating, RSTActivityIndicating {
         activityIndicatingHelper.decrementActivityCount()
     }
     
-    @objc(rst_activityIndicatorView)
     public var activityIndicatorView: UIActivityIndicatorView {
         return activityIndicatingHelper.activityIndicatorView
     }
@@ -359,7 +355,7 @@ extension UITextField: _ActivityIndicating, RSTActivityIndicating {
     }
 }
 
-extension UIApplication: _ActivityIndicating, RSTActivityIndicating {
+extension UIApplication: _ActivityIndicating, ActivityIndicating {
     public var isIndicatingActivity: Bool {
         get { return activityIndicatingHelper.isIndicatingActivity }
         set { activityIndicatingHelper.isIndicatingActivity = newValue }

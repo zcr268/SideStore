@@ -2,15 +2,15 @@
 //  UITableView+CellContent.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 
-extension UITableView: RSTCellContentUpdateableView, RSTCellContentTransactionUpdateable {
-    public func addChange(_ change: RSTCellContentChange) {
-        if change.sectionIndex != RSTUnknownSectionIndex {
+extension UITableView: CellContentUpdateableView, CellContentTransactionUpdateable {
+    public func addChange(_ change: CellContentChange) {
+        if change.sectionIndex != UnknownSectionIndex {
             let indexSet = IndexSet(integer: change.sectionIndex)
             switch change.type {
             case .insert:
@@ -38,8 +38,8 @@ extension UITableView: RSTCellContentUpdateableView, RSTCellContentTransactionUp
                 }
             case .move:
                 if let currentIndexPath = change.currentIndexPath, let destinationIndexPath = change.destinationIndexPath {
-                    DispatchQueue.main.async {
-                        self.reloadRows(at: [destinationIndexPath], with: change.rowAnimation)
+                    Task { @MainActor [weak self] in
+                        self?.reloadRows(at: [destinationIndexPath], with: change.rowAnimation)
                     }
                     self.moveRow(at: currentIndexPath, to: destinationIndexPath)
                 }

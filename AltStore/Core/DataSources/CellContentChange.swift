@@ -1,40 +1,38 @@
 //
-//  RSTCellContentChange.swift
+//  CellContentChange.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import CoreData
-public let RSTUnknownSectionIndex: Int = -1
 
-@objc(RSTCellContentChange)
-public final class RSTCellContentChange: NSObject {
-    @objc public enum ChangeType: Int {
+public let UnknownSectionIndex: Int = -1
+
+public final class CellContentChange: NSObject {
+    public enum ChangeType: Int {
         case insert
         case delete
         case move
         case update
     }
 
-    @objc public let type: ChangeType
-    @objc public let currentIndexPath: IndexPath?
-    @objc public let destinationIndexPath: IndexPath?
-    @objc public let sectionIndex: Int
-    @objc public var rowAnimation: UITableView.RowAnimation = .automatic
+    public let type: ChangeType
+    public let currentIndexPath: IndexPath?
+    public let destinationIndexPath: IndexPath?
+    public let sectionIndex: Int
+    public var rowAnimation: UITableView.RowAnimation = .automatic
 
-    @objc(initWithType:currentIndexPath:destinationIndexPath:)
     public init(type: ChangeType, currentIndexPath: IndexPath?, destinationIndexPath: IndexPath?) {
         self.type = type
         self.currentIndexPath = currentIndexPath
         self.destinationIndexPath = destinationIndexPath
-        self.sectionIndex = RSTUnknownSectionIndex
+        self.sectionIndex = UnknownSectionIndex
         super.init()
     }
 
-    @objc(initWithType:sectionIndex:)
     public init(type: ChangeType, sectionIndex: Int) {
         self.type = type
         self.currentIndexPath = nil

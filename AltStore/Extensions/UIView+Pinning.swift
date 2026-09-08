@@ -1,19 +1,18 @@
 //
-//  NSLayoutConstraint+Edges.swift
+//  UIView+Pinning.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
+//  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 
 public extension NSLayoutConstraint {
-    @objc(constraintsPinningEdgesOfView:toEdgesOfView:)
     static func constraintsPinningEdges(of view1: UIView, to view2: UIView) -> [NSLayoutConstraint] {
         return self.constraintsPinningEdges(of: view1, to: view2, withInsets: .zero)
     }
     
-    @objc(constraintsPinningEdgesOfView:toEdgesOfView:withInsets:)
     static func constraintsPinningEdges(of view1: UIView, to view2: UIView, withInsets insets: UIEdgeInsets) -> [NSLayoutConstraint] {
         let topConstraint = view1.topAnchor.constraint(equalTo: view2.topAnchor, constant: insets.top)
         let bottomConstraint = view2.bottomAnchor.constraint(equalTo: view1.bottomAnchor, constant: insets.bottom)
@@ -25,7 +24,6 @@ public extension NSLayoutConstraint {
 }
 
 public extension UIView {
-    @objc(addSubview:pinningEdgesWithInsets:)
     func addSubview(_ view: UIView, pinningEdgesWith insets: UIEdgeInsets) {
         view.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(view)

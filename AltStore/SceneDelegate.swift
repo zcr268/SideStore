@@ -81,11 +81,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate
         guard let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: Date()) else { return }
         
         let midnightOneMonthAgo = Calendar.current.startOfDay(for: oneMonthAgo)
-        DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo) { result in
-            switch result
+        Task.detached(priority: .background) {
+            do
             {
-            case .success: break
-            case .failure(let error): debugLog("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
+                try await DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo)
+            }
+            catch
+            {
+                debugLog("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
             }
         }
         

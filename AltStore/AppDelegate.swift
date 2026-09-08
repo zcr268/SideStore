@@ -168,26 +168,25 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             UserDefaults.standard.firstLaunch = Date()
         }
         
-        DatabaseManager.shared.start { (error) in
-            if let error = error
+        Task.detached(priority: .userInitiated) {
+            do
             {
-                debugLog("Failed to start DatabaseManager. Error: \(error)")
-            }
-            else
-            {
+                try await DatabaseManager.shared.start()
                 debugLog("Started DatabaseManager.")
                 debugLog("Reconciling any staged drafts started...")
                 Self.reconcileSelfReinstallationIfNeeded()
                 debugLog("Reconcile any staged drafts completed.")
                 
-                Task {
-                    await WidgetDataManager.publishCurrentInstalledAppsIfNeeded(in: DatabaseManager.shared.viewContext)
-                }
+                await WidgetDataManager.publishCurrentInstalledAppsIfNeeded(in: DatabaseManager.shared.viewContext)
                 
                 if isFirstLaunch
                 {
                     AuthManager.shared.signOut()
                 }
+            }
+            catch
+            {
+                debugLog("Failed to start DatabaseManager. Error: \(error)")
             }
         }
         
@@ -213,11 +212,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         guard let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: Date()) else { return }
         
         let midnightOneMonthAgo = Calendar.current.startOfDay(for: oneMonthAgo)
-        DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo) { result in
-            switch result
+        Task.detached(priority: .background) {
+            do
             {
-            case .success: break
-            case .failure(let error): debugLog("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
+                try await DatabaseManager.shared.purgeLoggedErrors(before: midnightOneMonthAgo)
+            }
+            catch
+            {
+                debugLog("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
             }
         }
              
@@ -422,29 +424,19 @@ extension AppDelegate
                 return
             }
             
-            if !DatabaseManager.shared.isStarted
-            {
-                DatabaseManager.shared.start() { (error) in
-                    if error != nil
-                    {
-                        backgroundFetchCompletionHandler(.failed)
+            Task.detached(priority: .userInitiated) {
+                do
+                {
+                    try await DatabaseManager.shared.start()
+                    self.performBackgroundFetch { (backgroundFetchResult) in
+                        backgroundFetchCompletionHandler(backgroundFetchResult)
+                    } refreshAppsCompletionHandler: { (refreshAppsResult) in
                         taskCompletionHandler()
                     }
-                    else
-                    {
-                        self.performBackgroundFetch { (backgroundFetchResult) in
-                            backgroundFetchCompletionHandler(backgroundFetchResult)
-                        } refreshAppsCompletionHandler: { (refreshAppsResult) in
-                            taskCompletionHandler()
-                        }
-                    }
                 }
-            }
-            else
-            {
-                self.performBackgroundFetch { (backgroundFetchResult) in
-                    backgroundFetchCompletionHandler(backgroundFetchResult)
-                } refreshAppsCompletionHandler: { (refreshAppsResult) in
+                catch
+                {
+                    backgroundFetchCompletionHandler(.failed)
                     taskCompletionHandler()
                 }
             }

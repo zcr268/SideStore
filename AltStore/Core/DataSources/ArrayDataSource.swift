@@ -1,14 +1,15 @@
 //
-//  RSTArrayDataSource.swift
+//  ArrayDataSource.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import CoreData
-open class RSTArrayDataSource<ContentType, CellType: UIView & RSTCellContentCell, ViewType: UIScrollView, DataSourceType>: RSTCellContentDataSource<ContentType, CellType, ViewType, DataSourceType> {
+
+open class ArrayDataSource<ContentType, CellType: UIView & CellContentCell, ViewType: UIScrollView, DataSourceType>: CellContentDataSource<ContentType, CellType, ViewType, DataSourceType> {
     private var isApplyingBatchChanges = false
 
     open var items: [ContentType] = [] {
@@ -25,7 +26,7 @@ open class RSTArrayDataSource<ContentType, CellType: UIView & RSTCellContentCell
         super.init()
         self.itemCount = items.count
     }
-    public func setItems(_ items: [ContentType], with changes: [RSTCellContentChange]? = nil) {
+    public func setItems(_ items: [ContentType], with changes: [CellContentChange]? = nil) {
         self.isApplyingBatchChanges = true
         self.items = items
         self.itemCount = items.count
@@ -33,11 +34,11 @@ open class RSTArrayDataSource<ContentType, CellType: UIView & RSTCellContentCell
         
         if let changes = changes {
             if !changes.isEmpty, let contentView = self.contentView {
-                (contentView as? RSTCellContentTransactionUpdateable)?.beginUpdates()
+                (contentView as? CellContentTransactionUpdateable)?.beginUpdates()
                 for change in changes {
                     self.addChange(change)
                 }
-                (contentView as? RSTCellContentTransactionUpdateable)?.endUpdates()
+                (contentView as? CellContentTransactionUpdateable)?.endUpdates()
             }
         } else {
             (contentView as? UICollectionView)?.reloadData()
@@ -50,11 +51,12 @@ open class RSTArrayDataSource<ContentType, CellType: UIView & RSTCellContentCell
     public override func filterContent(with predicate: NSPredicate?) {}
 }
 
-open class RSTArrayCollectionViewDataSource<ContentType>: RSTArrayDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
-open class RSTArrayTableViewDataSource<ContentType>: RSTArrayDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
-open class RSTArrayCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTArrayCollectionViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
+open class ArrayCollectionViewDataSource<ContentType>: ArrayDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
+open class ArrayTableViewDataSource<ContentType>: ArrayDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
+
+open class ArrayCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: ArrayCollectionViewDataSource<ContentType>, CellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UICollectionViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
     
     private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
@@ -70,44 +72,52 @@ open class RSTArrayCollectionViewPrefetchingDataSource<ContentType, PrefetchCont
             return
         }
         
-        if let task = prefetchHandler?(item, indexPath, { [weak self, weak cell] (content, error) in
-            guard let self, let cell else { return }
-            if let content {
-                self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-            }
-            DispatchQueue.main.async {
+        guard let prefetchHandler else { return }
+        
+        prefetchTasks[indexPath] = Task { @MainActor [weak self, weak cell] in
+            defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+            do {
+                guard let content = try await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
+                
+                guard let self, let cell else { return }
                 if let collectionView = self.contentView,
                    let cellIndexPath = collectionView.indexPath(for: cell) {
                     let localIndexPath = self.localIndexPath(for: cellIndexPath) ?? cellIndexPath
                     if self.isValidIndexPath(localIndexPath) {
                         let currentItem = self.item(at: localIndexPath)
                         if (currentItem as AnyObject) === (item as AnyObject) || localIndexPath == indexPath {
-                            self.prefetchCompletionHandler?(cell, content, localIndexPath, error)
+                            self.prefetchCompletionHandler?(cell, content, localIndexPath, nil)
                         }
                     }
                 } else {
-                    self.prefetchCompletionHandler?(cell, content, indexPath, error)
+                    self.prefetchCompletionHandler?(cell, content, indexPath, nil)
                 }
+            } catch {
+                guard !Task.isCancelled else { return }
+                guard let self, let cell else { return }
+                self.prefetchCompletionHandler?(cell, nil, indexPath, error)
             }
-        }) {
-            prefetchTasks[indexPath] = task
         }
     }
 
     public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        guard let prefetchHandler else { return }
         for indexPath in indexPaths {
             guard isValidIndexPath(indexPath) else { continue }
             let item = self.item(at: indexPath)
             if prefetchItemCache.object(forKey: item as AnyObject) != nil {
                 continue
             }
-            if let task = prefetchHandler?(item, indexPath, { [weak self] (content, error) in
-                guard let self else { return }
-                if let content {
-                    self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-                }
-            }) {
-                prefetchTasks[indexPath] = task
+            guard prefetchTasks[indexPath] == nil else { continue }
+            
+            prefetchTasks[indexPath] = Task { [weak self] in
+                defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+                guard let content = try? await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
             }
         }
     }
@@ -118,9 +128,10 @@ open class RSTArrayCollectionViewPrefetchingDataSource<ContentType, PrefetchCont
         }
     }
 }
-open class RSTArrayTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTArrayTableViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
+
+open class ArrayTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: ArrayTableViewDataSource<ContentType>, CellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UITableViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
     
     private var prefetchTasks: [IndexPath: Task<Void, Never>] = [:]
@@ -136,44 +147,52 @@ open class RSTArrayTableViewPrefetchingDataSource<ContentType, PrefetchContentTy
             return
         }
         
-        if let task = prefetchHandler?(item, indexPath, { [weak self, weak cell] (content, error) in
-            guard let self, let cell else { return }
-            if let content {
-                self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-            }
-            DispatchQueue.main.async {
+        guard let prefetchHandler else { return }
+        
+        prefetchTasks[indexPath] = Task { @MainActor [weak self, weak cell] in
+            defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+            do {
+                guard let content = try await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
+                
+                guard let self, let cell else { return }
                 if let tableView = self.contentView,
                    let cellIndexPath = tableView.indexPath(for: cell) {
                     let localIndexPath = self.localIndexPath(for: cellIndexPath) ?? cellIndexPath
                     if self.isValidIndexPath(localIndexPath) {
                         let currentItem = self.item(at: localIndexPath)
                         if (currentItem as AnyObject) === (item as AnyObject) || localIndexPath == indexPath {
-                            self.prefetchCompletionHandler?(cell, content, localIndexPath, error)
+                            self.prefetchCompletionHandler?(cell, content, localIndexPath, nil)
                         }
                     }
                 } else {
-                    self.prefetchCompletionHandler?(cell, content, indexPath, error)
+                    self.prefetchCompletionHandler?(cell, content, indexPath, nil)
                 }
+            } catch {
+                guard !Task.isCancelled else { return }
+                guard let self, let cell else { return }
+                self.prefetchCompletionHandler?(cell, nil, indexPath, error)
             }
-        }) {
-            prefetchTasks[indexPath] = task
         }
     }
 
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let prefetchHandler else { return }
         for indexPath in indexPaths {
             guard isValidIndexPath(indexPath) else { continue }
             let item = self.item(at: indexPath)
             if prefetchItemCache.object(forKey: item as AnyObject) != nil {
                 continue
             }
-            if let task = prefetchHandler?(item, indexPath, { [weak self] (content, error) in
-                guard let self else { return }
-                if let content {
-                    self.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
-                }
-            }) {
-                prefetchTasks[indexPath] = task
+            guard prefetchTasks[indexPath] == nil else { continue }
+            
+            prefetchTasks[indexPath] = Task { [weak self] in
+                defer { self?.prefetchTasks.removeValue(forKey: indexPath) }
+                guard let content = try? await prefetchHandler(item, indexPath) else { return }
+                guard !Task.isCancelled else { return }
+                self?.prefetchItemCache.setObject(content as AnyObject, forKey: item as AnyObject)
             }
         }
     }

@@ -49,19 +49,11 @@ final class LaunchViewController: UIViewController {
         await MainActor.run{
             retries += 1
         }
-        if !DatabaseManager.shared.isStarted {
-            await withCheckedContinuation { continuation in
-                DatabaseManager.shared.start { error in
-                    if let error {
-                        Task { await self.handleLaunchError(error, retryCallback: self.runLaunchSequence) }
-                    } else {
-                        Task { await self.finishLaunching() }
-                    }
-                    continuation.resume(returning: ())
-                }
-            }
-        } else {
+        do {
+            try await DatabaseManager.shared.start()
             await self.finishLaunching()
+        } catch {
+            await self.handleLaunchError(error, retryCallback: self.runLaunchSequence)
         }
     }
 

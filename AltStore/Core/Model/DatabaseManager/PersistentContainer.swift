@@ -1,15 +1,15 @@
 //
-//  RSTPersistentContainer.swift
+//  PersistentContainer.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
+//  Copyright © 2026 SideStore. All rights reserved.
 //
 
 import CoreData
 
-@objc(RSTPersistentContainer)
-public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable {
-    @objc open var isMigrationRequired: Bool {
+open class PersistentContainer: NSPersistentContainer, @unchecked Sendable {
+    open var isMigrationRequired: Bool {
         for description in self.persistentStoreDescriptions {
             guard let url = description.url,
                   let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: description.type, at: url, options: description.options) else {
@@ -22,13 +22,25 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         return false
     }
     
-    @objc open var shouldAddStoresAsynchronously = false
-    @objc open var preferredMergePolicy: NSMergePolicy = RSTRelationshipPreservingMergePolicy()
+    open var shouldAddStoresAsynchronously = false
+    open var preferredMergePolicy: NSMergePolicy = RelationshipPreservingMergePolicy()
     
     private let parentBackgroundContexts = NSHashTable<NSManagedObjectContext>.weakObjects()
     private let pendingSaveParentBackgroundContexts = NSHashTable<NSManagedObjectContext>.weakObjects()
     
-    @objc(initWithName:bundle:)
+    open override class func defaultDirectoryURL() -> URL {
+        guard let sharedDirectoryURL = FileManager.default.altstoreSharedDirectory else { return super.defaultDirectoryURL() }
+        
+        let databaseDirectoryURL = sharedDirectoryURL.appendingPathComponent("Database")
+        try? FileManager.default.createDirectory(at: databaseDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+
+        return databaseDirectoryURL
+    }
+    
+    open class func legacyDirectoryURL() -> URL {
+        return super.defaultDirectoryURL()
+    }
+    
     public init(name: String, bundle: Bundle) {
         let models = [bundle]
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: models)!
@@ -36,7 +48,6 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         initialize()
     }
     
-    @objc(initWithName:managedObjectModel:)
     public override init(name: String, managedObjectModel model: NSManagedObjectModel) {
         super.init(name: name, managedObjectModel: model)
         initialize()
@@ -44,50 +55,37 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
     
     private func initialize() {
         shouldAddStoresAsynchronously = false
-        preferredMergePolicy = RSTRelationshipPreservingMergePolicy()
+        preferredMergePolicy = RelationshipPreservingMergePolicy()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(rst_managedObjectContextWillSave(_:)), name: .NSManagedObjectContextWillSave, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(rst_managedObjectContextObjectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextWillSave(_:)), name: .NSManagedObjectContextWillSave, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(managedObjectContextObjectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: nil)
     }
     
-    open override func loadPersistentStores(completionHandler: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
-        let dispatchGroup = DispatchGroup()
-        
+    open func loadPersistentStores() async throws {
         for description in self.persistentStoreDescriptions {
-            description.shouldAddStoreAsynchronously = self.shouldAddStoresAsynchronously
-            
             guard let url = description.url,
                   let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: description.type, at: url, options: description.options) else {
                 continue
             }
             
             if !self.managedObjectModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata) && description.shouldMigrateStoreAutomatically {
-                dispatchGroup.enter()
-                
-                self.progressivelyMigratePersistentStore(to: self.managedObjectModel, configuration: description.configuration, isAsynchronous: description.shouldAddStoreAsynchronously) { error in
-                    if let error = error {
-                        debugLog("Migration error: \(error)")
-                    }
-                    dispatchGroup.leave()
+                try await self.progressivelyMigratePersistentStore(to: self.managedObjectModel, configuration: description.configuration)
+            }
+        }
+        
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            super.loadPersistentStores { [weak self] description, error in
+                guard let self = self else { return }
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
                 }
+                self.configure(self.viewContext, parent: nil)
+                continuation.resume(returning: ())
             }
-        }
-        
-        let finish: (NSPersistentStoreDescription, Error?) -> Void = { [weak self] description, error in
-            guard let self = self else { return }
-            self.configure(self.viewContext, parent: nil)
-            completionHandler(description, error)
-        }
-        
-        if self.shouldAddStoresAsynchronously {
-            dispatchGroup.notify(queue: .global(qos: .default)) {
-                super.loadPersistentStores(completionHandler: finish)
-            }
-        } else {
-            dispatchGroup.wait()
-            super.loadPersistentStores(completionHandler: finish)
         }
     }
+
     
     open override func newBackgroundContext() -> NSManagedObjectContext {
         let context = super.newBackgroundContext()
@@ -95,7 +93,7 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         return context
     }
     
-    @objc open func newBackgroundSavingViewContext() -> NSManagedObjectContext {
+    open func newBackgroundSavingViewContext() -> NSManagedObjectContext {
         let parentBackgroundContext = self.newBackgroundContext()
         self.parentBackgroundContexts.add(parentBackgroundContext)
         
@@ -104,7 +102,6 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         return context
     }
     
-    @objc(newViewContextWithParent:)
     open func newViewContext(parent parentContext: NSManagedObjectContext?) -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         self.configure(context, parent: parentContext)
@@ -116,7 +113,6 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         return context
     }
     
-    @objc(newBackgroundContextWithParent:)
     open func newBackgroundContext(parent parentContext: NSManagedObjectContext) -> NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         self.configure(context, parent: parentContext)
@@ -131,31 +127,16 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         context.mergePolicy = self.preferredMergePolicy
     }
     
-    // MARK: - Migrations
-    
-    private func progressivelyMigratePersistentStore(to model: NSManagedObjectModel, configuration: String?, isAsynchronous: Bool, completionHandler: @escaping (Error?) -> Void) {
-        let migrate = { [weak self] in
+    private func progressivelyMigratePersistentStore(to model: NSManagedObjectModel, configuration: String?) async throws {
+        try await Task.detached(priority: .userInitiated) { [weak self] in
             guard let self = self else { return }
-            do {
-                try self._progressivelyMigratePersistentStore(to: model, configuration: configuration)
-                completionHandler(nil)
-            } catch {
-                completionHandler(error)
-            }
-        }
-        
-        if isAsynchronous {
-            Task.detached(priority: .userInitiated) {
-                migrate()
-            }
-        } else {
-            migrate()
-        }
+            try self._progressivelyMigratePersistentStore(to: model, configuration: configuration)
+        }.value
     }
     
     private func _progressivelyMigratePersistentStore(to model: NSManagedObjectModel, configuration: String?) throws {
         guard let description = self.persistentStoreDescriptions.first, let url = description.url else {
-            throw NSError(domain: "com.rileytestut.Roxas", code: -25, userInfo: [NSLocalizedDescriptionKey: "Unable to find a persistent store."])
+            throw NSError(domain: "io.sidestore.PersistentContainer", code: -25, userInfo: [NSLocalizedDescriptionKey: "Unable to find a persistent store."])
         }
         
         let sourceMetadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: description.type, at: url, options: description.options)
@@ -165,12 +146,12 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         }
         
         guard let sourceModel = NSManagedObjectModel.mergedModel(from: Bundle.allBundles, forStoreMetadata: sourceMetadata) else {
-            throw NSError(domain: "com.rileytestut.Roxas", code: -23, userInfo: [NSLocalizedDescriptionKey: "Unable to find any managed object models."])
+            throw NSError(domain: "io.sidestore.PersistentContainer", code: -23, userInfo: [NSLocalizedDescriptionKey: "Unable to find any managed object models."])
         }
         
         var mappingModel: NSMappingModel?
         guard let migrationManager = self.progressiveMigrationManager(forSourceModel: sourceModel, destinationModel: model, configuration: configuration, mappingModel: &mappingModel), let finalMappingModel = mappingModel else {
-            throw NSError(domain: "com.rileytestut.Roxas", code: -24, userInfo: [NSLocalizedDescriptionKey: "Unable to find a valid mapping model."])
+            throw NSError(domain: "io.sidestore.PersistentContainer", code: -24, userInfo: [NSLocalizedDescriptionKey: "Unable to find a valid mapping model."])
         }
         
         let temporaryFilename = UUID().uuidString + "." + url.pathExtension
@@ -231,7 +212,7 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
     }
     
     private func explicitMappingModel(forSourceModel sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, configuration: String?) -> NSMappingModel? {
-        guard let mappingModel = NSMappingModel.init(from: Bundle.allBundles, forSourceModel: sourceModel, destinationModel: destinationModel) else {
+        guard let mappingModel = NSMappingModel(from: Bundle.allBundles, forSourceModel: sourceModel, destinationModel: destinationModel) else {
             return nil
         }
         
@@ -252,16 +233,14 @@ public class RSTPersistentContainer: NSPersistentContainer, @unchecked Sendable 
         return nil
     }
     
-    // MARK: - Notifications
-    
-    @objc private func rst_managedObjectContextWillSave(_ notification: Notification) {
+    @objc private func managedObjectContextWillSave(_ notification: Notification) {
         guard let context = notification.object as? NSManagedObjectContext else { return }
         if let parent = context.parent, self.parentBackgroundContexts.contains(parent) {
             self.pendingSaveParentBackgroundContexts.add(parent)
         }
     }
     
-    @objc private func rst_managedObjectContextObjectsDidChange(_ notification: Notification) {
+    @objc private func managedObjectContextObjectsDidChange(_ notification: Notification) {
         guard let context = notification.object as? NSManagedObjectContext else { return }
         if self.pendingSaveParentBackgroundContexts.contains(context) {
             do {

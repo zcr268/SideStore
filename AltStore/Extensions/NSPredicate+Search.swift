@@ -2,13 +2,13 @@
 //  NSPredicate+Search.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
+//  Copyright © 2026 SideStore. All rights reserved.
 //
 
 import Foundation
 
 public extension NSPredicate {
-    @objc(predicateForSearchingForText:inValuesForKeyPaths:)
     static func forSearching(forText searchText: String, inValuesForKeyPaths keyPaths: Set<String>) -> NSPredicate {
         if keyPaths.isEmpty {
             return NSPredicate(value: false)

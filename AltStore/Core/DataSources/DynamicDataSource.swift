@@ -1,15 +1,15 @@
 //
-//  RSTDynamicDataSource.swift
+//  DynamicDataSource.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
 //  Copyright © 2026 SideStore. All rights reserved.
 //
 
 @preconcurrency import UIKit
 import CoreData
 
-open class RSTDynamicDataSource<ContentType, CellType: UIView & RSTCellContentCell, ViewType: UIScrollView, DataSourceType>: RSTCellContentDataSource<ContentType, CellType, ViewType, DataSourceType> {
+open class DynamicDataSource<ContentType, CellType: UIView & CellContentCell, ViewType: UIScrollView, DataSourceType>: CellContentDataSource<ContentType, CellType, ViewType, DataSourceType> {
     open var numberOfSectionsHandler: (() -> Int) = { 0 }
     open var numberOfItemsHandler: ((Int) -> Int) = { _ in 0 }
     open var dynamicCellConfigurationHandler: ((CellType, IndexPath) -> Void) = { _, _ in }
@@ -20,7 +20,7 @@ open class RSTDynamicDataSource<ContentType, CellType: UIView & RSTCellContentCe
     public override func contentView(_ contentView: ViewType, numberOfItemsInSection section: Int) -> Int { numberOfItemsHandler(section) }
     
     public override func item(at indexPath: IndexPath) -> ContentType {
-        fatalError("item(at:) should not be called on RSTDynamicDataSource")
+        fatalError("item(at:) should not be called on DynamicDataSource")
     }
 
     public override func configureCell(_ cell: CellType, at indexPath: IndexPath) {
@@ -28,12 +28,12 @@ open class RSTDynamicDataSource<ContentType, CellType: UIView & RSTCellContentCe
     }
 }
 
-open class RSTDynamicCollectionViewDataSource<ContentType>: RSTDynamicDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
-open class RSTDynamicTableViewDataSource<ContentType>: RSTDynamicDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
+open class DynamicCollectionViewDataSource<ContentType>: DynamicDataSource<ContentType, UICollectionViewCell, UICollectionView, UICollectionViewDataSource> {}
+open class DynamicTableViewDataSource<ContentType>: DynamicDataSource<ContentType, UITableViewCell, UITableView, UITableViewDataSource> {}
 
-open class RSTDynamicCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTDynamicCollectionViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
+open class DynamicCollectionViewPrefetchingDataSource<ContentType, PrefetchContentType>: DynamicCollectionViewDataSource<ContentType>, CellContentPrefetchingDataSource, UICollectionViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UICollectionViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
 
     public override func configureCell(_ cell: UICollectionViewCell, at indexPath: IndexPath) {
@@ -44,9 +44,9 @@ open class RSTDynamicCollectionViewPrefetchingDataSource<ContentType, PrefetchCo
     public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {}
 }
 
-open class RSTDynamicTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: RSTDynamicTableViewDataSource<ContentType>, RSTCellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
+open class DynamicTableViewPrefetchingDataSource<ContentType, PrefetchContentType>: DynamicTableViewDataSource<ContentType>, CellContentPrefetchingDataSource, UITableViewDataSourcePrefetching {
     public var prefetchItemCache = NSCache<AnyObject, AnyObject>()
-    public var prefetchHandler: ((ContentType, IndexPath, @escaping (PrefetchContentType?, Error?) -> Void) -> Task<Void, Never>?)?
+    public var prefetchHandler: ((ContentType, IndexPath) async throws -> PrefetchContentType?)?
     public var prefetchCompletionHandler: ((UITableViewCell, PrefetchContentType?, IndexPath, Error?) -> Void)?
 
     public override func configureCell(_ cell: UITableViewCell, at indexPath: IndexPath) {
@@ -56,4 +56,3 @@ open class RSTDynamicTableViewPrefetchingDataSource<ContentType, PrefetchContent
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {}
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {}
 }
-

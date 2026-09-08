@@ -16,7 +16,7 @@ final class ResignAltStoreViewController: UIViewController
     
     var completionHandler: ((Result<Void, Error>) -> Void)?
     
-    @IBOutlet private var placeholderView: RSTPlaceholderView!
+    @IBOutlet private var placeholderView: PlaceholderView!
     @IBOutlet private var reinstallButton: PillButton!
     
     override func viewDidLoad()

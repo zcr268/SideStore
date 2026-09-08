@@ -1,14 +1,16 @@
 //
-//  RSTNibView.swift
+//  NibView.swift
 //  AltStore
 //
-//  Created by Magesh K on 6/17/26.
+//  Created by Magesh K on 8/9/26.
+//  Copyright © 2026 SideStore. All rights reserved.
 //
 
-@preconcurrency import UIKit
+import UIKit
 
-@objc(RSTNibView)
-open class RSTNibView: UIView {
+open class NibView: UIView {
+    public private(set) var contentView: UIView?
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         initializeFromNib()
@@ -32,7 +34,15 @@ open class RSTNibView: UIView {
             return
         }
         
+        self.contentView = nibView
         nibView.preservesSuperviewLayoutMargins = true
-        self.addSubview(nibView, pinningEdgesWith: .zero)
+        nibView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(nibView)
+        NSLayoutConstraint.activate([
+            nibView.topAnchor.constraint(equalTo: self.topAnchor),
+            nibView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            nibView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            nibView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        ])
     }
 }

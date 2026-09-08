@@ -131,7 +131,7 @@ private extension Error
 
 
 
-open class MergePolicy: RSTRelationshipPreservingMergePolicy
+open class MergePolicy: RelationshipPreservingMergePolicy
 {
     private let mergeLock = NSLock()
 
