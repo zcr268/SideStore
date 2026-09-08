@@ -161,13 +161,13 @@ public class DeveloperPortalProxy {
         return try await ALTAppleAPI.shared.deleteAppGroup(group, team: team, session: session)
     }
 
-    public func fetchProvisioningProfiles(team: ALTTeam? = nil) async throws -> [ALTProvisioningProfile] {
+    public func fetchProvisioningProfiles(team: ALTTeam? = nil) async throws -> [ALTListedProvisioningProfile] {
         let session = try await self.getSession()
         let team = try await self.getTeam(team)
         return try await ALTAppleAPI.shared.fetchProvisioningProfiles(for: team, session: session)
     }
 
-    public func fetchProvisioningProfiles(for team: ALTTeam) async throws -> [ALTProvisioningProfile] {
+    public func fetchProvisioningProfiles(for team: ALTTeam) async throws -> [ALTListedProvisioningProfile] {
         try await self.fetchProvisioningProfiles(team: team)
     }
 
@@ -179,6 +179,13 @@ public class DeveloperPortalProxy {
 
     public func fetchProvisioningProfile(for appID: ALTAppID, deviceType: ALTDeviceType = .iphone, team: ALTTeam? = nil) async throws -> ALTProvisioningProfile {
         try await self.downloadProvisioningProfile(for: appID, deviceType: deviceType, team: team)
+    }
+
+    @discardableResult
+    public func deleteProvisioningProfile(_ profile: ALTListedProvisioningProfile, team: ALTTeam? = nil) async throws -> Bool {
+        let session = try await self.getSession()
+        let team = try await self.getTeam(team)
+        return try await ALTAppleAPI.shared.deleteProvisioningProfile(profile, team: team, session: session)
     }
 
     @discardableResult

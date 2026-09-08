@@ -10,7 +10,7 @@ import SwiftUI
 import SideSign
 
 struct ProfilePortalDetailView: View {
-    let profile: ALTProvisioningProfile
+    let profile: ALTListedProvisioningProfile
     @ObservedObject var viewModel: DeveloperServicesViewModel
     weak var presentingViewController: UIViewController?
     @Environment(\.presentationMode) var presentationMode
@@ -25,43 +25,32 @@ struct ProfilePortalDetailView: View {
                 if let identifier = profile.identifier {
                     InfoRow(label: "Identifier", value: identifier)
                 }
-                InfoRow(label: "Team Name", value: profile.teamName)
-                InfoRow(label: "Team Identifier", value: profile.teamIdentifier)
-                InfoRow(label: "App Bundle ID", value: profile.bundleIdentifier)
-                InfoRow(label: "Created Date", value: formatDate(profile.creationDate))
-                InfoRow(label: "Expiration Date", value: formatDate(profile.expirationDate), valueColor: profile.expirationDate < Date() ? .red : .primary)
-                InfoRow(label: "Free Developer Profile", value: profile.isFreeProvisioningProfile ? "Yes" : "No")
-            }
-
-            if !profile.certificates.isEmpty {
-                Section(header: Text("Developer Certificates (\(profile.certificates.count))")) {
-                    ForEach(profile.certificates, id: \.serialNumber) { cert in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(cert.name)
-                                .font(.subheadline)
-                            Text("Serial: \(cert.serialNumber)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 2)
-                    }
+                if let status = profile.status {
+                    InfoRow(label: "Status", value: status)
+                }
+                if let type = profile.type {
+                    InfoRow(label: "Type", value: type)
+                }
+                if let bundleID = profile.bundleIdentifier {
+                    InfoRow(label: "App Bundle ID", value: bundleID)
+                }
+                if let teamName = viewModel.team?.name {
+                    InfoRow(label: "Team Name", value: teamName)
+                }
+                if let teamID = viewModel.team?.identifier {
+                    InfoRow(label: "Team Identifier", value: teamID)
+                }
+                InfoRow(label: "Expiration Date", value: formatDate(profile.dateExpire), valueColor: profile.dateExpire < Date() ? .red : .primary)
+                if let isFree = profile.isFreeProvisioningProfile {
+                    InfoRow(label: "Free Developer Profile", value: isFree ? "Yes" : "No")
                 }
             }
 
-            if !profile.deviceIDs.isEmpty {
-                Section(header: Text("Provisioned Devices (\(profile.deviceIDs.count))")) {
-                    ForEach(profile.deviceIDs, id: \.self) { deviceID in
+            if let devices = profile.deviceIds, !devices.isEmpty {
+                Section(header: Text("Provisioned Devices (\(devices.count))")) {
+                    ForEach(devices, id: \.self) { deviceID in
                         Text(deviceID)
                             .font(.system(.caption, design: .monospaced))
-                    }
-                }
-            }
-
-            if !profile.entitlements.isEmpty {
-                Section(header: Text("Entitlements (\(profile.entitlements.count))")) {
-                    let sortedEntitlements = profile.entitlements.sorted { $0.key < $1.key }
-                    ForEach(sortedEntitlements, id: \.key) { entitlement, value in
-                        EntitlementRow(key: entitlement, value: value)
                     }
                 }
             }

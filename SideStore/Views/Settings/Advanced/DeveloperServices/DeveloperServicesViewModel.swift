@@ -12,7 +12,7 @@ import SideSign
 @MainActor
 class DeveloperServicesViewModel: ObservableObject {
     @Published var appIDs: [ALTAppID] = []
-    @Published var profiles: [ALTProvisioningProfile] = []
+    @Published var profiles: [ALTListedProvisioningProfile] = []
     @Published var appGroups: [ALTAppGroup] = []
     @Published var devices: [ALTDevice] = []
 
@@ -60,6 +60,7 @@ class DeveloperServicesViewModel: ObservableObject {
             self.appGroups = groups.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.devices = devices.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         } catch {
+            debugLog("[DeveloperServices] loadAll failed: \(error)")
             if !(error is CancellationError) {
                 self.errorMessage = error.localizedDescription
             }
@@ -137,6 +138,7 @@ class DeveloperServicesViewModel: ObservableObject {
             let profs = try await DeveloperPortalProxy.shared.fetchProvisioningProfiles()
             self.profiles = profs.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         } catch {
+            debugLog("[DeveloperServices] fetchProfiles failed: \(error)")
             if !(error is CancellationError) {
                 self.errorMessage = error.localizedDescription
             }
@@ -147,22 +149,18 @@ class DeveloperServicesViewModel: ObservableObject {
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
-            let profile = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: .iphone)
-            if let idx = self.profiles.firstIndex(where: { $0.uuid == profile.uuid || $0.bundleIdentifier == profile.bundleIdentifier }) {
-                self.profiles[idx] = profile
-            } else {
-                self.profiles.append(profile)
-            }
-            self.profiles.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: .iphone)
+            await self.fetchProfiles(presentingViewController: presentingViewController)
             self.showToastMessage("Downloaded profile for '\(appID.name)'")
             return true
         } catch {
+            debugLog("[DeveloperServices] downloadProfile failed: \(error)")
             self.errorMessage = error.localizedDescription
             return false
         }
     }
 
-    func deleteProfile(_ profile: ALTProvisioningProfile, presentingViewController: UIViewController? = nil) async -> Bool {
+    func deleteProfile(_ profile: ALTListedProvisioningProfile, presentingViewController: UIViewController? = nil) async -> Bool {
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
@@ -171,6 +169,7 @@ class DeveloperServicesViewModel: ObservableObject {
             self.showToastMessage("Deleted profile '\(profile.name)'")
             return true
         } catch {
+            debugLog("[DeveloperServices] deleteProfile failed: \(error)")
             self.errorMessage = error.localizedDescription
             return false
         }
@@ -187,6 +186,7 @@ class DeveloperServicesViewModel: ObservableObject {
                     _ = try await DeveloperPortalProxy.shared.deleteProvisioningProfile(profile)
                     deleted += 1
                 } catch {
+                    debugLog("[DeveloperServices] deleteProfile '\(profile.name)' failed: \(error)")
                     failed += 1
                 }
             }
@@ -194,6 +194,7 @@ class DeveloperServicesViewModel: ObservableObject {
             self.showToastMessage("Purged \(deleted) profile(s)\(failed > 0 ? " (\(failed) failed)" : "")")
             return (deleted, failed)
         } catch {
+            debugLog("[DeveloperServices] deleteAllProfiles failed: \(error)")
             self.errorMessage = error.localizedDescription
             return (0, 0)
         }

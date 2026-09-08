@@ -17,17 +17,17 @@ struct ProfilesListView: View {
     @State private var showDownloadSheet = false
     @State private var selectedAppIDForDownload: ALTAppID? = nil
 
-    @State private var profileToDelete: ALTProvisioningProfile? = nil
+    @State private var profileToDelete: ALTListedProvisioningProfile? = nil
     @State private var showDeleteConfirmation = false
     @State private var showPurgeAllConfirmation = false
 
-    private var filteredProfiles: [ALTProvisioningProfile] {
+    private var filteredProfiles: [ALTListedProvisioningProfile] {
         if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return viewModel.profiles
         }
         return viewModel.profiles.filter {
             $0.name.localizedCaseInsensitiveContains(searchText) ||
-            $0.bundleIdentifier.localizedCaseInsensitiveContains(searchText) ||
+            ($0.bundleIdentifier?.localizedCaseInsensitiveContains(searchText) == true) ||
             $0.uuid.uuidString.localizedCaseInsensitiveContains(searchText)
         }
     }
@@ -177,11 +177,11 @@ struct ProfilesListView: View {
 }
 
 private struct ProfileRow: View {
-    let profile: ALTProvisioningProfile
+    let profile: ALTListedProvisioningProfile
     let formatDate: (Date) -> String
 
     private var isExpired: Bool {
-        profile.expirationDate < Date()
+        profile.dateExpire < Date()
     }
 
     var body: some View {
@@ -200,15 +200,17 @@ private struct ProfileRow: View {
                         .cornerRadius(6)
                 }
             }
-            Text(profile.bundleIdentifier)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            if let bundleID = profile.bundleIdentifier {
+                Text(bundleID)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
             HStack {
                 Text("UUID: \(profile.uuid.uuidString.prefix(8))...")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Spacer()
-                Text("Expires: \(formatDate(profile.expirationDate))")
+                Text("Expires: \(formatDate(profile.dateExpire))")
                     .font(.caption)
                     .foregroundColor(isExpired ? .red : .secondary)
             }
