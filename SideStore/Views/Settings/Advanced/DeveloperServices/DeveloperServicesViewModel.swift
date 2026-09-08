@@ -61,7 +61,7 @@ class DeveloperServicesViewModel: ObservableObject {
             self.profiles = profiles.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.appGroups = groups.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.devices = devices.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-            self.certificates = certs
+            self.certificates = certs.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         } catch {
             debugLog("[DeveloperServices] loadAll failed: \(error)")
             if !(error is CancellationError) {
@@ -78,7 +78,7 @@ class DeveloperServicesViewModel: ObservableObject {
                 AuthManager.shared.session = nil
             }
             let certs = try await DeveloperPortalProxy.shared.fetchCertificates()
-            self.certificates = certs
+            self.certificates = certs.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         } catch {
             debugLog("[DeveloperServices] fetchCertificates failed: \(error)")
             if !(error is CancellationError) {
@@ -205,6 +205,31 @@ class DeveloperServicesViewModel: ObservableObject {
             return true
         } catch {
             debugLog("[DeveloperServices] createManualProfile failed: \(error)")
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    func updateProfile(_ profile: ALTListedProvisioningProfile, name: String, appIDId: String, certificateIDs: [String], deviceIDs: [String], presentingViewController: UIViewController? = nil) async -> Bool {
+        guard let profileID = profile.identifier else {
+            self.errorMessage = "Profile identifier missing"
+            return false
+        }
+        self.isActionLoading = true
+        defer { self.isActionLoading = false }
+        do {
+            _ = try await DeveloperPortalProxy.shared.updateProvisioningProfile(
+                profileID: profileID,
+                name: name,
+                appIDId: appIDId,
+                certificateIDs: certificateIDs,
+                deviceIDs: deviceIDs
+            )
+            await self.fetchProfiles(presentingViewController: presentingViewController)
+            self.showToastMessage("Updated profile '\(name)'")
+            return true
+        } catch {
+            debugLog("[DeveloperServices] updateProfile failed: \(error)")
             self.errorMessage = error.localizedDescription
             return false
         }
