@@ -39,7 +39,7 @@ enum PipelineStep: OperationStep {
     case updateAppCertificate
     case embedSigningCert
     case cacheSigningCert
-    case zipApp
+    case createIPA
 
     fileprivate static let stepMap: [ObjectIdentifier: PipelineStep] = [
         ObjectIdentifier(PerformBackupRestoreOperation.self):             .backupAppData,
@@ -61,7 +61,7 @@ enum PipelineStep: OperationStep {
         ObjectIdentifier(RemoveAppExtensionsOperation.self):              .removeAppExtensions,
         ObjectIdentifier(RemoveAppOperation.self):                        .removeApp,
         ObjectIdentifier(ResignAppOperation.self):                        .resignApp,
-        ObjectIdentifier(ZipAppOperation.self):                           .zipApp,
+        ObjectIdentifier(CreateIpaOperation.self):                        .createIPA,
         ObjectIdentifier(SendAppOperation.self):                          .sendApp,
         ObjectIdentifier(StageAppOperation.self):                         .stageApp,
         ObjectIdentifier(UninstallAppOperation.self):                     .uninstallApp,

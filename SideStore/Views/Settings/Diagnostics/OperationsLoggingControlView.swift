@@ -38,7 +38,7 @@ private let pipelineStepToggles: [(name: String, step: PipelineStep)] = [
     ("User Customization",                      .userCustomization),
     ("Verify App",                              .verifyApp),
     ("Verify Certificate",                      .verifyCertificate),
-    ("Zip App",                                 .zipApp),
+    ("Create IPA",                              .createIPA),
 ]
 
 private let standaloneStepToggles: [(name: String, step: StandaloneStep)] = [
