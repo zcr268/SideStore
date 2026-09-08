@@ -76,26 +76,20 @@ func logOperationSummary(
         }
     }
     
-    debugLog("===================================================")
-    debugLog(centerRow("OPERATION \(status.uppercased())"))
-    debugLog("===================================================")
-    for row in bulletRow("Operation", operation) {
-        debugLog(row)
-    }
-    for row in bulletRow("App ID", target) {
-        debugLog(row)
-    }
-    for row in bulletRow("Status", status.uppercased()) {
-        debugLog(row)
-    }
-    for row in bulletRow("Elapsed", String(format: "%.3fs", elapsed)) {
-        debugLog(row)
-    }
+    var rows: [String] = [
+        "===================================================",
+        centerRow("OPERATION \(status.uppercased())"),
+        "==================================================="
+    ]
+    rows.append(contentsOf: bulletRow("Operation", operation))
+    rows.append(contentsOf: bulletRow("App ID", target))
+    rows.append(contentsOf: bulletRow("Status", status.uppercased()))
+    rows.append(contentsOf: bulletRow("Elapsed", String(format: "%.3fs", elapsed)))
     if let error = error {
-        for row in bulletRow("Error", error.localizedDescription) {
-            debugLog(row)
-        }
+        rows.append(contentsOf: bulletRow("Error", error.localizedDescription))
     }
-    debugLog("===================================================")
+    rows.append("===================================================")
+    
+    debugLog("Operation Summary:\n\(rows.joined(separator: "\n"))")
 }
 
