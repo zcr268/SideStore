@@ -28,7 +28,7 @@ struct AppInfoView: View {
     
     private var provisioningProfile: ALTProvisioningProfile? {
         let profileURL = appBundleURL.appendingPathComponent("embedded.mobileprovision")
-        return ALTProvisioningProfile(url: profileURL)
+        return try? ALTProvisioningProfile(url: profileURL)
     }
     
     private var infoPlist: [String: Any]? {
@@ -428,7 +428,7 @@ struct ExtensionInfoView: View {
 
     private var provisioningProfile: ALTProvisioningProfile? {
         guard let url = extensionURL else { return nil }
-        return ALTProvisioningProfile(url: url.appendingPathComponent("embedded.mobileprovision"))
+        return try? ALTProvisioningProfile(url: url.appendingPathComponent("embedded.mobileprovision"))
     }
 
     private var infoPlist: [String: Any]? {
@@ -572,7 +572,7 @@ struct BundleInspectorView: View {
     @ObservedObject var certificatesViewModel: CertificatesViewModel
 
     private var provisioningProfile: ALTProvisioningProfile? {
-        ALTProvisioningProfile(url: bundleURL.appendingPathComponent("embedded.mobileprovision"))
+        try? ALTProvisioningProfile(url: bundleURL.appendingPathComponent("embedded.mobileprovision"))
     }
 
     private var infoPlist: [String: Any]? {
