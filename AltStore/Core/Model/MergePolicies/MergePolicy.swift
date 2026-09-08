@@ -212,7 +212,7 @@ extension MergePolicy{
                    let secondaryAppVersion = conflictingAppVersions.first(where: { $0 != primaryAppVersion })
                 {
                     secondaryAppVersion.managedObjectContext?.delete(secondaryAppVersion)
-                    debugLog("[ALTLog] Resolving AppVersion context-level conflict. Most likely due to migrating from pre-AppVersion model version. \(primaryAppVersion)")
+                    debugLog("[SideStore] Resolving AppVersion context-level conflict. Most likely due to migrating from pre-AppVersion model version. \(primaryAppVersion)")
                 }
                 
             default:

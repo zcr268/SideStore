@@ -618,7 +618,7 @@ private extension MyAppsViewController
         }
         catch
         {
-            debugLog("[ALTLog] Failed to fetch updates: \(error)")
+            debugLog("[SideStore] Failed to fetch updates: \(error)")
         }
     }
 }
@@ -1687,7 +1687,7 @@ private extension MyAppsViewController
                         }
                         catch
                         {
-                            debugLog("[ALTLog] Failed to assign error \(sanitizedError.localizedErrorCode) to source \(sourceID). \(error)")
+                            debugLog("[SideStore] Failed to assign error \(sanitizedError.localizedErrorCode) to source \(sourceID). \(error)")
                         }
                     }
                     

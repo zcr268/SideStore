@@ -169,7 +169,7 @@ final class LaunchViewController: UIViewController {
     func updateKnownSources() {
         AppManager.shared.updateKnownSources { result in
             switch result {
-            case .failure(let error): debugLog("[ALTLog] Failed to update known sources: \(error)")
+            case .failure(let error): debugLog("[SideStore] Failed to update known sources: \(error)")
             case .success((_, let blockedSources)):
                 DatabaseManager.shared.persistentContainer.performBackgroundTask { context in
                     let blockedSourceIDs = Set(blockedSources.lazy.map { $0.identifier })

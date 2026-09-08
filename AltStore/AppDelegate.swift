@@ -219,7 +219,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             catch
             {
-                debugLog("[ALTLog] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
+                debugLog("[SideStore] Failed to purge logged errors before \(midnightOneMonthAgo). \(error)")
             }
         }
              
