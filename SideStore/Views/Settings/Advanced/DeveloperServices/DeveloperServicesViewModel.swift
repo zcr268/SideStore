@@ -15,6 +15,7 @@ class DeveloperServicesViewModel: ObservableObject {
     @Published var profiles: [ALTListedProvisioningProfile] = []
     @Published var appGroups: [ALTAppGroup] = []
     @Published var devices: [ALTDevice] = []
+    @Published var certificates: [ALTX509Certificate] = []
 
     @Published var isLoading = false
     @Published var isActionLoading = false
@@ -32,7 +33,7 @@ class DeveloperServicesViewModel: ObservableObject {
 
     var isPaidAccount: Bool {
         guard let team = AuthManager.shared.team else { return false }
-        return team.type != .free && team.type != .unknown
+        return team.isPaid
     }
 
     func showToastMessage(_ message: String) {
@@ -53,17 +54,51 @@ class DeveloperServicesViewModel: ObservableObject {
             async let fetchedProfiles = DeveloperPortalProxy.shared.fetchProvisioningProfiles()
             async let fetchedGroups = DeveloperPortalProxy.shared.fetchAppGroups()
             async let fetchedDevices = DeveloperPortalProxy.shared.fetchDevices(types: .all)
+            async let fetchedCerts = DeveloperPortalProxy.shared.fetchCertificates()
 
-            let (appIDs, profiles, groups, devices) = try await (fetchedAppIDs, fetchedProfiles, fetchedGroups, fetchedDevices)
+            let (appIDs, profiles, groups, devices, certs) = try await (fetchedAppIDs, fetchedProfiles, fetchedGroups, fetchedDevices, fetchedCerts)
             self.appIDs = appIDs.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.profiles = profiles.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.appGroups = groups.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             self.devices = devices.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            self.certificates = certs
         } catch {
             debugLog("[DeveloperServices] loadAll failed: \(error)")
             if !(error is CancellationError) {
                 self.errorMessage = error.localizedDescription
             }
+        }
+    }
+
+    func fetchCertificates(presentingViewController: UIViewController? = nil, isPullToRefresh: Bool = false) async {
+        self.isLoading = true
+        defer { self.isLoading = false }
+        do {
+            if isPullToRefresh {
+                AuthManager.shared.session = nil
+            }
+            let certs = try await DeveloperPortalProxy.shared.fetchCertificates()
+            self.certificates = certs
+        } catch {
+            debugLog("[DeveloperServices] fetchCertificates failed: \(error)")
+            if !(error is CancellationError) {
+                self.errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    func revokeCertificate(_ certificate: ALTX509Certificate, presentingViewController: UIViewController? = nil) async -> Bool {
+        self.isActionLoading = true
+        defer { self.isActionLoading = false }
+        do {
+            _ = try await DeveloperPortalProxy.shared.revokeCertificate(certificate)
+            self.certificates.removeAll { $0.serialNumber == certificate.serialNumber }
+            self.showToastMessage("Revoked certificate '\(certificate.name)'")
+            return true
+        } catch {
+            debugLog("[DeveloperServices] revokeCertificate failed: \(error)")
+            self.errorMessage = error.localizedDescription
+            return false
         }
     }
 
@@ -151,12 +186,44 @@ class DeveloperServicesViewModel: ObservableObject {
         do {
             _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: .iphone)
             await self.fetchProfiles(presentingViewController: presentingViewController)
-            self.showToastMessage("Downloaded profile for '\(appID.name)'")
+            self.showToastMessage("Profile synced for '\(appID.name)'")
             return true
         } catch {
             debugLog("[DeveloperServices] downloadProfile failed: \(error)")
             self.errorMessage = error.localizedDescription
             return false
+        }
+    }
+
+    func createManualProfile(name: String, appID: ALTAppID, certificateIDs: [String], deviceIDs: [String], presentingViewController: UIViewController? = nil) async -> Bool {
+        self.isActionLoading = true
+        defer { self.isActionLoading = false }
+        do {
+            _ = try await DeveloperPortalProxy.shared.createProvisioningProfile(name: name, appID: appID, certificateIDs: certificateIDs, deviceIDs: deviceIDs)
+            await self.fetchProfiles(presentingViewController: presentingViewController)
+            self.showToastMessage("Created profile '\(name)'")
+            return true
+        } catch {
+            debugLog("[DeveloperServices] createManualProfile failed: \(error)")
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    func downloadProfile(profile: ALTListedProvisioningProfile) async -> ALTProvisioningProfile? {
+        guard let profileID = profile.identifier else {
+            self.errorMessage = "Profile identifier missing"
+            return nil
+        }
+        self.isActionLoading = true
+        defer { self.isActionLoading = false }
+        do {
+            let downloaded = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(profileID: profileID)
+            return downloaded
+        } catch {
+            debugLog("[DeveloperServices] downloadProfile(profile:) failed: \(error)")
+            self.errorMessage = error.localizedDescription
+            return nil
         }
     }
 

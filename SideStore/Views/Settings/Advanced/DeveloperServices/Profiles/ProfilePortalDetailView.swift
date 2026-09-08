@@ -41,6 +41,9 @@ struct ProfilePortalDetailView: View {
                     InfoRow(label: "Team Identifier", value: teamID)
                 }
                 InfoRow(label: "Expiration Date", value: formatDate(profile.dateExpire), valueColor: profile.dateExpire < Date() ? .red : .primary)
+                if let isTeam = profile.isTeamProfile {
+                    InfoRow(label: "Managed By", value: isTeam ? "Xcode (Team Profile)" : "Manual (Portal)")
+                }
                 if let isFree = profile.isFreeProvisioningProfile {
                     InfoRow(label: "Free Developer Profile", value: isFree ? "Yes" : "No")
                 }
@@ -53,6 +56,39 @@ struct ProfilePortalDetailView: View {
                             .font(.system(.caption, design: .monospaced))
                     }
                 }
+            }
+
+            Section {
+                SwiftUI.Button {
+                    Task {
+                        guard let downloaded = await viewModel.downloadProfile(profile: profile) else { return }
+                        let safeName = profile.name.replacingOccurrences(of: "/", with: "_").replacingOccurrences(of: ":", with: "_")
+                        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(safeName).mobileprovision")
+                        do {
+                            try downloaded.data.write(to: tempURL)
+                            let activityVC = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+                            if let popover = activityVC.popoverPresentationController {
+                                popover.sourceView = presentingViewController?.view
+                            }
+                            presentingViewController?.present(activityVC, animated: true)
+                        } catch {
+                            debugLog("[ProfilePortalDetailView] Failed to write profile to temp: \(error)")
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Spacer()
+                        if viewModel.isActionLoading {
+                            ProgressView()
+                        } else {
+                            Image(systemName: "arrow.down.doc")
+                            Text("Download Profile (.mobileprovision)")
+                                .fontWeight(.semibold)
+                        }
+                        Spacer()
+                    }
+                }
+                .disabled(viewModel.isActionLoading)
             }
 
             Section {

@@ -177,6 +177,18 @@ public class DeveloperPortalProxy {
         return try await ALTAppleAPI.shared.downloadProvisioningProfile(for: appID, deviceType: deviceType, team: team, session: session)
     }
 
+    public func downloadProvisioningProfile(profileID: String, team: ALTTeam? = nil) async throws -> ALTProvisioningProfile {
+        let session = try await self.getSession()
+        let team = try await self.getTeam(team)
+        return try await ALTAppleAPI.shared.downloadProvisioningProfile(profileID: profileID, team: team, session: session)
+    }
+
+    public func createProvisioningProfile(name: String, appID: ALTAppID, certificateIDs: [String], deviceIDs: [String], team: ALTTeam? = nil) async throws -> ALTProvisioningProfile {
+        let session = try await self.getSession()
+        let team = try await self.getTeam(team)
+        return try await ALTAppleAPI.shared.createProvisioningProfile(name: name, appID: appID, certificateIDs: certificateIDs, deviceIDs: deviceIDs, team: team, session: session)
+    }
+
     public func fetchProvisioningProfile(for appID: ALTAppID, deviceType: ALTDeviceType = .iphone, team: ALTTeam? = nil) async throws -> ALTProvisioningProfile {
         try await self.downloadProvisioningProfile(for: appID, deviceType: deviceType, team: team)
     }
