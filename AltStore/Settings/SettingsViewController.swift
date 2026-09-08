@@ -84,6 +84,22 @@ extension SettingsViewController
         case certificateManagement  // row 7 - Certificate Management
         case backupAndRestore       // row 8 - Backup & Restore
         case userCustomizations     // row 9 - User Customizations
+
+        static var allCases: [AdvancedSettingsRow] {
+            var rows: [AdvancedSettingsRow] = [.sendFeedback, .refreshAttempts, .refreshSideJITServer]
+            if !UserDefaults.standard.useOnDeviceAnisette {
+                rows.append(.resetPairingFile)
+                rows.append(.anisetteServers)
+            }
+            rows.append(contentsOf: [
+                .connectionConfig,
+                .developerServices,
+                .certificateManagement,
+                .backupAndRestore,
+                .userCustomizations
+            ])
+            return rows
+        }
     }
 
     private enum BetaTestingRow: Int, CaseIterable {
@@ -875,7 +891,14 @@ extension SettingsViewController
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        return super.tableView(tableView, heightForRowAt: indexPath)
+        let effectiveIndexPath: IndexPath
+        if Section.allCases[indexPath.section] == .advancedSettings {
+            let row = AdvancedSettingsRow.allCases[indexPath.row]
+            effectiveIndexPath = IndexPath(row: row.rawValue, section: indexPath.section)
+        } else {
+            effectiveIndexPath = indexPath
+        }
+        return super.tableView(tableView, heightForRowAt: effectiveIndexPath)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -894,7 +917,14 @@ extension SettingsViewController
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        let effectiveIndexPath: IndexPath
+        if Section.allCases[indexPath.section] == .advancedSettings {
+            let row = AdvancedSettingsRow.allCases[indexPath.row]
+            effectiveIndexPath = IndexPath(row: row.rawValue, section: indexPath.section)
+        } else {
+            effectiveIndexPath = indexPath
+        }
+        let cell = super.tableView(tableView, cellForRowAt: effectiveIndexPath)
         
 
         if AppRefreshRow.AllCases().count == 1

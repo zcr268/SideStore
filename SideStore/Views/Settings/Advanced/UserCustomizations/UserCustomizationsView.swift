@@ -372,6 +372,7 @@ struct UserCustomizationsView: View {
                     selectedBackend = newBackend
                     selectedGatewayBackendCache = newBackend
                     UserDefaults.standard.minimuxerGatewayBackend = newBackend.rawValue
+                    UserDefaults.standard.synchronize()
                     exit(0)
                 }
             }
