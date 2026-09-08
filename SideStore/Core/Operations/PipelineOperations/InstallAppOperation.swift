@@ -173,7 +173,8 @@ final class InstallAppOperation: BasePipelineOperation<InstallAppOperationContex
         }
         
         // Phase 2: App bundle installation
-        try await installAppBundle(bundleID, appName: resignedAppBundle.fileURL.lastPathComponent)
+        // try await installAppBundle(bundleID, appName: resignedAppBundle.fileURL.lastPathComponent)
+        try await installIPA(bundleID)
         
         self.setProgress(90)
         

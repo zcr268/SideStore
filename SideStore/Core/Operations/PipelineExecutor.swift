@@ -153,6 +153,14 @@ final class PipelineExecutor: @unchecked Sendable {
                 result = try await step.execute(parentProgress: progress)
                 return nil
                 
+            case .zipApp:
+                loggerType = ZipAppOperation.self
+                let step = try ZipAppOperation(context: context)
+                let ipaURL = try await step.execute(parentProgress: progress)
+                context.ipaURL = ipaURL
+                result = ipaURL
+                return nil
+                
             case .sendApp:
                 loggerType = SendAppOperation.self
                 let step = try SendAppOperation(context: context)

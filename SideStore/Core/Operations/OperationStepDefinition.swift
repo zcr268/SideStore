@@ -51,7 +51,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                        15),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                          20),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                          18),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       15),
         PipelineExecutionStep(.cleanStagedApp,                    1)
@@ -68,7 +69,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                        18),
         PipelineExecutionStep(.exportResignedApp,                 2),
-        PipelineExecutionStep(.sendApp,                          20),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                          18),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       21),
         PipelineExecutionStep(.cleanStagedApp,                    2)
@@ -98,7 +100,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                         3),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                           5),
+        PipelineExecutionStep(.zipApp,                            1),
+        PipelineExecutionStep(.sendApp,                           4),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                        5),
         // restore data
@@ -114,7 +117,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                        15),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                          12),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                          10),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       15),
         // cleanup old backup
@@ -137,7 +141,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                         5),
         PipelineExecutionStep(.exportResignedApp,                 2),
-        PipelineExecutionStep(.sendApp,                          10),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                           8),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       10),
         // backup data
@@ -157,7 +162,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                         5),
         PipelineExecutionStep(.exportResignedApp,                 2),
-        PipelineExecutionStep(.sendApp,                          10),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                           8),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       10),
         // backup data
@@ -173,7 +179,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                         5),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                           2),
+        PipelineExecutionStep(.zipApp,                            1),
+        PipelineExecutionStep(.sendApp,                           1),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                        2),
         // cleanup staged app
@@ -197,7 +204,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                         3),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                           5),
+        PipelineExecutionStep(.zipApp,                            1),
+        PipelineExecutionStep(.sendApp,                           4),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                        5),
         // restore data
@@ -213,7 +221,8 @@ struct PipelineStepDefinition {
         PipelineExecutionStep(.embedSigningCert,                  1),
         PipelineExecutionStep(.resignApp,                        15),
         PipelineExecutionStep(.exportResignedApp,                 1),
-        PipelineExecutionStep(.sendApp,                          12),
+        PipelineExecutionStep(.zipApp,                            2),
+        PipelineExecutionStep(.sendApp,                          10),
         PipelineExecutionStep(.cacheSigningCert,                  1),
         PipelineExecutionStep(.installApp,                       15),
         // cleanup old backup

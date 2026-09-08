@@ -34,12 +34,18 @@ final class SendAppOperation: BasePipelineOperation<InstallAppOperationContext, 
         do {
             await CellularRefreshManager.shared.turnOffDataIfNeeded()
             
-            try await sendAppBundleAfc(bundleIdentifier, at: appURL)
+            // try await sendAppBundleAfc(bundleIdentifier, at: appURL)
+            guard let ipaURL = self.context.ipaURL else {
+                throw OperationError.invalidParameters("SendAppOperation: context.ipaURL is nil")
+            }
+            debugLog("[SendAppOperation] Sending IPA at \(ipaURL.path) via AFC...")
+            let rawBytes = try Data(contentsOf: ipaURL, options: .mappedIfSafe)
+            try await sendIpaAfc(bundleIdentifier, rawBytes)
             self.setProgress(100)
         } catch {
             await CellularRefreshManager.shared.turnOnDataIfNeeded()
 
-            debugLog("[SendAppOperation] Failed to send app bundle at \(appURL): \(error)")
+            debugLog("[SendAppOperation] Failed to send app at \(self.context.ipaURL?.path ?? appURL.path): \(error)")
             throw OperationError.appNotFound(name: bundleIdentifier)
         }
         return resignedAppBundle
