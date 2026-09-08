@@ -23,14 +23,13 @@ final class SyncAppIDsOperation: BaseStandaloneOperation<StandaloneOperationCont
         
         let auth = try await AuthManager.shared.getAuthenticatedSession()
         let team = auth.team
-        let session = auth.session
         
         self.setProgress(10)
         
         let dbContext = self.context.dbBackgroundContext
         
         let fetchedAppIDs = try await TaskChainCoalescer.shared.coalesce(key: "fetch_app_ids_\(team.identifier)") {
-            try await DeveloperPortalProxy.shared.fetchAppIDs(for: team, session: session)
+            try await DeveloperPortalProxy.shared.fetchAppIDs(team: team)
         }
         self.setProgress(50)
         

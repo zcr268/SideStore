@@ -39,7 +39,7 @@ final class VerifyCertificateOperation: BasePipelineOperation<InstallAppOperatio
         
         do {
             // 2. Obtain active portal certificates directly from Apple Developer Portal
-            let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team, session: session)
+            let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team)
             
             self.setProgress(30)
             

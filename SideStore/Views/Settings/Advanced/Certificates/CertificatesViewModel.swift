@@ -150,7 +150,7 @@ class CertificatesViewModel: ObservableObject {
                 self.team    = authResult.team
                 self.session = authResult.session
                 
-                let remoteCerts = try await DeveloperPortalProxy.shared.fetchCertificates(team: authResult.team, session: authResult.session)
+                let remoteCerts = try await DeveloperPortalProxy.shared.fetchCertificates()
                 var merged = [ALTX509Certificate]()
                 var matchedRemoteSerials = Set<String>()
                 
@@ -342,7 +342,7 @@ class CertificatesViewModel: ObservableObject {
                 self.team    = authResult.team
                 self.session = authResult.session
                 
-                let newCert = try await DeveloperPortalProxy.shared.createCertificate(machineName: machineName, team: authResult.team, session: authResult.session)
+                let newCert = try await DeveloperPortalProxy.shared.createCertificate(machineName: machineName)
                 self.saveLocalCertificate(newCert)
                 self.alertMessage = "Certificate created successfully."
                 self.showAlert    = true
@@ -367,7 +367,7 @@ class CertificatesViewModel: ObservableObject {
                 self.team    = authResult.team
                 self.session = authResult.session
                 
-                let success = try await DeveloperPortalProxy.shared.revokeCertificate(certificate, team: authResult.team, session: authResult.session)
+                let success = try await DeveloperPortalProxy.shared.revokeCertificate(certificate)
                 if success {
                     self.remoteSerials.remove(certificate.serialNumber)
                     if !keepLocal {

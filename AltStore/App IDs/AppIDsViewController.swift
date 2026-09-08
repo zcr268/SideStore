@@ -522,7 +522,7 @@ private extension AppIDsViewController
                             features: appID.features
                         )
                         
-                        let success = try await DeveloperPortalProxy.shared.deleteAppID(altAppID, for: team, session: session)
+                        let success = try await DeveloperPortalProxy.shared.deleteAppID(altAppID, for: team)
                         
                         if success
                         {

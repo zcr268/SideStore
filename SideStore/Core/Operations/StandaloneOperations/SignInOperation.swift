@@ -414,7 +414,7 @@ private extension SignInOperation {
         if let cached = self.portalCertificates {
             portalCertificates = cached
         } else {
-            let fetched = try await DeveloperPortalProxy.shared.fetchCertificates(team: signer.team, session: session)
+            let fetched = try await DeveloperPortalProxy.shared.fetchCertificates(team: signer.team)
             self.portalCertificates = fetched
             portalCertificates = fetched
         }
@@ -455,7 +455,7 @@ private extension SignInOperation {
 
     private func fetchTeam(for account: ALTAccount, session: ALTAppleAPISession) async throws -> ALTTeam {
         self.verboseLog("[SignInOperation] fetchTeam: Requesting teams from Apple...")
-        let teams = try await DeveloperPortalProxy.shared.fetchTeams(for: account, session: session)
+        let teams = try await DeveloperPortalProxy.shared.fetchTeams(for: account)
         
         guard !teams.isEmpty else {
             throw DeveloperPortalError.noTeams
@@ -474,7 +474,7 @@ private extension SignInOperation {
     }
 
     private func fetchCertificate(for team: ALTTeam, session: ALTAppleAPISession) async throws -> ALTCertificate {
-        let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team, session: session)
+        let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team)
         self.portalCertificates = portalCertificates
         
         let mainBundleCertSerial = Bundle.main.object(forInfoDictionaryKey: Bundle.Info.certificateID) as? String
@@ -516,10 +516,10 @@ private extension SignInOperation {
         self.verboseLog("[SignInOperation] Requesting certificate for machineName '\(machineName)'...")
 
         do {
-            let newPortalCertificate = try await DeveloperPortalProxy.shared.createCertificate(machineName: machineName, team: team, session: session)
+            let newPortalCertificate = try await DeveloperPortalProxy.shared.createCertificate(machineName: machineName, team: team)
             self.debugLog("[SignInOperation] Successfully requested new portal certificate (Serial: \(newPortalCertificate.serialNumber)).")
             
-            let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team, session: session)
+            let portalCertificates = try await DeveloperPortalProxy.shared.fetchCertificates(team: team)
             self.portalCertificates = portalCertificates
 
             let finalCert: ALTCertificate
@@ -564,7 +564,7 @@ private extension SignInOperation {
                 for certificate in certsToRevoke {
                     do {
                         self.verboseLog("[SignInOperation] replaceCertificate: Revoking certificate '\(certificate.machineName ?? certificate.name)' (Serial: \(certificate.serialNumber))...")
-                        _ = try await DeveloperPortalProxy.shared.revokeCertificate(certificate, team: team, session: session)
+                        _ = try await DeveloperPortalProxy.shared.revokeCertificate(certificate, team: team)
                         self.verboseLog("[SignInOperation] replaceCertificate: Revoke succeeded.")
                     } catch {
                         self.debugLog("[SignInOperation] replaceCertificate: Revoke failed with error: \(error)")
@@ -607,14 +607,14 @@ private extension SignInOperation {
         }
         self.debugLog("[SignInOperation] Fetched device UDID: \(udid). Fetching team devices...")
         
-        let devices = try await DeveloperPortalProxy.shared.fetchDevices(for: team, types: [.iphone, .ipad], session: session)
+        let devices = try await DeveloperPortalProxy.shared.fetchDevices(for: team, types: [.iphone, .ipad])
         if let device = devices.first(where: { $0.identifier == udid }) {
             self.debugLog("[SignInOperation] Device '\(device.name)' (UDID: \(udid)) is registered on team.")
             return device
         } else {
             let deviceName = await MainActor.run { UIDevice.current.name }
             self.debugLog("[SignInOperation] Registering new device '\(deviceName)' (UDID: \(udid))...")
-            let device = try await DeveloperPortalProxy.shared.registerDevice(name: UIDevice.current.name, identifier: udid, type: .iphone, team: team, session: session)
+            let device = try await DeveloperPortalProxy.shared.registerDevice(name: UIDevice.current.name, identifier: udid, type: .iphone, team: team)
             self.debugLog("[SignInOperation] Device '\(device.name)' (UDID: \(udid)) successfully registered.")
             return device
         }
