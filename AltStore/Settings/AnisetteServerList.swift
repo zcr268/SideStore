@@ -238,7 +238,6 @@ struct AnisetteServersView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = AnisetteViewModel()
     @State private var selectedServerURL: String = ""
-    @State private var showingResetAlert = false
     @State private var showingFileImporter = false
     @State private var showingShareSheet = false
     @State private var exportFileURL: URL? = nil
@@ -554,41 +553,6 @@ struct AnisetteServersView: View {
                         Text("Customization")
                     } footer: {
                         Text("Control if SideStore automatically rotates/retries servers upon failure.")
-                    }
-
-                    // Section 3: Troubleshooting
-                    Section {
-                        SwiftUI.Button(role: .destructive) {
-                            showingResetAlert = true
-                        } label: {
-                            HStack {
-                                Text("Reset adi.pb")
-                                Spacer()
-                                Image(systemName: "trash")
-                                    .font(.subheadline)
-                            }
-                        }
-                        .alert(isPresented: $showingResetAlert) {
-                            Alert(
-                                title: Text("Reset adi.pb"),
-                                message: Text("Are you sure you want to clear adi.pb from the Keychain? You will need to log back in to Apple ID in SideStore."),
-                                primaryButton: .destructive(Text("Reset")) {
-                                    #if !DEBUG
-                                    if AnisetteConfigManager.shared.anisetteAdiBlob != nil {
-                                        AnisetteConfigManager.shared.anisetteAdiBlob = nil
-                                    }
-                                    #endif
-                                    debugLog("Cleared adi.pb from keychain")
-                                    onResetAdiPb?()
-                                    presentationMode.wrappedValue.dismiss()
-                                },
-                                secondaryButton: .cancel()
-                            )
-                        }
-                    } header: {
-                        Text("Troubleshooting")
-                    } footer: {
-                        Text("Resetting local Anisette data forces a fresh provisioning flow if authentication is failing.")
                     }
 
                     // Bottom spacing section

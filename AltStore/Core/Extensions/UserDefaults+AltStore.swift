@@ -91,6 +91,14 @@ public extension UserDefaults
         get { self.string(forKey: #function) }
         set { self.set(newValue, forKey: #function) }
     }
+    @objc var customAnisetteSerialNumber: String? {
+        get { self.string(forKey: #function) }
+        set { self.set(newValue, forKey: #function) }
+    }
+    @objc var customAnisetteRoutingInfo: String? {
+        get { self.string(forKey: #function) }
+        set { self.set(newValue, forKey: #function) }
+    }
     
     @objc var isBackgroundRefreshEnabled: Bool {
         get { self.bool(forKey: #function) }

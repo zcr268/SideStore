@@ -18,6 +18,7 @@ struct UserCustomizationsView: View {
     @State private var selectedBackend: GatewayBackend = selectedGatewayBackendCache
     @State private var useOnDeviceAnisette: Bool = UserDefaults.standard.useOnDeviceAnisette
     @State private var showAnisetteRestartConfirmation: Bool = false
+    @State private var showResetAdiConfirmation: Bool = false
     @State private var customizeAppId: Bool = UserDefaults.standard.customizeAppId
     @State private var customizeAppExtensions: Bool = UserDefaults.standard.customizeAppExtensions
     @State private var autoFixAppGroupIDs: Bool = UserDefaults.standard.autoFixAppGroupIDs
@@ -109,6 +110,30 @@ struct UserCustomizationsView: View {
                             }
                             .padding(.horizontal, 16)
                             .frame(height: 50)
+                        }
+                        
+                        divider
+                        
+                        SwiftUI.Button(role: .destructive) {
+                            showResetAdiConfirmation = true
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Reset adi.pb")
+                                        .font(.system(size: 17, weight: .bold))
+                                        .foregroundColor(.red)
+                                    Text("Clear local Anisette provisioning data from Keychain")
+                                        .font(.system(size: 12, weight: .regular))
+                                        .foregroundColor(Color.white.opacity(0.6))
+                                }
+                                Spacer()
+                                Image(systemName: "trash")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(.red)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .frame(minHeight: 50)
                         }
                     }
                     .background(Color.settingsRowBackground)
@@ -429,6 +454,21 @@ struct UserCustomizationsView: View {
             } else {
                 Text("Switching to App Bundle prioritizes storage efficiency by transferring the app bundle directly without packaging a temporary IPA, but transfer speeds will be noticeably slower.")
             }
+        }
+        .alert("Reset adi.pb", isPresented: $showResetAdiConfirmation) {
+            SwiftUI.Button("Reset & Sign Out", role: .destructive) {
+                AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false)
+                debugLog("Reset adi.pb and signed out")
+                if let top = UIApplication.shared.topViewController() {
+                    ToastView(
+                        text: "Cleared adi.pb!",
+                        detailText: "Signed out of Apple ID. You can now sign back in with fresh provisioning."
+                    ).show(in: top)
+                }
+            }
+            SwiftUI.Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will sign you out of Apple ID in SideStore and clear the provisioned adi.pb data from your Keychain. Your active signing certificate will be preserved.")
         }
     }
 
