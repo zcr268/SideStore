@@ -847,8 +847,7 @@ private extension SettingsViewController
     
     @IBAction func followAltStoreGitHub()
     {
-        let safariURL = URL(string: "https://github.com/SideStore")!
-        UIApplication.shared.open(safariURL, options: [:])
+        UIApplication.shared.open(AppConstants.URLs.sideStoreGitHub, options: [:])
     }
 }
 
@@ -1107,16 +1106,12 @@ extension SettingsViewController
                 
                 // Option 1: GitHub
                 alertController.addAction(UIAlertAction(title: "GitHub", style: .default) { _ in
-                    if let githubURL = URL(string: "https://github.com/SideStore/SideStore/issues") {
-                        self.openWebURL(githubURL, preferredTintColor: .altPrimary)
-                    }
+                    self.openWebURL(AppConstants.URLs.sideStoreIssues, preferredTintColor: .altPrimary)
                 })
                 
                 // Option 2: Discord
                 alertController.addAction(UIAlertAction(title: "Discord", style: .default) { _ in
-                    if let discordURL = URL(string: "https://discord.gg/sidestore-949183273383395328") {
-                        self.openWebURL(discordURL, preferredTintColor: .altPrimary)
-                    }
+                    self.openWebURL(AppConstants.URLs.sideStoreDiscord, preferredTintColor: .altPrimary)
                 })
                 
                 #if !os(tvOS)

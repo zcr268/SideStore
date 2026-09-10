@@ -60,7 +60,7 @@ public actor OnDeviceAnisetteManager {
 
         let config = await AnisetteConfigManager.shared.loadConfig()
         let headers = AnisetteRequestHeaders().with {
-            $0.clientInfo = config.clientInfo.isEmpty ? AnisetteConstants.defaultClientInfo : config.clientInfo
+            $0.clientInfo = config.clientInfo.isEmpty ? AppConstants.Anisette.defaultClientInfo : config.clientInfo
             if let customLU = config.customLocalUserID { $0.localUserID = customLU }
             if let customDev = config.customDeviceID { $0.deviceID = customDev }
             if let loc = config.customLocale { $0.locale = loc }
@@ -68,8 +68,8 @@ public actor OnDeviceAnisetteManager {
         }
 
         let sourceURLString = UserDefaults.standard.menuAnisetteList.isEmpty ? AnisetteServersManager.defaultSource : UserDefaults.standard.menuAnisetteList
-        let sourceURL = URL(string: sourceURLString) ?? URL(string: AppConstants.Anisette.defaultODAMetadataURL)!
-        let fallbackURL = URL(string: AppConstants.Anisette.defaultODAMetadataURL)
+        let sourceURL = URL(string: sourceURLString) ?? AppConstants.Anisette.defaultODAMetadataURL
+        let fallbackURL = AppConstants.Anisette.defaultODAMetadataURL
 
         let mode = AnisetteMode.remoteODA(sourceURL: sourceURL, fallbackURL: fallbackURL)
 
