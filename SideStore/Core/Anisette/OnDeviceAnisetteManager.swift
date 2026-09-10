@@ -58,14 +58,7 @@ public actor OnDeviceAnisetteManager {
             debugLog("[OnDeviceAnisetteManager] [Fetch] No existing adi.pb in Keychain -> local in-memory provisioning will be performed")
         }
 
-        let config = await AnisetteConfigManager.shared.loadConfig()
-        let headers = AnisetteRequestHeaders().with {
-            $0.clientInfo = config.clientInfo.isEmpty ? AppConstants.Anisette.defaultClientInfo : config.clientInfo
-            if let customLU = config.customLocalUserID { $0.localUserID = customLU }
-            if let customDev = config.customDeviceID { $0.deviceID = customDev }
-            if let loc = config.customLocale { $0.locale = loc }
-            if let tz = config.customTimeZone { $0.timeZone = tz }
-        }
+        let headers = await AnisetteConfigManager.shared.makeRequestHeaders()
 
         let sourceURLString = UserDefaults.standard.menuAnisetteList.isEmpty ? AnisetteServersManager.defaultSource : UserDefaults.standard.menuAnisetteList
         let sourceURL = URL(string: sourceURLString) ?? AppConstants.Anisette.defaultODAMetadataURL

@@ -105,15 +105,52 @@ public actor AnisetteConfigManager {
     }
     
     public func loadConfig() -> AnisetteConfig {
-        if let data = try? Data(contentsOf: configFileURL),
-           let config = try? Foundation.JSONDecoder().decode(AnisetteConfig.self, from: data) {
+        let ud = UserDefaults.standard
+        let udClientInfo   = ud.customAnisetteClientInfo
+        let udUserAgent    = ud.customAnisetteUserAgent
+        let udDeviceID     = ud.customAnisetteDeviceID
+        let udLocalUserID  = ud.customAnisetteLocalUserID
+        let udLocale       = ud.customAnisetteLocale
+        let udTimeZone     = ud.customAnisetteTimeZone
+        let udXcodeVersion = ud.customAnisetteXcodeVersion
+
+        let fileConfig: AnisetteConfig? = {
+            guard let data = try? Data(contentsOf: configFileURL),
+                  let config = try? Foundation.JSONDecoder().decode(AnisetteConfig.self, from: data) else {
+                return nil
+            }
             return config
-        }
-        // Fallback to static defaults in FetchAnisetteDataOperation
+        }()
+
+        let resolvedClientInfo  = (udClientInfo?.isEmpty == false ? udClientInfo : fileConfig?.clientInfo) ?? AppConstants.Anisette.defaultClientInfo
+        let resolvedUserAgent   = (udUserAgent?.isEmpty == false ? udUserAgent : fileConfig?.userAgent) ?? AppConstants.Anisette.defaultUserAgent
+        let resolvedDeviceID    = (udDeviceID?.isEmpty == false ? udDeviceID : fileConfig?.customDeviceID)
+        let resolvedLocalUserID = (udLocalUserID?.isEmpty == false ? udLocalUserID : fileConfig?.customLocalUserID)
+        let resolvedLocale      = (udLocale?.isEmpty == false ? udLocale : fileConfig?.customLocale)
+        let resolvedTimeZone    = (udTimeZone?.isEmpty == false ? udTimeZone : fileConfig?.customTimeZone)
+        let resolvedXcode       = (udXcodeVersion?.isEmpty == false ? udXcodeVersion : fileConfig?.customXcodeVersion)
+
         return AnisetteConfig(
-            clientInfo: AppConstants.Anisette.defaultClientInfo,
-            userAgent: AppConstants.Anisette.defaultUserAgent
+            clientInfo: resolvedClientInfo,
+            userAgent: resolvedUserAgent,
+            customDeviceID: resolvedDeviceID,
+            customLocalUserID: resolvedLocalUserID,
+            customLocale: resolvedLocale,
+            customTimeZone: resolvedTimeZone,
+            customXcodeVersion: resolvedXcode
         )
+    }
+
+    public func makeRequestHeaders() -> AnisetteRequestHeaders {
+        let config = loadConfig()
+        return AnisetteRequestHeaders().with {
+            $0.clientInfo = config.clientInfo.isEmpty ? AppConstants.Anisette.defaultClientInfo : config.clientInfo
+            $0.userAgent  = config.userAgent.isEmpty ? AppConstants.Anisette.defaultUserAgent : config.userAgent
+            if let customLU = config.customLocalUserID, !customLU.isEmpty { $0.localUserID = customLU }
+            if let customDev = config.customDeviceID, !customDev.isEmpty { $0.deviceID = customDev }
+            if let loc = config.customLocale, !loc.isEmpty { $0.locale = loc }
+            if let tz = config.customTimeZone, !tz.isEmpty { $0.timeZone = tz }
+        }
     }
 
     public func resolvedXcodeVersion() async -> String {
@@ -126,6 +163,14 @@ public actor AnisetteConfigManager {
         if let data = try? encoder.encode(config) {
             try? data.write(to: configFileURL, options: .atomic)
         }
+        let ud = UserDefaults.standard
+        ud.customAnisetteClientInfo   = config.clientInfo
+        ud.customAnisetteUserAgent    = config.userAgent
+        ud.customAnisetteDeviceID     = config.customDeviceID
+        ud.customAnisetteLocalUserID  = config.customLocalUserID
+        ud.customAnisetteLocale       = config.customLocale
+        ud.customAnisetteTimeZone     = config.customTimeZone
+        ud.customAnisetteXcodeVersion = config.customXcodeVersion
     }
     
     public func importFromFile(url: URL) throws -> AnisetteConfig {
@@ -176,11 +221,20 @@ public actor AnisetteConfigManager {
     }
     
     public func resetToDefaults() -> AnisetteConfig {
+        let ud = UserDefaults.standard
+        ud.customAnisetteClientInfo   = nil
+        ud.customAnisetteUserAgent    = nil
+        ud.customAnisetteDeviceID     = nil
+        ud.customAnisetteLocalUserID  = nil
+        ud.customAnisetteLocale       = nil
+        ud.customAnisetteTimeZone     = nil
+        ud.customAnisetteXcodeVersion = nil
+        deleteConfigFile()
+
         let config = AnisetteConfig(
             clientInfo: AppConstants.Anisette.defaultClientInfo,
             userAgent: AppConstants.Anisette.defaultUserAgent
         )
-        saveConfig(config)
         return config
     }
     

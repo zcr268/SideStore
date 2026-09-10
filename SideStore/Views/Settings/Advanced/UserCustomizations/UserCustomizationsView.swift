@@ -94,6 +94,22 @@ struct UserCustomizationsView: View {
                                 }
                             )
                         )
+                        
+                        divider
+                        
+                        NavigationLink(destination: AnisetteDataView()) {
+                            HStack {
+                                Text("Anisette Client Configuration")
+                                    .font(.system(size: 17, weight: .bold))
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(Color.white.opacity(0.4))
+                            }
+                            .padding(.horizontal, 16)
+                            .frame(height: 50)
+                        }
                     }
                     .background(Color.settingsRowBackground)
                     .cornerRadius(14)
