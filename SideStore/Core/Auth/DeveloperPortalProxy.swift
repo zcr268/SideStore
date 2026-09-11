@@ -47,10 +47,10 @@ public class DeveloperPortalProxy {
     }
     
     @discardableResult
-    public func createCertificate(machineName: String, team: ALTTeam? = nil) async throws -> ALTCertificate {
+    public func createCertificate(machineName: String, type: CertificateType = .development, team: ALTTeam? = nil) async throws -> ALTCertificate {
         let session = try await self.getSession()
         let team = try await self.getTeam(team)
-        return try await ALTAppleAPI.shared.addCertificate(machineName: machineName, to: team, session: session)
+        return try await ALTAppleAPI.shared.addCertificate(machineName: machineName, type: type, to: team, session: session)
     }
     
     @discardableResult
