@@ -367,8 +367,7 @@ private struct CreateCertificateSheetView: View {
     }
 
     private var canCreate: Bool {
-        let trimmed = machineName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return !trimmed.isEmpty && !isPaidWarningVisible
+        !machineName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var body: some View {
