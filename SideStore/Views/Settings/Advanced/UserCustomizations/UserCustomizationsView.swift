@@ -139,6 +139,32 @@ struct UserCustomizationsView: View {
                     .cornerRadius(14)
                 }
 
+                // Section: SIDESIGN
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("SIDESIGN")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color.white.opacity(0.6))
+                        .padding(.horizontal, 16)
+                    
+                    VStack(spacing: 0) {
+                        NavigationLink(destination: SideSignConfigurationView()) {
+                            HStack {
+                                Text("SideSign Client Configuration")
+                                    .font(.system(size: 17, weight: .bold))
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(Color.white.opacity(0.4))
+                            }
+                            .padding(.horizontal, 16)
+                            .frame(height: 50)
+                        }
+                    }
+                    .background(Color.settingsRowBackground)
+                    .cornerRadius(14)
+                }
+
                 // Section 2: GENERAL
                 VStack(alignment: .leading, spacing: 8) {
                     Text("GENERAL")
@@ -515,8 +541,8 @@ struct UserCustomizationsView: View {
         let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
         let resetAction = UIAlertAction(title: NSLocalizedString("Reset & Sign Out", comment: ""), style: .destructive) { _ in
             let keepHeaders = contentVC.isKeepHeadersChecked
-            AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false, keepHeaderCustomizations: keepHeaders)
-            debugLog("Reset adi.pb (keepHeaderCustomizations: \(keepHeaders)) and signed out")
+            AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false, keepAnisetteHeaders: keepHeaders)
+            debugLog("Reset adi.pb (keepAnisetteHeaders: \(keepHeaders)) and signed out")
             if let topVC = UIApplication.shared.topViewController() {
                 let detail = keepHeaders
                     ? NSLocalizedString("Signed out of Apple ID. You can now sign back in with fresh provisioning.", comment: "")

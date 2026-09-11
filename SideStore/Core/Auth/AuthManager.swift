@@ -58,7 +58,12 @@ public final class AuthManager: @unchecked Sendable {
         return Keychain.shared.appleIDXcodeToken != nil
     }
     
-    public func signOut(keepCertificate: Bool = false, keepAnisetteData: Bool = true, keepHeaderCustomizations: Bool = true) {
+    public func signOut(
+        keepCertificate: Bool = false,
+        keepAnisetteData: Bool = true,
+        keepAnisetteHeaders: Bool = true,
+        keepSideSignHeaders: Bool = true
+    ) {
         self.session = nil
         self.team = nil
         if !keepCertificate {
@@ -77,9 +82,14 @@ public final class AuthManager: @unchecked Sendable {
         Keychain.shared.clearSignInInfo(keepAnisetteData: keepAnisetteData)
         debugLog("[AuthManager] Cleared sign-in info from keychain.")
 
-        if !keepHeaderCustomizations {
+        if !keepAnisetteHeaders {
             debugLog("[AuthManager] Resetting Anisette header customizations to defaults.")
             AnisetteConfigManager.shared.resetToDefaults()
+        }
+
+        if !keepSideSignHeaders {
+            debugLog("[AuthManager] Resetting SideSign header customizations to defaults.")
+            SideSignConfigManager.shared.resetToDefaults()
         }
 
         AnisetteDataManager.shared.clearCache()

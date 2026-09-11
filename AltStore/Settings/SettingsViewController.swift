@@ -612,8 +612,14 @@ private extension SettingsViewController
         let signOutAction = UIAlertAction(title: NSLocalizedString("Sign Out", comment: ""), style: .destructive) { _ in
             let keepCert = contentVC.isChecked
             let keepAnisette = contentVC.isKeepAnisetteChecked
-            let keepHeaders = contentVC.isKeepHeadersChecked
-            AuthManager.shared.signOut(keepCertificate: keepCert, keepAnisetteData: keepAnisette, keepHeaderCustomizations: keepHeaders)
+            let keepAnisetteHeaders = contentVC.isKeepAnisetteHeadersChecked
+            let keepSideSignHeaders = contentVC.isKeepSideSignHeadersChecked
+            AuthManager.shared.signOut(
+                keepCertificate: keepCert,
+                keepAnisetteData: keepAnisette,
+                keepAnisetteHeaders: keepAnisetteHeaders,
+                keepSideSignHeaders: keepSideSignHeaders
+            )
             self.update()
         }
         
