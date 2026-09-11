@@ -190,7 +190,7 @@ class DeveloperServicesViewModel: ObservableObject {
                 _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: DeveloperPortalProxy.currentDeviceType)
             }
             await self.fetchProfiles(presentingViewController: presentingViewController)
-            self.showToastMessage("Profile synced for '\(appID.name)'")
+            self.showToastMessage("Profile generated for '\(appID.name)'")
             return true
         } catch {
             debugLog("[DeveloperServices] downloadProfile failed: \(error)")
