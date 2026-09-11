@@ -51,7 +51,7 @@ class DeveloperServicesViewModel: ObservableObject {
                 AuthManager.shared.session = nil
             }
             async let fetchedAppIDs = DeveloperPortalProxy.shared.fetchAppIDs()
-            async let fetchedProfiles = DeveloperPortalProxy.shared.fetchProvisioningProfiles()
+            async let fetchedProfiles = DeveloperPortalProxy.shared.listProvisioningProfiles()
             async let fetchedGroups = DeveloperPortalProxy.shared.fetchAppGroups()
             async let fetchedDevices = DeveloperPortalProxy.shared.fetchDevices(types: .all)
             async let fetchedCerts = DeveloperPortalProxy.shared.fetchCertificates()
@@ -170,7 +170,7 @@ class DeveloperServicesViewModel: ObservableObject {
             if isPullToRefresh {
                 AuthManager.shared.session = nil
             }
-            let profs = try await DeveloperPortalProxy.shared.fetchProvisioningProfiles()
+            let profs = try await DeveloperPortalProxy.shared.listProvisioningProfiles()
             self.profiles = profs.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         } catch {
             debugLog("[DeveloperServices] fetchProfiles failed: \(error)")
@@ -253,10 +253,14 @@ class DeveloperServicesViewModel: ObservableObject {
     }
 
     func deleteProfile(_ profile: ALTListedProvisioningProfile, presentingViewController: UIViewController? = nil) async -> Bool {
+        guard let profileID = profile.identifier else {
+            self.errorMessage = "Profile identifier is missing"
+            return false
+        }
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
-            _ = try await DeveloperPortalProxy.shared.deleteProvisioningProfile(profile)
+            _ = try await DeveloperPortalProxy.shared.deleteProvisioningProfile(profileID: profileID)
             self.profiles.removeAll { $0.uuid == profile.uuid }
             self.showToastMessage("Deleted profile '\(profile.name)'")
             return true
@@ -274,8 +278,12 @@ class DeveloperServicesViewModel: ObservableObject {
             var deleted = 0
             var failed = 0
             for profile in self.profiles {
+                guard let profileID = profile.identifier else {
+                    failed += 1
+                    continue
+                }
                 do {
-                    _ = try await DeveloperPortalProxy.shared.deleteProvisioningProfile(profile)
+                    _ = try await DeveloperPortalProxy.shared.deleteProvisioningProfile(profileID: profileID)
                     deleted += 1
                 } catch {
                     debugLog("[DeveloperServices] deleteProfile '\(profile.name)' failed: \(error)")
