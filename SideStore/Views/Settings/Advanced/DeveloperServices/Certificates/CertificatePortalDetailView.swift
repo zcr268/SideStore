@@ -29,6 +29,12 @@ struct CertificatePortalDetailView: View {
                 if let identifier = certificate.identifier {
                     InfoRow(label: "Certificate ID", value: identifier)
                 }
+                if let certType = certificate.certificateType {
+                    InfoRow(label: "Certificate Type", value: certType)
+                }
+                if let platform = certificate.platform {
+                    InfoRow(label: "Platform", value: platform)
+                }
                 if let machineName = certificate.machineName {
                     InfoRow(label: "Machine Name", value: machineName)
                 }

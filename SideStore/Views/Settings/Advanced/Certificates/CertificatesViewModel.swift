@@ -121,6 +121,9 @@ class CertificatesViewModel: ObservableObject {
         if let existing = self.certificates.first(where: { $0.serialNumber == cert.serialNumber }) {
             if cert.machineName == nil { cert.machineName = existing.machineName }
             if cert.machineIdentifier == nil { cert.machineIdentifier = existing.machineIdentifier }
+            if cert.certificateType == nil { cert.certificateType = existing.certificateType }
+            if cert.platform == nil { cert.platform = existing.platform }
+            if cert.sourceEndpoint == nil { cert.sourceEndpoint = existing.sourceEndpoint }
         }
         CertificateManager.shared.saveCertificate(cert)
     }
@@ -465,6 +468,13 @@ class CertificatesViewModel: ObservableObject {
                 let v1 = self.hasPrivateKey(for: $1) ? 1 : 0
                 return isAscending ? v0 < v1 : v0 > v1
             }
+        case .type:
+            return certs.sorted {
+                let t0 = $0.certificateType ?? getBriefInfo(for: $0.data)?.type ?? $0.name
+                let t1 = $1.certificateType ?? getBriefInfo(for: $1.data)?.type ?? $1.name
+                let cmp = t0.localizedCaseInsensitiveCompare(t1)
+                return isAscending ? cmp == .orderedAscending : cmp == .orderedDescending
+            }
         }
     }
     
@@ -485,6 +495,11 @@ class CertificatesViewModel: ObservableObject {
                 return cert.machineName.flatMap { $0.first.map { String($0).uppercased() } }
                     ?? cert.name.first.map { String($0).uppercased() }
                     ?? "#"
+            }
+            return grouped.keys.sorted().map { GroupedCertificates(name: $0, certificates: grouped[$0] ?? []) }
+        case .type:
+            let grouped = Dictionary(grouping: sorted) { cert -> String in
+                cert.certificateType ?? getBriefInfo(for: cert.data)?.type ?? "Other"
             }
             return grouped.keys.sorted().map { GroupedCertificates(name: $0, certificates: grouped[$0] ?? []) }
         case .creationDate:
@@ -556,6 +571,7 @@ class CertificatesViewModel: ObservableObject {
     
     func displayBriefType(for brief: CertificateBriefInfo, cert: ALTX509Certificate) -> String {
         if isSerialMasked(for: cert) { return "••••••••••" }
+        if let type = cert.certificateType { return type }
         return brief.type
     }
     

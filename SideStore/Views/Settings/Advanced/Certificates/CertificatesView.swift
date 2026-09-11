@@ -261,7 +261,9 @@ struct CertificatesView: View {
             identifier: cert.identifier,
             machineName: cert.machineName,
             machineIdentifier: cert.machineIdentifier,
-            requesterEmail: cert.requesterEmail
+            requesterEmail: cert.requesterEmail,
+            certificateType: cert.certificateType,
+            platform: cert.platform
         )
         let detailVC = UIHostingController(rootView: CertificateDetailView(certificate: cert, portalMetadata: metadata, viewModel: viewModel))
         #if !os(tvOS)

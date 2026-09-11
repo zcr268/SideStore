@@ -14,6 +14,8 @@ struct DeveloperPortalMetadata {
     var machineName: String?
     var machineIdentifier: String?
     var requesterEmail: String?
+    var certificateType: String? = nil
+    var platform: String? = nil
 }
 
 struct CertificateDetailView: View {
@@ -47,6 +49,12 @@ struct CertificateDetailView: View {
                 Section {
                     if let identifier = portalMetadata?.identifier {
                         detailRowWithCopy(title: "Certificate ID", value: identifier, isCopied: $copiedIdentifier)
+                    }
+                    if let certType = portalMetadata?.certificateType ?? certificate.certificateType {
+                        detailRow(title: "Certificate Type", value: certType)
+                    }
+                    if let platform = portalMetadata?.platform ?? certificate.platform {
+                        detailRow(title: "Platform", value: platform)
                     }
                     if let machineID = portalMetadata?.machineIdentifier {
                         detailRow(title: "Machine ID", value: machineID)
