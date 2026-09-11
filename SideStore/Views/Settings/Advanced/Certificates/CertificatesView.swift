@@ -262,8 +262,21 @@ struct CertificatesView: View {
             machineName: cert.machineName,
             machineIdentifier: cert.machineIdentifier,
             requesterEmail: cert.requesterEmail,
+            requesterFirstName: cert.requesterFirstName,
+            requesterLastName: cert.requesterLastName,
+            displayName: cert.displayName,
             certificateType: cert.certificateType,
-            platform: cert.platform
+            certificateTypeName: cert.certificateTypeName,
+            certificateTypeId: cert.certificateTypeId,
+            platform: cert.platform,
+            platformName: cert.platformName,
+            isManaged: cert.isManaged,
+            status: cert.status,
+            ownerName: cert.ownerName,
+            ownerId: cert.ownerId,
+            autoRotationEnabled: cert.autoRotationEnabled,
+            requestedDate: cert.requestedDate,
+            serialNumDecimal: cert.serialNumDecimal
         )
         let detailVC = UIHostingController(rootView: CertificateDetailView(certificate: cert, portalMetadata: metadata, viewModel: viewModel))
         #if !os(tvOS)

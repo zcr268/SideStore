@@ -123,7 +123,21 @@ class CertificatesViewModel: ObservableObject {
             if cert.machineName == nil { cert.machineName = existing.machineName }
             if cert.machineIdentifier == nil { cert.machineIdentifier = existing.machineIdentifier }
             if cert.certificateType == nil { cert.certificateType = existing.certificateType }
+            if cert.certificateTypeName == nil { cert.certificateTypeName = existing.certificateTypeName }
+            if cert.certificateTypeId == nil { cert.certificateTypeId = existing.certificateTypeId }
+            if cert.requesterEmail == nil { cert.requesterEmail = existing.requesterEmail }
+            if cert.requesterFirstName == nil { cert.requesterFirstName = existing.requesterFirstName }
+            if cert.requesterLastName == nil { cert.requesterLastName = existing.requesterLastName }
+            if cert.displayName == nil { cert.displayName = existing.displayName }
+            if cert.ownerName == nil { cert.ownerName = existing.ownerName }
+            if cert.ownerId == nil { cert.ownerId = existing.ownerId }
             if cert.platform == nil { cert.platform = existing.platform }
+            if cert.platformName == nil { cert.platformName = existing.platformName }
+            if cert.isManaged == nil { cert.isManaged = existing.isManaged }
+            if cert.status == nil { cert.status = existing.status }
+            if cert.autoRotationEnabled == nil { cert.autoRotationEnabled = existing.autoRotationEnabled }
+            if cert.requestedDate == nil { cert.requestedDate = existing.requestedDate }
+            if cert.serialNumDecimal == nil { cert.serialNumDecimal = existing.serialNumDecimal }
             if cert.sourceEndpoint == nil { cert.sourceEndpoint = existing.sourceEndpoint }
         }
         CertificateManager.shared.saveCertificate(cert)
@@ -570,6 +584,18 @@ class CertificatesViewModel: ObservableObject {
         guard let req = cert.requesterEmail, !req.isEmpty else { return nil }
         if isSerialMasked(for: cert) { return "••••••••••" }
         return req
+    }
+    
+    func displayCreatedBy(for cert: ALTX509Certificate) -> String? {
+        guard let name = cert.requesterFirstName, !name.isEmpty else { return nil }
+        if isSerialMasked(for: cert) { return "••••••••••" }
+        return name
+    }
+    
+    func displayCertificateTypeName(for cert: ALTX509Certificate) -> String? {
+        guard let typeName = cert.certificateTypeName, !typeName.isEmpty else { return nil }
+        if isSerialMasked(for: cert) { return "••••••••••" }
+        return typeName
     }
     
     func displayBriefType(for brief: CertificateBriefInfo, cert: ALTX509Certificate) -> String {

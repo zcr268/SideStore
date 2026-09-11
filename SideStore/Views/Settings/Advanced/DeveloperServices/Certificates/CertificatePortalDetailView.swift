@@ -32,6 +32,12 @@ struct CertificatePortalDetailView: View {
                 if let certType = certificate.certificateType {
                     InfoRow(label: "Certificate Type", value: certType)
                 }
+                if let typeName = certificate.certificateTypeName {
+                    InfoRow(label: "Type Name", value: typeName)
+                }
+                if let managed = certificate.isManaged {
+                    InfoRow(label: "Managed", value: managed ? "Yes (Xcode Cloud)" : "No")
+                }
                 if let platform = certificate.platform {
                     InfoRow(label: "Platform", value: platform)
                 }
@@ -40,6 +46,9 @@ struct CertificatePortalDetailView: View {
                 }
                 if let machineIdentifier = certificate.machineIdentifier {
                     InfoRow(label: "Machine Identifier", value: machineIdentifier)
+                }
+                if let createdBy = certificate.requesterFirstName {
+                    InfoRow(label: "Created By", value: createdBy)
                 }
                 if let email = certificate.requesterEmail {
                     InfoRow(label: "Requester Email", value: email)
