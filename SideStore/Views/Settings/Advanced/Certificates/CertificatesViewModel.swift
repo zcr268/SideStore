@@ -39,6 +39,7 @@ class CertificatesViewModel: ObservableObject {
     @Published var alertMessage: String? = nil
     @Published var showAlert = false
     @Published var remoteSerials: Set<String> = []
+    @Published var hasFetchedRemote: Bool = false
     
     @Published var currentSort: SortOption   = .creationDate
     @Published var isAscending: Bool         = false
@@ -134,6 +135,7 @@ class CertificatesViewModel: ObservableObject {
     
     func loadCertificates(presentingViewController: UIViewController?, isPullToRefresh: Bool = false, completion: (() -> Void)? = nil) {
         if !isPullToRefresh { self.isLoading = true }
+        self.hasFetchedRemote = false
         self.errorMessage = nil
         self.fetchActiveSerialNumber()
         
@@ -178,6 +180,7 @@ class CertificatesViewModel: ObservableObject {
                 }
                 self.certificates  = merged
                 self.remoteSerials = matchedRemoteSerials
+                self.hasFetchedRemote = true
             } catch {
                 if isPullToRefresh && !(error is CancellationError) {
                     self.errorMessage = error.localizedDescription

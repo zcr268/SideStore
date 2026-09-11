@@ -106,8 +106,12 @@ private struct CertGroupHeaderView: View {
     private var headerTitle: String {
         if group.name == "Certificates" {
             let localCount = viewModel.certificates.count
-            let remoteCount = viewModel.remoteSerials.count
-            return "Certificates \(localCount)(\(remoteCount))"
+            if viewModel.hasFetchedRemote {
+                let remoteCount = viewModel.remoteSerials.count
+                return "Certificates \(localCount)(\(remoteCount)R)"
+            } else {
+                return "Certificates \(localCount)"
+            }
         }
         return group.name
     }
