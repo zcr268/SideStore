@@ -89,7 +89,7 @@ class CertificatesViewModel: ObservableObject {
     }
 
     var availableCertificateTypes: [CertificateType] {
-        isPaidAccount ? CertificateType.allCases : CertificateType.freeAccountCases
+        CertificateType.allCases
     }
     
     var isActiveCertThirdParty: Bool {
