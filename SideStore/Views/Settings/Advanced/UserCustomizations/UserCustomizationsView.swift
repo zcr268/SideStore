@@ -18,7 +18,6 @@ struct UserCustomizationsView: View {
     @State private var selectedBackend: GatewayBackend = selectedGatewayBackendCache
     @State private var useOnDeviceAnisette: Bool = UserDefaults.standard.useOnDeviceAnisette
     @State private var showAnisetteRestartConfirmation: Bool = false
-    @State private var showResetAdiConfirmation: Bool = false
     @State private var customizeAppId: Bool = UserDefaults.standard.customizeAppId
     @State private var customizeAppExtensions: Bool = UserDefaults.standard.customizeAppExtensions
     @State private var autoFixAppGroupIDs: Bool = UserDefaults.standard.autoFixAppGroupIDs
@@ -115,7 +114,7 @@ struct UserCustomizationsView: View {
                         divider
                         
                         SwiftUI.Button(role: .destructive) {
-                            showResetAdiConfirmation = true
+                            presentResetAdiDialog()
                         } label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
@@ -455,21 +454,6 @@ struct UserCustomizationsView: View {
                 Text("Switching to App Bundle prioritizes storage efficiency by transferring the app bundle directly without packaging a temporary IPA, but transfer speeds will be noticeably slower.")
             }
         }
-        .alert("Reset adi.pb", isPresented: $showResetAdiConfirmation) {
-            SwiftUI.Button("Reset & Sign Out", role: .destructive) {
-                AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false)
-                debugLog("Reset adi.pb and signed out")
-                if let top = UIApplication.shared.topViewController() {
-                    ToastView(
-                        text: "Cleared adi.pb!",
-                        detailText: "Signed out of Apple ID. You can now sign back in with fresh provisioning."
-                    ).show(in: top)
-                }
-            }
-            SwiftUI.Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This will sign you out of Apple ID in SideStore and clear the provisioned adi.pb data from your Keychain. Your active signing certificate will be preserved.")
-        }
     }
 
     private func toggleRow(title: String, subtitle: String? = nil, isOn: Binding<Bool>) -> some View {
@@ -516,5 +500,36 @@ struct UserCustomizationsView: View {
         #else
         TVWebFileTransferManager.shared.startExport(fileURL: url, title: "Export SideStore.conf", presentingVC: top)
         #endif
+    }
+
+    private func presentResetAdiDialog() {
+        guard let top = UIApplication.shared.topViewController() else { return }
+        let alertController = UIAlertController(
+            title: NSLocalizedString("Reset adi.pb", comment: ""),
+            message: NSLocalizedString("This will sign you out of Apple ID in SideStore and clear the provisioned adi.pb data from your Keychain. Your active signing certificate will be preserved.", comment: ""),
+            preferredStyle: .alert
+        )
+        let contentVC = ResetAdiAlertViewController()
+        alertController.setValue(contentVC, forKey: "contentViewController")
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil)
+        let resetAction = UIAlertAction(title: NSLocalizedString("Reset & Sign Out", comment: ""), style: .destructive) { _ in
+            let keepHeaders = contentVC.isKeepHeadersChecked
+            AuthManager.shared.signOut(keepCertificate: true, keepAnisetteData: false, keepHeaderCustomizations: keepHeaders)
+            debugLog("Reset adi.pb (keepHeaderCustomizations: \(keepHeaders)) and signed out")
+            if let topVC = UIApplication.shared.topViewController() {
+                let detail = keepHeaders
+                    ? NSLocalizedString("Signed out of Apple ID. You can now sign back in with fresh provisioning.", comment: "")
+                    : NSLocalizedString("Signed out of Apple ID. Reset adi.pb and header configs to defaults.", comment: "")
+                ToastView(
+                    text: NSLocalizedString("Cleared adi.pb!", comment: ""),
+                    detailText: detail
+                ).show(in: topVC)
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(resetAction)
+        top.present(alertController, animated: true, completion: nil)
     }
 }

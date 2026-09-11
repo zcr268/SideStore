@@ -11,6 +11,7 @@ import Foundation
 class SignOutAlertViewController: UIViewController {
     let certCheckboxButton = UIButton(type: .system)
     let anisetteCheckboxButton = UIButton(type: .system)
+    let headersCheckboxButton = UIButton(type: .system)
     
     var isChecked: Bool = true {
         didSet {
@@ -21,6 +22,12 @@ class SignOutAlertViewController: UIViewController {
     var isKeepAnisetteChecked: Bool = true {
         didSet {
             updateButtonImage(anisetteCheckboxButton, isChecked: isKeepAnisetteChecked)
+        }
+    }
+    
+    var isKeepHeadersChecked: Bool = true {
+        didSet {
+            updateButtonImage(headersCheckboxButton, isChecked: isKeepHeadersChecked)
         }
     }
     
@@ -36,6 +43,7 @@ class SignOutAlertViewController: UIViewController {
         
         isChecked = UserDefaults.standard.keepSigningCertsAfterLogout
         isKeepAnisetteChecked = UserDefaults.standard.keepAnisetteDataAfterLogout
+        isKeepHeadersChecked = UserDefaults.standard.keepAnisetteHeadersAfterLogout
         
         certCheckboxButton.tintColor = .systemBlue
         certCheckboxButton.imageView?.contentMode = .scaleAspectFit
@@ -80,8 +88,30 @@ class SignOutAlertViewController: UIViewController {
         anisetteStack.axis = .horizontal
         anisetteStack.spacing = 8
         anisetteStack.alignment = .center
+
+        headersCheckboxButton.tintColor = .systemBlue
+        headersCheckboxButton.imageView?.contentMode = .scaleAspectFit
+        headersCheckboxButton.setContentHuggingPriority(.required, for: .horizontal)
+        headersCheckboxButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+        NSLayoutConstraint.activate([
+            headersCheckboxButton.widthAnchor.constraint(equalToConstant: 24),
+            headersCheckboxButton.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        headersCheckboxButton.addTarget(self, action: #selector(toggleHeadersCheckbox), for: .touchUpInside)
         
-        let mainStackView = UIStackView(arrangedSubviews: [certStack, anisetteStack])
+        let headersLabel = UILabel()
+        headersLabel.text = NSLocalizedString("Keep header customizations", comment: "")
+        headersLabel.font = .systemFont(ofSize: 14)
+        headersLabel.isUserInteractionEnabled = true
+        let headersTap = UITapGestureRecognizer(target: self, action: #selector(toggleHeadersCheckbox))
+        headersLabel.addGestureRecognizer(headersTap)
+        
+        let headersStack = UIStackView(arrangedSubviews: [headersCheckboxButton, headersLabel])
+        headersStack.axis = .horizontal
+        headersStack.spacing = 8
+        headersStack.alignment = .center
+        
+        let mainStackView = UIStackView(arrangedSubviews: [certStack, anisetteStack, headersStack])
         mainStackView.axis = .vertical
         mainStackView.spacing = 8
         mainStackView.alignment = .leading
@@ -95,7 +125,7 @@ class SignOutAlertViewController: UIViewController {
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
-        self.preferredContentSize = CGSize(width: 270, height: 68)
+        self.preferredContentSize = CGSize(width: 270, height: 96)
     }
     
     @objc func toggleCertCheckbox() {
@@ -106,6 +136,11 @@ class SignOutAlertViewController: UIViewController {
     @objc func toggleAnisetteCheckbox() {
         isKeepAnisetteChecked.toggle()
         UserDefaults.standard.keepAnisetteDataAfterLogout = isKeepAnisetteChecked
+    }
+
+    @objc func toggleHeadersCheckbox() {
+        isKeepHeadersChecked.toggle()
+        UserDefaults.standard.keepAnisetteHeadersAfterLogout = isKeepHeadersChecked
     }
 }
 

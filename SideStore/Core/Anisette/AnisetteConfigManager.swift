@@ -71,12 +71,12 @@ public actor AnisetteConfigManager {
         return generated
     }
     
-    private var configFileURL: URL {
+    private nonisolated var configFileURL: URL {
         let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         return libraryDirectory.appendingPathComponent("anisette-config.json")
     }
     
-    private var serverHeadersFileURL: URL {
+    private nonisolated var serverHeadersFileURL: URL {
         let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
         return libraryDirectory.appendingPathComponent("anisette-server-headers.json")
     }
@@ -243,7 +243,8 @@ public actor AnisetteConfigManager {
         return try? encoder.encode(config)
     }
     
-    public func resetToDefaults() -> AnisetteConfig {
+    @discardableResult
+    public nonisolated func resetToDefaults() -> AnisetteConfig {
         let ud = UserDefaults.standard
         ud.customAnisetteClientInfo   = nil
         ud.customAnisetteUserAgent    = nil
@@ -263,11 +264,11 @@ public actor AnisetteConfigManager {
         return config
     }
     
-    public func deleteConfigFile() {
+    public nonisolated func deleteConfigFile() {
         try? FileManager.default.removeItem(at: configFileURL)
     }
     
-    public func hasConfigFile() -> Bool {
+    public nonisolated func hasConfigFile() -> Bool {
         return FileManager.default.fileExists(atPath: configFileURL.path)
     }
 }
