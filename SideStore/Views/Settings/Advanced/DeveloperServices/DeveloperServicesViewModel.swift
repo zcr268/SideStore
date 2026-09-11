@@ -180,11 +180,15 @@ class DeveloperServicesViewModel: ObservableObject {
         }
     }
 
-    func downloadProfile(for appID: ALTAppID, presentingViewController: UIViewController? = nil) async -> Bool {
+    func downloadProfile(for appID: ALTAppID, type: ALTProfileType? = nil, presentingViewController: UIViewController? = nil) async -> Bool {
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
-            _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: DeveloperPortalProxy.currentDeviceType)
+            if let type = type {
+                _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, type: type)
+            } else {
+                _ = try await DeveloperPortalProxy.shared.downloadProvisioningProfile(for: appID, deviceType: DeveloperPortalProxy.currentDeviceType)
+            }
             await self.fetchProfiles(presentingViewController: presentingViewController)
             self.showToastMessage("Profile synced for '\(appID.name)'")
             return true
@@ -195,11 +199,11 @@ class DeveloperServicesViewModel: ObservableObject {
         }
     }
 
-    func createManualProfile(name: String, appID: ALTAppID, certificateIDs: [String], deviceIDs: [String], presentingViewController: UIViewController? = nil) async -> Bool {
+    func createManualProfile(name: String, appID: ALTAppID, certificateIDs: [String], deviceIDs: [String], type: ALTProfileType = .iOS, presentingViewController: UIViewController? = nil) async -> Bool {
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
-            _ = try await DeveloperPortalProxy.shared.createProvisioningProfile(name: name, appID: appID, certificateIDs: certificateIDs, deviceIDs: deviceIDs)
+            _ = try await DeveloperPortalProxy.shared.createProvisioningProfile(name: name, appID: appID, certificateIDs: certificateIDs, deviceIDs: deviceIDs, type: type)
             await self.fetchProfiles(presentingViewController: presentingViewController)
             self.showToastMessage("Created profile '\(name)'")
             return true
@@ -210,7 +214,7 @@ class DeveloperServicesViewModel: ObservableObject {
         }
     }
 
-    func updateProfile(_ profile: ALTListedProvisioningProfile, name: String, appIDId: String, certificateIDs: [String], deviceIDs: [String], presentingViewController: UIViewController? = nil) async -> Bool {
+    func updateProfile(_ profile: ALTListedProvisioningProfile, name: String, appIDId: String, certificateIDs: [String], deviceIDs: [String], type: ALTProfileType? = nil, presentingViewController: UIViewController? = nil) async -> Bool {
         guard let profileID = profile.identifier else {
             self.errorMessage = "Profile identifier missing"
             return false
@@ -218,13 +222,24 @@ class DeveloperServicesViewModel: ObservableObject {
         self.isActionLoading = true
         defer { self.isActionLoading = false }
         do {
-            _ = try await DeveloperPortalProxy.shared.updateProvisioningProfile(
-                profileID: profileID,
-                name: name,
-                appIDId: appIDId,
-                certificateIDs: certificateIDs,
-                deviceIDs: deviceIDs
-            )
+            if let type = type {
+                _ = try await DeveloperPortalProxy.shared.updateProvisioningProfile(
+                    profileID: profileID,
+                    name: name,
+                    appIDId: appIDId,
+                    certificateIDs: certificateIDs,
+                    deviceIDs: deviceIDs,
+                    type: type
+                )
+            } else {
+                _ = try await DeveloperPortalProxy.shared.updateProvisioningProfile(
+                    profileID: profileID,
+                    name: name,
+                    appIDId: appIDId,
+                    certificateIDs: certificateIDs,
+                    deviceIDs: deviceIDs
+                )
+            }
             await self.fetchProfiles(presentingViewController: presentingViewController)
             self.showToastMessage("Updated profile '\(name)'")
             return true

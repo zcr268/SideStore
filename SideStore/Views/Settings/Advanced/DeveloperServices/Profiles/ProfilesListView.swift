@@ -242,6 +242,16 @@ private struct ProfileRow: View {
                         .foregroundColor(.secondary)
                 }
                 Spacer()
+                if let type = profile.profileType {
+                    Text(type.rawValue.uppercased())
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.secondary.opacity(0.12))
+                        .foregroundColor(.secondary)
+                        .cornerRadius(6)
+                }
                 if let isTeam = profile.isTeamProfile {
                     Text(isTeam ? "Xcode Managed" : "Manual")
                         .font(.caption2)
