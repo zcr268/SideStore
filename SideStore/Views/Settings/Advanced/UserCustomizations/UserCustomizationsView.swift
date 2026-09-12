@@ -19,7 +19,7 @@ struct UserCustomizationsView: View {
     @State private var useOnDeviceAnisette: Bool = UserDefaults.standard.useOnDeviceAnisette
     @State private var showAnisetteRestartConfirmation: Bool = false
     @State private var customizeAppId: Bool = UserDefaults.standard.customizeAppId
-    @State private var customizeAppExtensions: Bool = UserDefaults.standard.customizeAppExtensions
+    @State private var customizeAppExtensions: AppExtensionCustomization = UserDefaults.standard.customizeAppExtensions
     @State private var autoFixAppGroupIDs: Bool = UserDefaults.standard.autoFixAppGroupIDs
     @State private var preferResignedIPA: Bool = UserDefaults.standard.preferResignedIPA
     @State private var pendingPreferIPAOngoing: Bool = false
@@ -184,13 +184,28 @@ struct UserCustomizationsView: View {
                         
                         divider
                         
-                        toggleRow(title: "Customize App Extensions", isOn: Binding(
-                            get: { customizeAppExtensions },
-                            set: { newValue in
-                                customizeAppExtensions = newValue
-                                UserDefaults.standard.customizeAppExtensions = newValue
+                        HStack {
+                            Text("Customize App Extensions")
+                                .font(.system(size: 17, weight: .bold))
+                                .foregroundColor(.white)
+                            Spacer()
+                            Picker("", selection: Binding(
+                                get: { customizeAppExtensions },
+                                set: { newValue in
+                                    customizeAppExtensions = newValue
+                                    UserDefaults.standard.customizeAppExtensions = newValue
+                                }
+                            )) {
+                                ForEach(AppExtensionCustomization.allCases) { option in
+                                    Text(option.displayName).tag(option)
+                                }
                             }
-                        ))
+                            .pickerStyle(.menu)
+                            .tint(Color.white.opacity(0.7))
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .frame(minHeight: 50)
                         
                         divider
                         

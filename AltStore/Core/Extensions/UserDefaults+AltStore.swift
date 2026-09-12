@@ -156,20 +156,18 @@ public extension UserDefaults
         get { self.bool(forKey: #function) }
         set { self.set(newValue, forKey: #function) }
     }
-    var customizeAppExtensions: Bool {
+    
+    var customizeAppExtensions: AppExtensionCustomization {
         get {
-            if self.object(forKey: "customizeAppExtensions") != nil {
-                return self._customizeAppExtensions
-            }
-            if let activeTeam = DatabaseManager.shared.activeTeam(), activeTeam.type != .free {
-                return false
-            }
-            return true
+            let option = _customizeAppExtensions.flatMap { AppExtensionCustomization(rawValue: $0) } ?? .promptUser
+            return option
         }
-        set { self._customizeAppExtensions = newValue }
+        set {
+            _customizeAppExtensions = newValue.rawValue
+        }
     }
-    @objc(customizeAppExtensions) private var _customizeAppExtensions: Bool {
-        get { self.bool(forKey: "customizeAppExtensions") }
+    @objc(customizeAppExtensions) private var _customizeAppExtensions: String? {
+        get { self.string(forKey: "customizeAppExtensions") }
         set { self.set(newValue, forKey: "customizeAppExtensions") }
     }
     var autoFixAppGroupIDs: Bool {
@@ -441,6 +439,7 @@ public extension UserDefaults
             
             #keyPath(UserDefaults.responseCachingDisabled): false,
             #keyPath(UserDefaults.customizeAppId): false,
+            #keyPath(UserDefaults._customizeAppExtensions): AppExtensionCustomization.promptUser.rawValue,
             #keyPath(UserDefaults.preferResignedIPA): true,
             #keyPath(UserDefaults.isExportResignedAppEnabled): false,
             #keyPath(UserDefaults.isVerboseOperationsLoggingEnabled): false,

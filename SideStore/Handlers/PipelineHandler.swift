@@ -95,7 +95,7 @@ final class PipelineHandler: PipelineExecutionHandler,
         excessExtensions: Set<ALTApplication>
     ) async throws -> ExtensionRemovalDecision {
         guard let presenter = self.activePresenter else {
-            return .keepAll(useMainProfile: false)
+            return .removeSelected(excessExtensions)
         }
         
         return try await withCheckedThrowingContinuation { continuation in
