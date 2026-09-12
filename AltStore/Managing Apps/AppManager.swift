@@ -588,27 +588,13 @@ final class AppManager: ObservableObject, @unchecked Sendable
                         throw OperationError.invalidApp(reason: "Unsupported package format '.\(url.pathExtension)'. Expected '.ipa' or '.app'.")
                     }
 
-                    var localURL = url
-                    if !url.isFileURL {
-                        let temporaryDirectory = FileManager.default.uniqueTemporaryURL()
-                        try FileManager.default.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true)
-                        localURL = try await withCheckedThrowingContinuation { continuation in
-                            let downloadTask = URLSession.shared.downloadTask(with: url) { (fileURL, response, error) in
-                                do {
-                                    let (fileURL, _) = try Result((fileURL, response), error).get()
-                                    let dest = temporaryDirectory.appendingPathComponent(url.lastPathComponent)
-                                    try FileManager.default.moveItem(at: fileURL, to: dest)
-                                    continuation.resume(returning: dest)
-                                } catch {
-                                    continuation.resume(throwing: error)
-                                }
-                            }
-                            downloadTask.resume()
-                        }
+                    if url.isFileURL {
+                        let (bundleIdentifier, appName) = try Self.readAppMetadata(from: url, packageType: packageType)
+                        resolvedApp = AnyApp(name: appName, bundleIdentifier: bundleIdentifier, url: url, storeApp: nil)
+                    } else {
+                        let appName = url.deletingPathExtension().lastPathComponent
+                        resolvedApp = AnyApp(name: appName, bundleIdentifier: appName, url: url, storeApp: nil)
                     }
-
-                    let (bundleIdentifier, appName) = try Self.readAppMetadata(from: localURL, packageType: packageType)
-                    resolvedApp = AnyApp(name: appName, bundleIdentifier: bundleIdentifier, url: localURL, storeApp: nil)
                 }
 
                 let subGroup = self.pipelineRunner.performSingleOperation(
