@@ -439,15 +439,23 @@ private extension FetchProvisioningProfilesOperation {
     }
 
     func sanitizeToAscii(_ string: String) -> String {
-        let transliterated = string
-            .applyingTransform(.toLatin, reverse: false)?
-            .applyingTransform(.stripDiacritics, reverse: false) ?? string
+        let romanized = string.applyingTransform(.toLatin, reverse: false) ?? string
+
+        let asciiConverted: String
+        if let icuTransliterated = romanized.applyingTransform(StringTransform("Latin-ASCII"), reverse: false) {
+            asciiConverted = icuTransliterated
+        } else if let lossyData = romanized.data(using: .ascii, allowLossyConversion: true),
+                  let lossyString = String(data: lossyData, encoding: .ascii) {
+            asciiConverted = lossyString
+        } else {
+            asciiConverted = romanized
+        }
 
         var result = ""
-        result.reserveCapacity(min(transliterated.utf8.count, 50))
+        result.reserveCapacity(min(asciiConverted.utf8.count, 50))
         var lastWasSpace = true
 
-        for scalar in transliterated.unicodeScalars {
+        for scalar in asciiConverted.unicodeScalars {
             if result.count >= 50 { break }
 
             if (scalar.value >= 0x30 && scalar.value <= 0x39) ||
