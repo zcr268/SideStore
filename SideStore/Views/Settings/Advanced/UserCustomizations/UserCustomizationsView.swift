@@ -185,7 +185,7 @@ struct UserCustomizationsView: View {
                         divider
                         
                         HStack {
-                            Text("Customize App Extensions")
+                            Text("Customize Extensions")
                                 .font(.system(size: 17, weight: .bold))
                                 .foregroundColor(.white)
                             Spacer()
