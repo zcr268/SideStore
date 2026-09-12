@@ -19,6 +19,7 @@ struct BackupAndRestoreView: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @State private var showingMessageAlert = false
+    @State private var exportFileURL: URL? = nil
 
     var body: some View {
         ScrollView {
@@ -168,6 +169,14 @@ struct BackupAndRestoreView: View {
         } message: {
             Text(alertMessage)
         }
+        .sheet(isPresented: Binding<Bool>(
+            get: { exportFileURL != nil },
+            set: { if !$0 { exportFileURL = nil } }
+        )) {
+            if let url = exportFileURL {
+                ActivityViewController(activityItems: [url])
+            }
+        }
     }
     
     private var divider: some View {
@@ -206,12 +215,9 @@ struct BackupAndRestoreView: View {
                 let fileURL = tempDir.appendingPathComponent(AppConstants.accountConfigurationFileName)
                 try encryptedData.write(to: fileURL)
                 
-                #if !os(tvOS)
-                let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
-                top.present(activityVC, animated: true)
-                #else
-                TVWebFileTransferManager.shared.startExport(fileURL: fileURL, title: "Export Account", presentingVC: top)
-                #endif
+                DispatchQueue.main.async {
+                    self.exportFileURL = fileURL
+                }
             } catch {
                 showAlert(title: "Export Error", message: error.localizedDescription)
             }

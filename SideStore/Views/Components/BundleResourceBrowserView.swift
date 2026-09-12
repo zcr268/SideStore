@@ -711,18 +711,6 @@ struct QLPreviewControllerView: UIViewControllerRepresentable {
         }
     }
 }
-
-// MARK: - Activity View (Share Sheet)
-
-struct ActivityView: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
 #endif
 
 // Provisioning Profile Resource Viewer Bridge

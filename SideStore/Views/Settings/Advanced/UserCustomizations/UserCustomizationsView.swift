@@ -38,6 +38,7 @@ struct UserCustomizationsView: View {
     @State private var isChecksumVerificationEnabled: Bool = UserDefaults.standard.isChecksumVerificationEnabled
     @State private var isFileSizeVerificationEnabled: Bool = UserDefaults.standard.isFileSizeVerificationEnabled
     @State private var permissionCheckingDisabled: Bool = UserDefaults.standard.permissionCheckingDisabled
+    @State private var wireGuardExportURL: URL? = nil
 
     private var isFreeAccount: Bool {
         DatabaseManager.shared.activeTeam()?.type == .free
@@ -480,6 +481,14 @@ struct UserCustomizationsView: View {
                 Text("Switching to App Bundle prioritizes storage efficiency by transferring the app bundle directly without packaging a temporary IPA, but transfer speeds will be noticeably slower.")
             }
         }
+        .sheet(isPresented: Binding<Bool>(
+            get: { wireGuardExportURL != nil },
+            set: { if !$0 { wireGuardExportURL = nil } }
+        )) {
+            if let url = wireGuardExportURL {
+                ActivityViewController(activityItems: [url])
+            }
+        }
     }
 
     private func toggleRow(title: String, subtitle: String? = nil, isOn: Binding<Bool>) -> some View {
@@ -514,18 +523,14 @@ struct UserCustomizationsView: View {
     }
 
     private func exportWireGuardConfig() {
-        guard let top = UIApplication.shared.topViewController() else { return }
         guard let url = Bundle.main.url(forResource: "SideStore", withExtension: "conf") else {
-            let toastView = ToastView(text: NSLocalizedString("SideStore.conf missing!", comment: ""), detailText: "Unable to locate SideStore.conf in bundle resources.")
-            toastView.show(in: top)
+            if let top = UIApplication.shared.topViewController() {
+                let toastView = ToastView(text: NSLocalizedString("SideStore.conf missing!", comment: ""), detailText: "Unable to locate SideStore.conf in bundle resources.")
+                toastView.show(in: top)
+            }
             return
         }
-        #if !os(tvOS)
-        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        top.present(activityVC, animated: true)
-        #else
-        TVWebFileTransferManager.shared.startExport(fileURL: url, title: "Export SideStore.conf", presentingVC: top)
-        #endif
+        wireGuardExportURL = url
     }
 
     private func presentResetAdiDialog() {
