@@ -261,7 +261,7 @@ class InstallAppOperationContext: PipelineOperationContext
     var appendTeamID: Bool = true
 
     let standaloneContext: StandaloneOperationContext
-    var sharedContext: SharedPipelineContext?
+    let sharedContext: SharedPipelineContext
 
     var targetBundleIdentifier: String { customBundleIdentifier ?? bundleIdentifier }
 
@@ -321,7 +321,7 @@ class InstallAppOperationContext: PipelineOperationContext
         pipelineSteps: [PipelineExecutionStep],
         bundleIdentifier: String,
         standaloneContext: StandaloneOperationContext,
-        sharedContext: SharedPipelineContext? = nil,
+        sharedContext: SharedPipelineContext,
         handler: PipelineExecutionHandler,
         additionalEntitlements: [ALTEntitlement: any Sendable] = [:],
         activeSigningCertificate: ALTCertificate? = nil,
