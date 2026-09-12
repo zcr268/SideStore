@@ -541,89 +541,29 @@ final class AppManager: ObservableObject, @unchecked Sendable
         debugLog("[AppManager] install() called for target: \(target)")
         let pipelineHandler = self.makePipelineHandler(presentingViewController: presentingViewController)
         let baseContext = self.makeAuthenticatedContext(presentingViewController: presentingViewController, baseContext: context)
-        let group = RefreshGroup(context: baseContext)
-        group.completionHandler = { results in
-            if let result = results.values.first {
-                completionHandler(result)
-            } else {
-                completionHandler(.failure(OperationError.unknown()))
+
+        let app = self.resolveApp(for: target)
+        return self.pipelineRunner.performSingleOperation(
+            .install(app),
+            handler: pipelineHandler,
+            context: baseContext,
+            completionHandler: completionHandler
+        )
+    }
+
+    private func resolveApp(for target: InstallTarget) -> AppProtocol {
+        switch target {
+        case .app(let app):
+            return app
+        case .url(let url):
+            if url.isFileURL,
+               let packageType = PackageType(url: url),
+               let (bundleID, appName) = try? Self.readAppMetadata(from: url, packageType: packageType) {
+                return AnyApp(name: appName, bundleIdentifier: bundleID, url: url, storeApp: nil)
             }
+            let name = url.deletingPathExtension().lastPathComponent
+            return AnyApp(name: name, bundleIdentifier: name, url: url, storeApp: nil)
         }
-
-        group.activeTask = Task.detached {
-            do {
-                let resolvedApp: AppProtocol
-
-                switch target {
-                case .app(let app):
-                    var targetApp = app
-                    if let storeApp = app.storeApp,
-                       let source = storeApp.source,
-                       try await !source.isAdded()
-                    {
-                        guard let presentingViewController else { throw OperationError.sourceNotAdded(source) }
-                        let message = String(format: NSLocalizedString("You must add this source before installing apps from it.\n\n“%@” will begin downloading once it has been added.", comment: ""), app.name)
-                        try await AppManager.shared.add(source, message: message, presentingViewController: presentingViewController)
-                        
-                        let appBundleID = app.bundleIdentifier
-                        let sourceID = source.identifier
-                        if let fetchedStoreApp = try await DatabaseManager.shared.viewContext.performAsync({
-                            let fetchRequest = StoreApp.fetchRequest()
-                            fetchRequest.predicate = NSPredicate(format: "%K == %@ AND %K == %@",
-                                                                 #keyPath(StoreApp.bundleIdentifier), appBundleID,
-                                                                 #keyPath(StoreApp.sourceIdentifier), sourceID)
-                            return try DatabaseManager.shared.viewContext.fetch(fetchRequest).first
-                        }) {
-                            targetApp = fetchedStoreApp
-                        }
-                        
-                        await MainActor.run {
-                            NotificationCenter.default.post(name: AppManager.willInstallAppFromNewSourceNotification, object: app)
-                        }
-                    }
-                    resolvedApp = targetApp
-
-                case .url(let url):
-                    guard let packageType = PackageType(url: url) else {
-                        throw OperationError.invalidApp(reason: "Unsupported package format '.\(url.pathExtension)'. Expected '.ipa' or '.app'.")
-                    }
-
-                    if url.isFileURL {
-                        let (bundleIdentifier, appName) = try Self.readAppMetadata(from: url, packageType: packageType)
-                        resolvedApp = AnyApp(name: appName, bundleIdentifier: bundleIdentifier, url: url, storeApp: nil)
-                    } else {
-                        let appName = url.deletingPathExtension().lastPathComponent
-                        resolvedApp = AnyApp(name: appName, bundleIdentifier: appName, url: url, storeApp: nil)
-                    }
-                }
-
-                let subGroup = self.pipelineRunner.performSingleOperation(
-                    .install(resolvedApp),
-                    handler: pipelineHandler,
-                    context: baseContext,
-                    completionHandler: completionHandler
-                )
-                group.progress.addChild(subGroup.progress, withPendingUnitCount: 100)
-            } catch {
-                let elapsed = CFAbsoluteTimeGetCurrent() - group.context.operationStartTime
-                let status = Task.isCancelled ? "CANCELLED" : "FAILED"
-                let targetId: String
-                switch target {
-                case .url(let url): targetId = url.lastPathComponent
-                case .app(let app): targetId = app.bundleIdentifier
-                }
-                logOperationSummary(
-                    operation: "install",
-                    target: targetId,
-                    status: status,
-                    elapsed: elapsed,
-                    error: error
-                )
-                completionHandler(.failure(error))
-            }
-        }
-
-        return group
     }
 
     private static func readAppMetadata(from url: URL, packageType: PackageType) throws -> (bundleIdentifier: String, name: String) {
