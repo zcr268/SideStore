@@ -920,27 +920,48 @@ private extension MyAppsViewController
     
     @IBAction func sideloadApp(_ sender: UIBarButtonItem)
     {
-        Task { @MainActor in
-            #if !os(tvOS)
-            let supportedTypes = UTType.types(tag: "ipa", tagClass: .filenameExtension, conformingTo: nil)
-            
-            let documentPickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: supportedTypes, asCopy: true)
-            documentPickerViewController.delegate = self
-            self.present(documentPickerViewController, animated: true, completion: nil)
-            #else
-            TVWebFileTransferManager.shared.startImport(
-                acceptedExtensions: ["ipa"],
-                title: "Sideload IPA",
-                presentingVC: self
-            ) { [weak self] fileURL in
-                guard let fileURL = fileURL else { return }
+        InstallAppDialog.presentSourceSelection(
+            from: self,
+            barButtonItem: sender,
+            onChooseFiles: { [weak self] in
+                #if !os(tvOS)
+                self?.presentDocumentPicker()
+                #else
+                self?.presentTVWebTransfer()
+                #endif
+            },
+            onConfirm: { [weak self] url in
+                self?.sideloadApp(at: url) { _ in }
+            }
+        )
+    }
+    
+    #if !os(tvOS)
+    private func presentDocumentPicker()
+    {
+        let supportedTypes = UTType.types(tag: "ipa", tagClass: .filenameExtension, conformingTo: nil)
+        
+        let documentPickerViewController = UIDocumentPickerViewController(forOpeningContentTypes: supportedTypes, asCopy: true)
+        documentPickerViewController.delegate = self
+        self.present(documentPickerViewController, animated: true, completion: nil)
+    }
+    #else
+    private func presentTVWebTransfer()
+    {
+        TVWebFileTransferManager.shared.startImport(
+            acceptedExtensions: ["ipa"],
+            title: "Sideload IPA",
+            presentingVC: self
+        ) { [weak self] fileURL in
+            guard let fileURL = fileURL, let self else { return }
+            InstallAppDialog.present(ipaURL: fileURL, from: self) { [weak self] in
                 self?.sideloadApp(at: fileURL) { result in
                     debugLog("Sideloaded app at \(fileURL) with result: \(result)")
                 }
             }
-            #endif
         }
     }
+    #endif
     
     func sideloadApp(at url: URL, completion: @escaping (Result<Void, Error>) -> Void)
     {
@@ -2598,8 +2619,10 @@ extension MyAppsViewController: UIDocumentPickerDelegate
     {
         guard let fileURL = urls.first else { return }
         
-        self.sideloadApp(at: fileURL) { (result) in
-            debugLog("Sideloaded app at \(fileURL) with result: \(result)")
+        InstallAppDialog.present(ipaURL: fileURL, from: self) { [weak self] in
+            self?.sideloadApp(at: fileURL) { (result) in
+                debugLog("Sideloaded app at \(fileURL) with result: \(result)")
+            }
         }
     }
 }
