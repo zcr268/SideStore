@@ -210,8 +210,7 @@ private extension FetchProvisioningProfilesOperation{
             
             let sortedExpirationDates = appIDs.compactMap { $0.expirationDate }.sorted(by: { $0 < $1 })
             
-            let sanitized = name.filter { $0.isLetter || $0.isNumber || $0.isWhitespace }
-            let appIDName = sanitized.isEmpty ? bundleIdentifier : sanitized
+            let appIDName = self.sanitizeAppIDName(name: name, bundleIdentifier: bundleIdentifier)
             
             self.debugLog("[FetchProvisioningProfiles] Calling DeveloperPortalProxy.shared.addAppID with name '\(appIDName)' and identifier '\(bundleIdentifier)'...")
             let appID = try await DeveloperPortalProxy.shared.addAppID(name: appIDName, bundleIdentifier: bundleIdentifier, team: team)
@@ -426,5 +425,46 @@ private extension FetchProvisioningProfilesOperation{
         }
 
         return groupIdentifier + "." + team.identifier
+    }
+}
+
+private extension FetchProvisioningProfilesOperation {
+    func sanitizeAppIDName(name: String, bundleIdentifier: String) -> String {
+        let sanitizedName = self.sanitizeToAscii(name)
+        if !sanitizedName.isEmpty {
+            return sanitizedName
+        }
+
+        return self.sanitizeToAscii(bundleIdentifier)
+    }
+
+    func sanitizeToAscii(_ string: String) -> String {
+        let transliterated = string
+            .applyingTransform(.toLatin, reverse: false)?
+            .applyingTransform(.stripDiacritics, reverse: false) ?? string
+
+        var result = ""
+        result.reserveCapacity(min(transliterated.utf8.count, 50))
+        var lastWasSpace = true
+
+        for scalar in transliterated.unicodeScalars {
+            if result.count >= 50 { break }
+
+            if (scalar.value >= 0x30 && scalar.value <= 0x39) ||
+               (scalar.value >= 0x41 && scalar.value <= 0x5A) ||
+               (scalar.value >= 0x61 && scalar.value <= 0x7A) {
+                result.unicodeScalars.append(scalar)
+                lastWasSpace = false
+            } else if !lastWasSpace {
+                result.append(" ")
+                lastWasSpace = true
+            }
+        }
+
+        if lastWasSpace, !result.isEmpty {
+            result.removeLast()
+        }
+
+        return result
     }
 }
