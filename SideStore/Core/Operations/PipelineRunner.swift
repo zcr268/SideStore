@@ -67,6 +67,11 @@ final class PipelineRunner: Sendable
                 debugLog("[AppManager] performSingleOperation executing task for: \(operation.bundleIdentifier)")
                 try await self.perform([operation], handler: handler, group: group)
             } catch {
+                if Task.isCancelled || error is CancellationError {
+                    debugLog("[AppManager] performSingleOperation task CANCELLED for: \(operation.bundleIdentifier)")
+                    completionHandler(.failure(OperationError.cancelled))
+                    return
+                }
                 debugLog("[AppManager] performSingleOperation task failed for: \(operation.bundleIdentifier) with error: \(error)")
                 completionHandler(.failure(error))
             }
@@ -255,13 +260,20 @@ final class PipelineRunner: Sendable
             progress.set(nil, for: operation)
             
             let elapsed = CFAbsoluteTimeGetCurrent() - group.context.operationStartTime
-            let status = Task.isCancelled ? "CANCELLED" : "FAILED"
-            if Task.isCancelled {
+            let isCancelled = Task.isCancelled || error is CancellationError
+            let status = isCancelled ? "CANCELLED" : "FAILED"
+            if isCancelled {
                 debugLog("[AppManager] performOperation: Execution CANCELLED for app: \(operation.bundleIdentifier)")
             } else {
                 debugLog("[AppManager] performOperation: Execution FAILED for app: \(operation.bundleIdentifier) with error: \(error.localizedDescription)")
             }
             operation.logSummary(status: status, elapsed: elapsed, error: error)
+            
+            if isCancelled {
+                // Cancellation error is logged and ignored
+                group.set(.failure(OperationError.cancelled), forAppWithBundleIdentifier: operation.bundleIdentifier)
+                return
+            }
             
             let mappedError = logger.getMappedError(for: operation, error: error)
             
